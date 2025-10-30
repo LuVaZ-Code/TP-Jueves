@@ -1,0 +1,19 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Bienvenida";
+}
+
+<!-- Accessible welcome modal triggered on load -->
+<div id="welcomeModal" role="dialog" aria-labelledby="welcomeTitle" aria-modal="true" class="modal" style="display:block;">
+    <div class="modal-content" role="document" style="max-width:600px;margin:3rem auto;padding:1.5rem;border:1px solid #ccc;background:#fff;">
+        <h2 id="welcomeTitle">Bienvenido a @Model.RestaurantName</h2>
+        <p>Reservá tu mesa online de forma rápida.</p>
+        <a class="btn" asp-page="/Reserve">Reservar</a>
+    </div>
+</div>
+
+<style>
+    /* minimal styling ensuring no <br> usage */
+    .btn { display:inline-block; padding:0.6rem 1rem; background:#0078d4;color:#fff;text-decoration:none;border-radius:4px; }
+</style>

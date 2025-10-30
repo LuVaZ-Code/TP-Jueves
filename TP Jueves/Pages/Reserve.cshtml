@@ -1,0 +1,82 @@
+@page
+@model ReserveModel
+@{
+    ViewData["Title"] = "Reservar";
+}
+
+<h1>Reservar una mesa</h1>
+
+<form method="post" novalidate aria-labelledby="reserveFormTitle">
+    <div>
+        <label for="dni">DNI</label>
+        <input id="dni" name="Dni" value="@Model.Dni" />
+        <span asp-validation-for="Dni" class="validation-message"></span>
+    </div>
+
+    <div>
+        <label for="dieta">Dieta</label>
+        <select id="dieta" name="Dieta" aria-label="Dieta">
+            @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
+            {
+                <option value="@((int)d)" selected="@(d == Model.Dieta ? "selected" : null)">@d</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="cant">Cantidad de personas</label>
+        <input id="cant" type="number" name="CantPersonas" min="1" max="20" value="@Model.CantPersonas" />
+    </div>
+
+    <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" name="Fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div>
+        <label for="horario">Horario</label>
+        <select id="horario" name="Horario">
+            @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
+            {
+                <option value="@((int)h)" selected="@(h == Model.Horario ? "selected" : null)">@h</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn">Reservar</button>
+</form>
+
+@if (Model.ReservaId != null)
+{
+    <div role="status" aria-live="polite">
+        <p>Reserva creada correctamente. ID: <strong>@Model.ReservaId</strong></p>
+    </div>
+}
+else if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div role="status" aria-live="polite">
+        <p>@Model.Message</p>
+
+        @if (Model.Suggestions.Any())
+        {
+            <p>Alternativas disponibles:</p>
+            <ul>
+                @foreach (var s in Model.Suggestions)
+                {
+                    <li>@s.fecha.ToString("yyyy-MM-dd") - @s.horario</li>
+                }
+            </ul>
+            <p>Podés reintentar con una de estas opciones.</p>
+        }
+        else
+        {
+            <p>No hay opciones cercanas disponibles.</p>
+        }
+    </div>
+}
+
+<style>
+    .btn { padding:0.5rem 0.8rem; background:#0078d4;color:#fff;border-radius:4px;text-decoration:none; }
+    label { display:block; margin-top:0.6rem; }
+    input, select { padding:0.4rem; width:100%; max-width:320px; }
+</style>

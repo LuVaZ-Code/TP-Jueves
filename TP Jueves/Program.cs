@@ -1,29 +1,54 @@
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using TP_Jueves.Data;
+using TP_Jueves.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Configure culture (es-AR)
+var supportedCultures = new[] { new CultureInfo("es-AR") };
+builder.Services.Configure<RequestLocalizationOptions>(opts =>
+{
+    opts.DefaultRequestCulture = new RequestCulture("es-AR");
+    opts.SupportedCultures = supportedCultures;
+    opts.SupportedUICultures = supportedCultures;
+});
+
+// Database
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=tpjueves.db"));
+
+// Razor Pages and runtime compilation
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+// Application services
+builder.Services.AddScoped<RestauranteService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseRequestLocalization();
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.MapRazorPages();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+// Ensure DB created
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
