@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preview - Reservas Restaurante</title>
+  <style>
+    :root{--bg:#f7f7f9;--card:#fff;--primary:#0078d4;--text:#111}
+    body{font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:2rem}
+    .container{max-width:760px;margin:0 auto}
+    .card{background:var(--card);padding:1.25rem;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+    h1{margin:0 0 1rem;font-size:1.5rem}
+    label{display:block;margin:0.6rem 0 0.25rem}
+    input,select,button,textarea{font-size:1rem;padding:0.55rem;border:1px solid #d1d5db;border-radius:6px;width:100%;box-sizing:border-box}
+    .row{display:flex;gap:0.75rem}
+    .col{flex:1}
+    .btn{background:var(--primary);color:#fff;border:none;padding:0.6rem 0.9rem;border-radius:6px;cursor:pointer}
+    .status{margin-top:1rem;padding:0.75rem;border-radius:6px}
+    .status.success{background:#ecfdf5;color:#065f46}
+    .status.error{background:#fff7ed;color:#7c2d12}
+    ul{margin:.5rem 0 0 1.25rem}
+    .welcome{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="card welcome" aria-labelledby="welcomeTitle">
+      <div>
+        <h1 id="welcomeTitle">Bienvenido a Mi Restaurante</h1>
+        <p>Reservá tu mesa online de forma rápida.</p>
+      </div>
+      <div>
+        <button id="openReserve" class="btn" aria-controls="reserveCard">Reservar</button>
+      </div>
+    </section>
+
+    <section id="reserveCard" class="card" style="margin-top:1rem;display:none;" aria-labelledby="reserveTitle">
+      <h2 id="reserveTitle">Formulario de reserva (Preview)</h2>
+      <form id="reserveForm" novalidate>
+        <div>
+          <label for="dni">DNI</label>
+          <input id="dni" name="dni" type="text" inputmode="numeric" aria-describedby="dniHelp" />
+        </div>
+
+        <div>
+          <label for="dieta">Dieta</label>
+          <select id="dieta" name="dieta" aria-label="Dieta">
+            <option value="Normal">Normal</option>
+            <option value="Vegetariano">Vegetariano</option>
+            <option value="Celiaco">Celiaco</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="cant">Cantidad de personas</label>
+            <input id="cant" name="cant" type="number" min="1" max="20" value="2" />
+          </div>
+          <div class="col">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" name="fecha" type="date" />
+          </div>
+        </div>
+
+        <div>
+          <label for="horario">Horario</label>
+          <select id="horario" name="horario">
+            <option value="H12_1330">12:00 - 13:30</option>
+            <option value="H1330_15">13:30 - 15:00</option>
+            <option value="H15_1630">15:00 - 16:30</option>
+            <option value="H20_22">20:00 - 22:00</option>
+            <option value="H22_00">22:00 - 00:00</option>
+            <option value="H00_02">00:00 - 02:00</option>
+          </select>
+        </div>
+
+        <div style="margin-top:1rem;display:flex;gap:.75rem;align-items:center">
+          <button type="submit" class="btn">Reservar</button>
+          <div id="spinner" aria-hidden="true" style="display:none">Comprobando...</div>
+        </div>
+      </form>
+
+      <div id="result" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+    // UUID v4 generator used to simulate reservation id
+    // Returns string
+    function generateUuid() {
+      // single return pattern: compute then return
+      const hex = [...Array(256)].map((_,i)=> (i).toString(16).padStart(2,'0'));
+      const rnd = crypto.getRandomValues(new Uint8Array(16));
+      rnd[6] = (rnd[6] & 0x0f) | 0x40; // version 4
+      rnd[8] = (rnd[8] & 0x3f) | 0x80;
+      const parts = [0,4,6,8,10].map((i,idx)=> {
+        const slice = rnd.slice(i, i + (idx===4?6: (idx===0?4: (idx===1?2:2))));
+        return Array.from(slice).map(b=>hex[b]).join('');
+      });
+      const uuid = parts.join('-');
+      return uuid;
+    }
+
+    // Compute alternative suggestions for same day (other horarios) and nearby dates
+    // Parameters: dateStr ("YYYY-MM-DD"), horario (string), daysRange (int)
+    // Returns: array of {fecha,horario}
+    function computeSuggestions(dateStr, horario, daysRange = 3) {
+      const horarios = ['H12_1330','H1330_15','H15_1630','H20_22','H22_00','H00_02'];
+      const suggestions = [];
+
+      // Same day, other horarios
+      for (const h of horarios) {
+        if (h === horario) continue;
+        suggestions.push({fecha: dateStr, horario: h});
+      }
+
+      // Nearby days +/- up to daysRange
+      const base = dateStr ? new Date(dateStr) : new Date();
+      for (let d = 1; d <= daysRange; d++) {
+        const plus = new Date(base); plus.setDate(base.getDate() + d);
+        const minus = new Date(base); minus.setDate(base.getDate() - d);
+        const toYMD = dt => dt.toISOString().slice(0,10);
+        for (const h of horarios) {
+          suggestions.push({fecha: toYMD(plus), horario: h});
+          suggestions.push({fecha: toYMD(minus), horario: h});
+        }
+      }
+
+      return suggestions.slice(0,6);
+    }
+
+    // Simulate availability check. Deterministic pseudo-random: uses date+horario+partySize to decide.
+    // Returns boolean.
+    function isAvailable(dateStr, horario, partySize) {
+      // simple hash to deterministic bool
+      const s = [dateStr || '', horario || '', partySize].join('|');
+      let hash = 0;
+      for (let i = 0; i < s.length; i++) { hash = ((hash << 5) - hash) + s.charCodeAt(i); hash |= 0; }
+      // treat positive hashes as available ~50%
+      return (Math.abs(hash) % 3) !== 0; // ~66% available
+    }
+
+    (function () {
+      const openBtn = document.getElementById('openReserve');
+      const reserveCard = document.getElementById('reserveCard');
+      const form = document.getElementById('reserveForm');
+      const result = document.getElementById('result');
+      const spinner = document.getElementById('spinner');
+
+      openBtn.addEventListener('click', () => {
+        reserveCard.style.display = 'block';
+        reserveCard.scrollIntoView({behavior:'smooth'});
+        document.getElementById('dni').focus();
+      });
+
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        result.innerHTML = '';
+
+        const dni = form.dni.value.trim();
+        const dieta = form.dieta.value;
+        const cant = parseInt(form.cant.value, 10) || 1;
+        const fecha = form.fecha.value || new Date().toISOString().slice(0,10);
+        const horario = form.horario.value;
+
+        // Basic frontend validation
+        if (!dni) {
+          result.innerHTML = '<div class="status error">Por favor ingrese DNI.</div>';
+          return;
+        }
+        if (cant < 1) {
+          result.innerHTML = '<div class="status error">Cantidad inválida.</div>';
+          return;
+        }
+
+        spinner.style.display = 'inline-block';
+
+        // Simulate network delay
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          const avail = isAvailable(fecha, horario, cant);
+          if (avail) {
+            const id = generateUuid();
+            result.innerHTML = `<div class="status success">Reserva creada correctamente. ID: <strong>${id}</strong></div>`;
+          } else {
+            const suggestions = computeSuggestions(fecha, horario, 3);
+            let html = '<div class="status error"><p>No hay disponibilidad para el turno solicitado.</p>';
+            if (suggestions.length) {
+              html += '<p>Alternativas:</p><ul>' + suggestions.map(s => `<li>${s.fecha} - ${formatHorario(s.horario)}</li>`).join('') + '</ul>';
+            }
+            html += '</div>';
+            result.innerHTML = html;
+          }
+        }, 600);
+      });
+
+      function formatHorario(key) {
+        switch(key) {
+          case 'H12_1330': return '12:00 - 13:30';
+          case 'H1330_15': return '13:30 - 15:00';
+          case 'H15_1630': return '15:00 - 16:30';
+          case 'H20_22': return '20:00 - 22:00';
+          case 'H22_00': return '22:00 - 00:00';
+          case 'H00_02': return '00:00 - 02:00';
+          default: return key;
+        }
+      }
+
+    })();
+  </script>
+</body>
+</html>
