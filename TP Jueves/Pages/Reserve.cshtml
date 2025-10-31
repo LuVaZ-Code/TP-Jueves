@@ -7,11 +7,17 @@
 
 <h1>Reservar una mesa</h1>
 
-<form method="post" novalidate aria-labelledby="reserveFormTitle" id="reserveForm">
+<!-- Remove 'novalidate' to allow HTML5 validation for required/pattern/minlength -->
+<form method="post" aria-labelledby="reserveFormTitle" id="reserveForm">
     <div>
         <label for="dni">DNI</label>
-        <input id="dni" name="Dni" value="@(Model.Dni == 0 ? string.Empty : Model.Dni.ToString())" type="text" inputmode="numeric" pattern="\d{8}" maxlength="8" aria-describedby="dniHelp" autocomplete="off"
-               onkeypress="return event.charCode >= 48 && event.charCode <= 57;" />
+        <!--
+            - type="tel" gives numeric keypad on mobile and avoids 'e' on desktop number inputs
+            - required + minlength enforces 8 digits with browser validation
+            - oninput sanitizes any non-digit characters immediately and enforces max length
+        -->
+        <input id="dni" name="Dni" value="@Model.Dni" type="tel" inputmode="numeric" pattern="\d{8}" minlength="8" maxlength="8" required aria-describedby="dniHelp" autocomplete="off"
+               oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
         <small id="dniHelp">Ingrese 8 dígitos sin puntos ni espacios.</small>
         <span asp-validation-for="Dni" class="validation-message"></span>
     </div>
@@ -28,12 +34,12 @@
 
     <div>
         <label for="cant">Cantidad de personas</label>
-        <input id="cant" type="number" name="CantPersonas" min="1" max="20" value="@Model.CantPersonas" />
+        <input id="cant" type="number" name="CantPersonas" min="1" max="20" value="@Model.CantPersonas" required />
     </div>
 
     <div>
         <label for="fecha">Fecha</label>
-        <input id="fecha" type="date" name="Fecha" min="@todayMin" value="@Model.Fecha.ToString("yyyy-MM-dd")" />
+        <input id="fecha" type="date" name="Fecha" min="@todayMin" value="@Model.Fecha.ToString("yyyy-MM-dd")" required />
         <span asp-validation-for="Fecha" class="validation-message"></span>
     </div>
 
@@ -93,7 +99,7 @@ else if (!string.IsNullOrEmpty(Model.Message))
             const fechaInput = document.getElementById('fecha');
             const form = document.getElementById('reserveForm');
 
-            // Strip non-digits on input and on paste
+            // Additional JS handlers kept as defense-in-depth: input and paste sanitize
             dniInput.addEventListener('input', function (e) {
                 const cleaned = this.value.replace(/\D/g, '').slice(0, 8);
                 if (this.value !== cleaned) {
@@ -109,7 +115,7 @@ else if (!string.IsNullOrEmpty(Model.Message))
                 this.value = (prior + cleaned).slice(0,8);
             });
 
-            // On submit, validate DNI length and fecha not in past
+            // On submit, validate DNI length and fecha not in past (defense-in-depth)
             form.addEventListener('submit', function (e) {
                 // Clear previous client-side messages
                 const existing = document.querySelectorAll('.client-error');

@@ -78,12 +78,12 @@ namespace TP_Jueves.Services
         /// If not, Success=false and Suggestions populated.
         /// Single return pattern: use result variable.
         /// </summary>
-        public async Task<ReservationResult> ReservarAsync(int dni, Dieta dieta, int partySize, DateTime fecha, Horario horario, CancellationToken cancellationToken = default)
+        public async Task<ReservationResult> ReservarAsync(string dni, Dieta dieta, int partySize, DateTime fecha, Horario horario, CancellationToken cancellationToken = default)
         {
             var result = new ReservationResult();
 
             // Basic validation (argument checks)
-            if (dni < 10000000 || dni > 99999999)
+            if (string.IsNullOrWhiteSpace(dni) || !System.Text.RegularExpressions.Regex.IsMatch(dni, "^\\d{8}$"))
             {
                 result.Success = false;
                 result.Message = "DNI inválido.";
@@ -104,7 +104,7 @@ namespace TP_Jueves.Services
                 // Create reserva
                 var reserva = new Reserva
                 {
-                    DniCliente = dni,
+                    DniCliente = dni.Trim(),
                     Dieta = dieta,
                     CantPersonas = partySize,
                     Fecha = fecha.Date,
@@ -173,10 +173,11 @@ namespace TP_Jueves.Services
         /// <summary>
         /// Busca reservas por DNI.
         /// </summary>
-        public async Task<List<Reserva>> VerReservasPorDniAsync(int dni, CancellationToken cancellationToken = default)
+        public async Task<List<Reserva>> VerReservasPorDniAsync(string dni, CancellationToken cancellationToken = default)
         {
+            var norm = dni.Trim();
             var reservas = await _db.Reservas.Include(r => r.Mesa)
-                .Where(r => r.DniCliente == dni)
+                .Where(r => r.DniCliente == norm)
                 .OrderBy(r => r.Fecha).ThenBy(r => r.Horario)
                 .ToListAsync(cancellationToken);
             return reservas;

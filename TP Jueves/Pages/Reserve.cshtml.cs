@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using TP_Jueves.Models;
 using TP_Jueves.Services;
@@ -20,12 +21,15 @@ namespace TP_Jueves.Pages
         }
 
         [BindProperty]
-        public int Dni { get; set; }
+        [Required(ErrorMessage = "DNI es requerido.")]
+        [RegularExpression("^\\d{8}$", ErrorMessage = "DNI debe contener exactamente 8 dígitos.")]
+        public string Dni { get; set; } = string.Empty;
 
         [BindProperty]
         public Dieta Dieta { get; set; } = Dieta.Normal;
 
         [BindProperty]
+        [Range(1, 20, ErrorMessage = "Debe indicar al menos 1 comensal.")]
         public int CantPersonas { get; set; } = 1;
 
         [BindProperty]
@@ -46,30 +50,29 @@ namespace TP_Jueves.Pages
 
         public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken = default)
         {
-            // Server-side validation: DNI must be 8 digits (numeric)
-            if (Dni < 10000000 || Dni > 99999999)
-            {
-                ModelState.AddModelError(nameof(Dni), "DNI debe contener exactamente 8 dígitos numéricos.");
-            }
-
-            // Fecha must be today or future
-            var today = DateTime.Today;
-            if (Fecha.Date < today)
-            {
-                ModelState.AddModelError(nameof(Fecha), "La fecha debe ser hoy o una fecha futura.");
-            }
-
-            if (CantPersonas < 1)
-            {
-                ModelState.AddModelError(nameof(CantPersonas), "Debe indicar al menos 1 comensal.");
-            }
-
+            // Let model binding run DataAnnotations validators first
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var result = await _restaurante.ReservarAsync(Dni, Dieta, CantPersonas, Fecha.Date, Horario, cancellationToken);
+            // Additional server-side guards (defense in depth)
+            var dniNorm = (Dni ?? string.Empty).Trim();
+            if (!Regex.IsMatch(dniNorm, "^\\d{8}$"))
+            {
+                ModelState.AddModelError(nameof(Dni), "DNI inválido.");
+                return Page();
+            }
+
+            var today = DateTime.Today;
+            if (Fecha.Date < today)
+            {
+                ModelState.AddModelError(nameof(Fecha), "La fecha debe ser hoy o una fecha futura.");
+                return Page();
+            }
+
+            // Call service with validated dniNorm
+            var result = await _restaurante.ReservarAsync(dniNorm, Dieta, CantPersonas, Fecha.Date, Horario, cancellationToken);
 
             Message = result.Message;
             ReservaId = result.ReservaId;

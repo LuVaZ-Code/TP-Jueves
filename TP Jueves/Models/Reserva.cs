@@ -13,10 +13,12 @@ namespace TP_Jueves.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// DNI del cliente (número, hasta 8 dígitos).
+        /// DNI del cliente (8 dígitos, stored as string to preserve leading zeros).
         /// </summary>
         [Required]
-        public int DniCliente { get; set; }
+        [StringLength(8, MinimumLength = 8)]
+        [RegularExpression("^\\d{8}$", ErrorMessage = "DNI debe contener exactamente 8 dígitos.")]
+        public string DniCliente { get; set; } = string.Empty;
 
         /// <summary>
         /// Dieta solicitada.
@@ -30,7 +32,7 @@ namespace TP_Jueves.Models
         public int CantPersonas { get; set; }
 
         /// <summary>
-        /// Fecha (date only) del turno almacenada en UTC date kind for consistency.
+        /// Fecha (date only) del turno almacenada in UTC for consistency.
         /// </summary>
         public DateTime Fecha { get; set; }
 
