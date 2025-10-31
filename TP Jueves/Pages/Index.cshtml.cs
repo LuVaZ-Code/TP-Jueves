@@ -20,6 +20,8 @@ namespace TP_Jueves.Pages
         public void OnGet()
         {
             RestaurantName = _restaurante.GetNombre();
+            // Add class to body so layout can target background only on this page if needed
+            ViewData["BodyClass"] = "has-restaurant-bg";
         }
     }
 }

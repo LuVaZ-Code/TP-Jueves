@@ -13,11 +13,10 @@ namespace TP_Jueves.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// DNI del cliente.
+        /// DNI del cliente (número, hasta 8 dígitos).
         /// </summary>
         [Required]
-        [StringLength(30)]
-        public string DniCliente { get; set; } = string.Empty;
+        public int DniCliente { get; set; }
 
         /// <summary>
         /// Dieta solicitada.

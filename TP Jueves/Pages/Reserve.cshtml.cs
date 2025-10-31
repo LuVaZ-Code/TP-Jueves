@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.RegularExpressions;
 using TP_Jueves.Models;
 using TP_Jueves.Services;
 
@@ -19,7 +20,7 @@ namespace TP_Jueves.Pages
         }
 
         [BindProperty]
-        public string Dni { get; set; } = string.Empty;
+        public int Dni { get; set; }
 
         [BindProperty]
         public Dieta Dieta { get; set; } = Dieta.Normal;
@@ -39,15 +40,25 @@ namespace TP_Jueves.Pages
 
         public void OnGet()
         {
-            // No-op
+            // Ensure the layout will apply the restaurant background
+            ViewData["BodyClass"] = "has-restaurant-bg";
         }
 
         public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(Dni))
+            // Server-side validation: DNI must be 8 digits (numeric)
+            if (Dni < 10000000 || Dni > 99999999)
             {
-                ModelState.AddModelError(nameof(Dni), "DNI es requerido.");
+                ModelState.AddModelError(nameof(Dni), "DNI debe contener exactamente 8 dígitos numéricos.");
             }
+
+            // Fecha must be today or future
+            var today = DateTime.Today;
+            if (Fecha.Date < today)
+            {
+                ModelState.AddModelError(nameof(Fecha), "La fecha debe ser hoy o una fecha futura.");
+            }
+
             if (CantPersonas < 1)
             {
                 ModelState.AddModelError(nameof(CantPersonas), "Debe indicar al menos 1 comensal.");

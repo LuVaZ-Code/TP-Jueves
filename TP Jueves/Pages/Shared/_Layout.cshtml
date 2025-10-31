@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TP Jueves</title>
+    <link rel="stylesheet" href="/css/site.css" />
+    <style>
+        /* Inline background rule using Url.Content to ensure correct path resolution regardless of app base path */
+        body.has-restaurant-bg {
+            background-image: url('@Url.Content("~/images/restaurant-bg.jpg")');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+        body.has-restaurant-bg::before{
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="@(ViewData["BodyClass"] ?? "")">
+    <header>
+        <nav>
+            <a asp-page="/Index">Inicio</a> |
+            <a asp-page="/Reserve">Reservar</a>
+        </nav>
+    </header>
+    <main role="main" class="content">
+        @RenderBody()
+    </main>
+    <footer>
+        <p>&copy; @DateTime.UtcNow.Year - TP Jueves</p>
+    </footer>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

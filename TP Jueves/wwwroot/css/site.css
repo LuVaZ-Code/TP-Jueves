@@ -29,3 +29,61 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* New background and content styles */
+:root{
+  --content-bg: rgba(255,255,255,0.92);
+  --text-color: #111;
+  --accent: #0078d4;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+}
+
+body{
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color:var(--text-color);
+}
+
+/* Apply restaurant background only on pages that set body class */
+body.has-restaurant-bg {
+  background-image: url('/images/restaurant-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+/* Overlay for better contrast */
+body.has-restaurant-bg::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+
+/* A translucent content container to improve readability on top of the image */
+main.content{
+  background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95));
+  margin: 2rem auto;
+  max-width: 980px;
+  padding: 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 2;
+}
+
+header nav a{ color:var(--accent); text-decoration:none; margin-right:.5rem }
+header{ padding:1rem 0 }
+footer{ text-align:center; padding:1rem 0; color:#444 }
+
+/* Ensure forms and cards are readable */
+.card, .modal-content{ background: transparent; }
+
+@media (max-width:600px){
+  main.content{ margin:1rem; padding:.75rem }
+}

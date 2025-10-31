@@ -2,14 +2,17 @@
 @model TP_Jueves.Pages.ReserveModel
 @{
     ViewData["Title"] = "Reservar";
+    var todayMin = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
 <h1>Reservar una mesa</h1>
 
-<form method="post" novalidate aria-labelledby="reserveFormTitle">
+<form method="post" novalidate aria-labelledby="reserveFormTitle" id="reserveForm">
     <div>
         <label for="dni">DNI</label>
-        <input id="dni" name="Dni" value="@Model.Dni" />
+        <input id="dni" name="Dni" value="@(Model.Dni == 0 ? string.Empty : Model.Dni.ToString())" type="text" inputmode="numeric" pattern="\d{8}" maxlength="8" aria-describedby="dniHelp" autocomplete="off"
+               onkeypress="return event.charCode >= 48 && event.charCode <= 57;" />
+        <small id="dniHelp">Ingrese 8 dígitos sin puntos ni espacios.</small>
         <span asp-validation-for="Dni" class="validation-message"></span>
     </div>
 
@@ -30,7 +33,8 @@
 
     <div>
         <label for="fecha">Fecha</label>
-        <input id="fecha" type="date" name="Fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" />
+        <input id="fecha" type="date" name="Fecha" min="@todayMin" value="@Model.Fecha.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Fecha" class="validation-message"></span>
     </div>
 
     <div>
@@ -79,4 +83,68 @@ else if (!string.IsNullOrEmpty(Model.Message))
     .btn { padding:0.5rem 0.8rem; background:#0078d4;color:#fff;border-radius:4px;text-decoration:none; }
     label { display:block; margin-top:0.6rem; }
     input, select { padding:0.4rem; width:100%; max-width:320px; }
+    .validation-message { color: #a61b1b; font-size: .9rem; }
 </style>
+
+@section Scripts {
+    <script>
+        (function () {
+            const dniInput = document.getElementById('dni');
+            const fechaInput = document.getElementById('fecha');
+            const form = document.getElementById('reserveForm');
+
+            // Strip non-digits on input and on paste
+            dniInput.addEventListener('input', function (e) {
+                const cleaned = this.value.replace(/\D/g, '').slice(0, 8);
+                if (this.value !== cleaned) {
+                    this.value = cleaned;
+                }
+            });
+
+            dniInput.addEventListener('paste', function (e) {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+                const cleaned = text.replace(/\D/g, '').slice(0, 8);
+                const prior = this.value.slice(0, 8 - cleaned.length);
+                this.value = (prior + cleaned).slice(0,8);
+            });
+
+            // On submit, validate DNI length and fecha not in past
+            form.addEventListener('submit', function (e) {
+                // Clear previous client-side messages
+                const existing = document.querySelectorAll('.client-error');
+                existing.forEach(el => el.remove());
+
+                let hasError = false;
+
+                const dniVal = dniInput.value.trim();
+                if (!/^\d{8}$/.test(dniVal)) {
+                    const err = document.createElement('div');
+                    err.className = 'client-error validation-message';
+                    err.textContent = 'DNI debe contener exactamente 8 dígitos.';
+                    dniInput.parentNode.appendChild(err);
+                    hasError = true;
+                }
+
+                const fechaVal = fechaInput.value;
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const sel = fechaVal ? new Date(fechaVal) : null;
+                if (!sel || sel < today) {
+                    const err = document.createElement('div');
+                    err.className = 'client-error validation-message';
+                    err.textContent = 'La fecha debe ser hoy o futura.';
+                    fechaInput.parentNode.appendChild(err);
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                return true;
+            });
+        })();
+    </script>
+}
