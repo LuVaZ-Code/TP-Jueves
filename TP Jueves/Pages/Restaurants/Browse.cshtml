@@ -5,116 +5,190 @@
 }
 
 <!-- HERO SECTION -->
-<section class="hero" style="margin-bottom: 2rem;">
+<section class="hero" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
     <h1>??? Restaurantes Disponibles</h1>
-    <p>Descubre y reserva en nuestros restaurantes asociados</p>
+    <p>Descubre tu próxima experiencia gastronómica perfecta</p>
 </section>
 
-<!-- BUSCADOR -->
-<div style="max-width: 600px; margin: 0 auto 2rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-    <form method="get" novalidate>
-        <div class="input-group" style="gap: 0.5rem; display: flex;">
-            <input type="text" name="searchTerm" class="form-control" placeholder="Buscar por nombre, descripcion o ubicacion..." value="@Model.SearchTerm" style="border-radius: 6px; border: 1px solid #ddd; padding: 0.75rem;" />
-            <button type="submit" class="btn btn-primary" style="border-radius: 6px;">
-                ?? Buscar
+<!-- SEARCH BAR -->
+<div style="max-width: 800px; margin: -30px auto 3rem; position: relative; z-index: 10;">
+    <form method="get" novalidate style="background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.15);">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <input type="text" name="searchTerm" class="form-control" 
+                   placeholder="?? Buscar por nombre, cocina o ubicación..." 
+                   value="@Model.SearchTerm" 
+                   style="flex: 1; border: 2px solid #e0e0e0; border-radius: 12px; padding: 1.2rem; font-size: 1.1rem;" />
+            
+            <button type="submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+                Buscar
             </button>
+            
             @if (!string.IsNullOrEmpty(Model.SearchTerm))
             {
-                <a asp-page="Browse" class="btn btn-secondary" style="border-radius: 6px;">Limpiar</a>
+                <a asp-page="Browse" style="background: #95a5a6; color: white; padding: 1.2rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; transition: all 0.3s; white-space: nowrap;">
+                    Limpiar
+                </a>
             }
         </div>
     </form>
 </div>
 
-<!-- RESULTADOS -->
+<!-- RESULTS COUNT -->
 @if (Model.Restaurantes.Any())
 {
-    <div style="margin-bottom: 1rem; text-align: center;">
-        <span style="color: #7f8c8d; font-size: 0.95rem;">
-            Se encontraron <strong>@Model.Restaurantes.Count</strong> restaurante(s)
-        </span>
+    <div style="max-width: 1200px; margin: 0 auto 2rem; padding: 0 1rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center;">
+            <p style="margin: 0; color: var(--dark-color); font-size: 1.1rem;">
+                Se encontraron <strong style="color: #f5576c; font-size: 1.3rem;">@Model.Restaurantes.Count</strong> restaurante(s)
+                @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    <span>para "<strong>@Model.SearchTerm</strong>"</span>
+                }
+            </p>
+        </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 2rem;">
-        @foreach (var restaurante in Model.Restaurantes)
-        {
-            <div class="card" style="display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)';">
-                <div style="background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0;">
-                    <h5 style="margin: 0; font-size: 1.5rem; font-weight: 700;">@restaurante.Nombre</h5>
-                    <p style="margin: 0.5rem 0 0; font-size: 0.95rem; opacity: 0.95;">?? @restaurante.Direccion</p>
-                </div>
-
-                <div class="card-body" style="flex: 1; display: flex; flex-direction: column;">
-                    <p class="card-text" style="color: #7f8c8d; margin-bottom: 1.5rem; flex: 1; line-height: 1.6;">
-                        @if (!string.IsNullOrEmpty(restaurante.Descripcion))
-                        {
-                            @restaurante.Descripcion
-                        }
-                        else
-                        {
-                            <em>Sin descripción disponible</em>
-                        }
-                    </p>
-
-                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h6 style="color: #2c3e50; font-weight: 600; margin-bottom: 0.75rem;">?? Contacto</h6>
-                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">
-                            <strong>Teléfono:</strong> @restaurante.Telefono
-                        </p>
-                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">
-                            <strong>Email:</strong> @restaurante.Email
-                        </p>
-                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">
-                            <strong>Mesas:</strong> @(restaurante.Mesas?.Count ?? 0) disponibles
-                        </p>
+    <!-- RESTAURANT GRID -->
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 2.5rem;">
+            @foreach (var restaurante in Model.Restaurantes)
+            {
+                <div class="card" style="border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);" 
+                     onmouseover="this.style.transform='translateY(-12px) scale(1.03)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.2)';" 
+                     onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)';">
+                    
+                    <!-- HEADER -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                        <div style="position: absolute; bottom: -30px; left: -30px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                        
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                                    ???
+                                </div>
+                                <h5 style="margin: 0; font-size: 1.6rem; font-weight: 800; flex: 1;">@restaurante.Nombre</h5>
+                            </div>
+                            <p style="margin: 0; font-size: 1rem; opacity: 0.95; display: flex; align-items: center; gap: 0.5rem;">
+                                ?? @restaurante.Direccion
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="btn-group" style="width: 100%; display: flex; gap: 0.5rem;">
-                        <a asp-page="Details" asp-route-id="@restaurante.Id" class="btn btn-info" style="flex: 1; border-radius: 6px;">
-                            ??? Ver Detalles
-                        </a>
-                        @if (User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            @if (User.IsInRole("Cliente"))
+                    <!-- BODY -->
+                    <div class="card-body" style="padding: 2rem;">
+                        <p style="color: #636e72; line-height: 1.8; margin-bottom: 1.5rem; min-height: 80px;">
+                            @if (!string.IsNullOrEmpty(restaurante.Descripcion))
                             {
-                                <a asp-page="/Reserve" asp-route-restauranteId="@restaurante.Id" class="btn btn-success" style="flex: 1; border-radius: 6px;">
-                                    ?? Reservar
+                                @restaurante.Descripcion
+                            }
+                            else
+                            {
+                                <em style="opacity: 0.7;">Descubre las delicias que este restaurante tiene para ofrecer.</em>
+                            }
+                        </p>
+
+                        <!-- CONTACT INFO -->
+                        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.2rem;">??</span>
+                                    <div>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Teléfono</p>
+                                        <p style="margin: 0; font-weight: 700; color: var(--dark-color);">@restaurante.Telefono</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.2rem;">??</span>
+                                    <div style="flex: 1; overflow: hidden;">
+                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Email</p>
+                                        <p style="margin: 0; font-weight: 700; color: var(--dark-color); overflow: hidden; text-overflow: ellipsis;">@restaurante.Email</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.2rem;">??</span>
+                                    <div>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Mesas</p>
+                                        <p style="margin: 0; font-weight: 700; color: var(--dark-color);">@(restaurante.Mesas?.Count ?? 0) disponibles</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <a asp-page="Details" asp-route-id="@restaurante.Id" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                ??? Ver Más
+                            </a>
+                            
+                            @if (User?.Identity?.IsAuthenticated ?? false)
+                            {
+                                @if (User.IsInRole("Cliente"))
+                                {
+                                    <a asp-page="/Reserve" asp-route-restauranteId="@restaurante.Id" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                        ?? Reservar
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button disabled style="background: #95a5a6; color: white; padding: 1rem; border-radius: 10px; border: none; font-weight: 700; cursor: not-allowed;">
+                                        Solo Clientes
+                                    </button>
+                                }
+                            }
+                            else
+                            {
+                                <a asp-page="/Account/Login" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                        ?? Ingresar
                                 </a>
                             }
-                        }
-                        else
-                        {
-                            <a asp-page="/Account/Login" class="btn btn-secondary" style="flex: 1; border-radius: 6px;">
-                                ?? Ingresar
-                            </a>
-                        }
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 }
 else
 {
-    <div style="text-align: center; padding: 3rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
-        <div class="alert alert-warning" role="alert" style="display: inline-block; border-radius: 12px;">
-            <p style="margin: 0; font-size: 1.1rem;">
+    <!-- NO RESULTS -->
+    <div style="max-width: 700px; margin: 3rem auto; padding: 0 1rem;">
+        <div style="background: white; padding: 4rem 2rem; border-radius: 20px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.1);">
+            <div style="font-size: 5rem; margin-bottom: 1.5rem;">??</div>
+            <h3 style="color: var(--dark-color); font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">
+                No encontramos resultados
+            </h3>
+            <p style="color: #636e72; font-size: 1.1rem; margin-bottom: 2rem;">
                 @if (!string.IsNullOrEmpty(Model.SearchTerm))
                 {
-                    <span>No se encontraron restaurantes que coincidan con "<strong>@Model.SearchTerm</strong>"</span>
+                    <span>No hay restaurantes que coincidan con "<strong>@Model.SearchTerm</strong>"</span>
                 }
                 else
                 {
                     <span>No hay restaurantes disponibles en este momento.</span>
                 }
             </p>
+            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+            {
+                <a asp-page="Browse" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
+                    Ver Todos los Restaurantes
+                </a>
+            }
         </div>
     </div>
 }
 
-<div style="margin-top: 2rem; text-align: center;">
-    <a asp-page="/Index" class="btn btn-secondary">
+<!-- BACK BUTTON -->
+<div style="max-width: 1200px; margin: 3rem auto 0; padding: 0 1rem; text-align: center;">
+    <a asp-page="/Index" style="background: white; color: var(--dark-color); padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s;">
         ? Volver al Inicio
     </a>
 </div>
+
+<style>
+    @@media (max-width: 768px) {
+        .card {
+            margin-bottom: 2rem;
+        }
+    }
+</style>
