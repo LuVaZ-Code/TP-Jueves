@@ -80,12 +80,19 @@ else
     <!-- VISTA USUARIO NO AUTENTICADO -->
     <div style="text-align: center; padding: 3rem 1rem;">
         <div class="alert alert-info mb-4" role="alert" style="border-radius: 12px; font-size: 1.1rem;">
-            Para continuar, debes <strong>iniciar sesion</strong> o <strong>crear una cuenta</strong>.
+            Explora nuestros restaurantes o <strong>inicia sesion</strong> para reservar.
         </div>
 
         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;">
-            <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Ingresar</a>
-            <a asp-page="/Account/Register" class="btn btn-success btn-lg">Registrarse</a>
+            <a asp-page="/Restaurants/Browse" class="btn btn-primary btn-lg">
+                ??? Ver Restaurantes
+            </a>
+            <a asp-page="/Account/Login" class="btn btn-secondary btn-lg">
+                Ingresar
+            </a>
+            <a asp-page="/Account/Register" class="btn btn-success btn-lg">
+                Registrarse
+            </a>
         </div>
     </div>
 
