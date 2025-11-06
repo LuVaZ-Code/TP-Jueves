@@ -1,0 +1,87 @@
+@page
+@model TP_Jueves.Pages.Reservations.CancelModel
+@{
+    ViewData["Title"] = "Cancelar Reserva";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+    <h1>Cancelar Reserva</h1>
+    <p>Confirma que deseas cancelar esta reserva</p>
+</section>
+
+<div style="max-width: 700px; margin: 0 auto;">
+    <div class="alert alert-danger" role="alert" style="border-radius: 12px; padding: 2rem;">
+        <h4 style="color: #721c24; margin-bottom: 1.5rem; font-weight: 700;">
+            ?? Confirmar Cancelación
+        </h4>
+
+        @if (Model.Reserva != null)
+        {
+            <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Restaurante</p>
+                        <p style="font-weight: 600; margin: 0;">@Model.Reserva.Restaurante?.Nombre</p>
+                    </div>
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">ID de Reserva</p>
+                        <p style="font-weight: 600; margin: 0; font-size: 0.85rem;">@Model.Reserva.Id</p>
+                    </div>
+                </div>
+
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ddd;" />
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Fecha</p>
+                        <p style="font-weight: 600; margin: 0;">@Model.Reserva.Fecha.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Horario</p>
+                        <p style="font-weight: 600; margin: 0;">@Model.Reserva.Horario</p>
+                    </div>
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Personas</p>
+                        <p style="font-weight: 600; margin: 0;">@Model.Reserva.CantPersonas</p>
+                    </div>
+                    <div>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Dieta</p>
+                        <p style="font-weight: 600; margin: 0;">@Model.Reserva.Dieta</p>
+                    </div>
+                </div>
+
+                @if (Model.Reserva.Mesa != null)
+                {
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Mesa Asignada</p>
+                        <p style="font-weight: 600; margin: 0;">
+                            Mesa @Model.Reserva.Mesa.Id (@Model.Reserva.Mesa.Capacidad personas)
+                        </p>
+                    </div>
+                }
+            </div>
+
+            <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107;">
+                <p style="margin: 0; color: #856404;">
+                    <strong>Nota:</strong> Una vez cancelada, esta reserva no se podrá recuperar. 
+                    Podrás hacer una nueva reserva en cualquier momento.
+                </p>
+            </div>
+
+            <form method="post" style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-danger btn-lg" style="flex: 1;">
+                    Cancelar Reserva
+                </button>
+                <a asp-page="List" class="btn btn-secondary btn-lg" style="flex: 1;">
+                    No, Mantener
+                </a>
+            </form>
+        }
+        else
+        {
+            <p style="margin: 0; color: #721c24;">No se encontró la reserva.</p>
+            <a asp-page="List" class="btn btn-secondary mt-3">Volver a Mis Reservas</a>
+        }
+    </div>
+</div>

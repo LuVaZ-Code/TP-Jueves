@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Hacer una Reserva";
     var todayMin = DateTime.Today.ToString("yyyy-MM-dd");
+    var maxDate = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
 }
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem;">
-    <h1>Hacer una Reserva</h1>
+    <h1>?? Hacer una Reserva</h1>
     @if (Model.RestauranteSeleccionado != null)
     {
         <p>en <strong>@Model.RestauranteSeleccionado.Nombre</strong></p>
@@ -18,136 +19,202 @@
     }
 </section>
 
+<!-- RESTAURANTE SELECCIONADO -->
 @if (Model.RestauranteSeleccionado != null)
 {
     <div style="background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
         <h3 style="margin: 0 0 1rem; font-weight: 700;">@Model.RestauranteSeleccionado.Nombre</h3>
-        <p style="margin: 0.5rem 0; opacity: 0.95;">@Model.RestauranteSeleccionado.Direccion</p>
-        <p style="margin: 0.5rem 0; opacity: 0.95;">Telefono: @Model.RestauranteSeleccionado.Telefono</p>
-        <p style="margin: 0.5rem 0; opacity: 0.95;">Email: @Model.RestauranteSeleccionado.Email</p>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">?? @Model.RestauranteSeleccionado.Direccion</p>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">?? @Model.RestauranteSeleccionado.Telefono</p>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">?? @Model.RestauranteSeleccionado.Email</p>
     </div>
 }
 
-<div class="reserve-form">
-    <form method="post" novalidate>
-        <!-- FILA 1: DNI y CANTIDAD -->
-        <div class="form-row">
-            <div class="form-group">
-                <label asp-for="Dni" class="form-label">
-                    DNI
-                </label>
-                <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
-                       class="form-control" placeholder="12345678"
-                       oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
-                <span asp-validation-for="Dni" class="text-danger"></span>
-                <small class="form-text">8 digitos sin puntos ni espacios</small>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CantPersonas" class="form-label">
-                    Cantidad de Personas
-                </label>
-                <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control" />
-                <span asp-validation-for="CantPersonas" class="text-danger"></span>
-            </div>
-        </div>
-
-        <!-- FILA 2: FECHA y HORARIO -->
-        <div class="form-row">
-            <div class="form-group">
-                <label asp-for="Fecha" class="form-label">
-                    Fecha
-                </label>
-                <input asp-for="Fecha" type="date" min="@todayMin" class="form-control" />
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Horario" class="form-label">
-                    Horario
-                </label>
-                <select asp-for="Horario" class="form-control">
-                    @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
-                    {
-                        <option value="@((int)h)" selected="@(h == Model.Horario ? "selected" : null)">@h</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <!-- DIETA -->
-        <div class="form-group">
-            <label asp-for="Dieta" class="form-label">
-                Preferencia Dietetica
-            </label>
-            <select asp-for="Dieta" class="form-control">
-                @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
-                {
-                    <option value="@((int)d)" selected="@(d == Model.Dieta ? "selected" : null)">@d</option>
-                }
-            </select>
-        </div>
-
-        <!-- BOTON RESERVAR -->
-        <button type="submit" class="btn btn-primary btn-lg w-100" style="margin-top: 2rem;">
-            Confirmar Reserva
-        </button>
-    </form>
-</div>
-
-<!-- RESULTADO DE RESERVA -->
-@if (Model.ReservaId != null)
+<!-- RESULTADO: ÉXITO -->
+@if (Model.IsSuccess && Model.ReservaId.HasValue)
 {
-    <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
-        <div class="alert alert-success" role="alert" style="border-radius: 12px; padding: 1.5rem;">
-            <h4 style="color: #155724; margin-bottom: 1rem;">
-                Reserva Confirmada!
+    <div style="max-width: 700px; margin: 0 auto 2rem; animation: slideIn 0.3s ease;">
+        <div class="alert alert-success" role="alert" style="border-radius: 12px; padding: 2rem; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; color: white;">
+            <h4 style="margin-bottom: 1rem; font-weight: 700;">
+                ? ¡Reserva Confirmada!
             </h4>
-            <p><strong>ID de Reserva:</strong> @Model.ReservaId</p>
-            <p style="margin-bottom: 1rem;">
-                Tu reserva ha sido registrada exitosamente. Pronto recibiras una confirmacion por correo.
+            
+            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <p style="margin: 0.5rem 0;">
+                    <strong>ID de Reserva:</strong> @Model.ReservaId
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    <strong>Restaurante:</strong> @Model.RestauranteSeleccionado?.Nombre
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    <strong>Fecha:</strong> @Model.Fecha.ToString("dddd, dd/MM/yyyy", System.Globalization.CultureInfo.GetCultureInfo("es-AR"))
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    <strong>Horario:</strong> @Model.Horario
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    <strong>Personas:</strong> @Model.CantPersonas
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    <strong>Dieta:</strong> @Model.Dieta
+                </p>
+            </div>
+
+            <p style="margin-bottom: 1.5rem; opacity: 0.95;">
+                Tu reserva ha sido registrada exitosamente. Recibirás una confirmación por correo electrónico.
             </p>
-            <a asp-page="/Reservations/List" class="btn btn-success">Ver mis Reservas</a>
-            <a asp-page="/Index" class="btn btn-secondary">Volver al Inicio</a>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a asp-page="/Reservations/List" class="btn btn-light" style="flex: 1;">
+                    Ver mis Reservas
+                </a>
+                <a asp-page="/Restaurants/Browse" class="btn btn-outline-light" style="flex: 1;">
+                    Más Restaurantes
+                </a>
+                <a asp-page="/Index" class="btn btn-outline-light" style="flex: 1;">
+                    Ir al Inicio
+                </a>
+            </div>
         </div>
     </div>
 }
-else if (!string.IsNullOrEmpty(Model.Message))
+else
 {
-    <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
-        <div class="alert alert-warning" role="alert" style="border-radius: 12px; padding: 1.5rem;">
-            <h4 style="color: #856404; margin-bottom: 1rem;">
-                @Model.Message
-            </h4>
+    <!-- FORMULARIO DE RESERVA -->
+    <div style="max-width: 700px; margin: 0 auto;">
+        <div class="card" style="box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <div class="card-body">
+                <h3 style="color: #2c3e50; margin-bottom: 2rem; font-weight: 700;">Detalles de la Reserva</h3>
 
-            @if (Model.Suggestions.Any())
-            {
-                <p style="margin-bottom: 1rem;"><strong>Alternativas disponibles:</strong></p>
-                <div class="table-responsive">
-                    <table class="table table-sm" style="background: white; margin-bottom: 1rem;">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Horario</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var s in Model.Suggestions.Take(5))
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="alert alert-warning" role="alert" style="border-radius: 12px; margin-bottom: 2rem;">
+                        @Model.Message
+                        
+                        @if (Model.Suggestions.Any())
+                        {
+                            <div style="margin-top: 1rem;">
+                                <p style="font-weight: 600; margin-bottom: 0.5rem;">Alternativas disponibles:</p>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                    @foreach (var sugg in Model.Suggestions.Take(5))
+                                    {
+                                        <span class="badge bg-info">
+                                            @sugg.fecha.ToString("dd/MM") - @sugg.horario
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <form method="post" novalidate>
+                    <!-- FILA 1: DNI Y CANTIDAD -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Dni" class="form-label">
+                                DNI
+                            </label>
+                            <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
+                                   class="form-control" placeholder="12345678"
+                                   oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
+                            <span asp-validation-for="Dni" class="text-danger"></span>
+                            <small class="form-text">8 dígitos sin puntos ni espacios</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CantPersonas" class="form-label">
+                                Cantidad de Personas
+                            </label>
+                            <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control" />
+                            <span asp-validation-for="CantPersonas" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- FILA 2: FECHA Y HORARIO -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Fecha" class="form-label">
+                                Fecha
+                            </label>
+                            <input asp-for="Fecha" type="date" min="@todayMin" max="@maxDate" class="form-control" />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                            <small class="form-text">Próximos 30 días</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Horario" class="form-label">
+                                Horario
+                            </label>
+                            <select asp-for="Horario" class="form-control">
+                                @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
+                                {
+                                    <option value="@((int)h)" selected="@(h == Model.Horario ? "selected" : null)">@h</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Horario" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- DIETA -->
+                    <div class="form-group">
+                        <label asp-for="Dieta" class="form-label">
+                            Preferencia Dietética
+                        </label>
+                        <select asp-for="Dieta" class="form-control">
+                            @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
                             {
-                                <tr>
-                                    <td>@s.fecha.ToString("dd/MM/yyyy")</td>
-                                    <td>@s.horario</td>
-                                </tr>
+                                <option value="@((int)d)" selected="@(d == Model.Dieta ? "selected" : null)">@d</option>
                             }
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-light">Podes intentar nuevamente con una de estas opciones.</p>
-            }
-            else
-            {
-                <p>No hay opciones cercanas disponibles en este momento.</p>
-            }
+                        </select>
+                    </div>
+
+                    <!-- HORARIOS DISPONIBLES (Si hay datos) -->
+                    @if (Model.HorariosDisponibles.Any())
+                    {
+                        <div class="form-group">
+                            <label class="form-label">?? Horarios Disponibles (Próximos 30 días)</label>
+                            <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    @foreach (var turno in Model.HorariosDisponibles.Take(10))
+                                    {
+                                        <div style="background: white; padding: 0.75rem; border-radius: 6px; border-left: 4px solid @(turno.EstaLleno ? "#dc3545" : turno.CapacidadRestante <= 5 ? "#ffc107" : "#28a745"); display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <strong>@turno.Fecha.ToString("dd/MM/yyyy")</strong> - @turno.Horario
+                                            </div>
+                                            <div style="text-align: right;">
+                                                @if (turno.EstaLleno)
+                                                {
+                                                    <span class="badge bg-danger">Lleno</span>
+                                                }
+                                                else if (turno.CapacidadRestante <= 5)
+                                                {
+                                                    <span class="badge bg-warning">@turno.CapacidadRestante disp.</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">@turno.CapacidadRestante disp.</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <small class="form-text d-block mt-2">Mostrando los primeros 10 disponibles</small>
+                        </div>
+                    }
+
+                    <!-- BOTONES -->
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                            ? Confirmar Reserva
+                        </button>
+                        <a asp-page="/Restaurants/Browse" class="btn btn-secondary btn-lg" style="flex: 1;">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 }
@@ -163,6 +230,41 @@ else if (!string.IsNullOrEmpty(Model.Message))
             transform: translateY(0);
         }
     }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    }
+
+    @@media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 @section Scripts {
@@ -176,21 +278,27 @@ else if (!string.IsNullOrEmpty(Model.Message))
                 const dniInput = document.querySelector('input[name="Dni"]');
                 const fechaInput = document.querySelector('input[name="Fecha"]');
                 
-                const dniVal = dniInput.value.trim();
-                if (!/^\d{8}$/.test(dniVal)) {
-                    e.preventDefault();
-                    dniInput.focus();
-                    return false;
+                if (dniInput) {
+                    const dniVal = dniInput.value.trim();
+                    if (!/^\d{8}$/.test(dniVal)) {
+                        e.preventDefault();
+                        dniInput.focus();
+                        alert('DNI debe contener exactamente 8 dígitos');
+                        return false;
+                    }
                 }
 
-                const fechaVal = fechaInput.value;
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                const sel = fechaVal ? new Date(fechaVal) : null;
-                if (!sel || sel < today) {
-                    e.preventDefault();
-                    fechaInput.focus();
-                    return false;
+                if (fechaInput) {
+                    const fechaVal = fechaInput.value;
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const sel = fechaVal ? new Date(fechaVal) : null;
+                    if (!sel || sel < today) {
+                        e.preventDefault();
+                        fechaInput.focus();
+                        alert('Selecciona una fecha válida');
+                        return false;
+                    }
                 }
 
                 return true;

@@ -27,7 +27,7 @@ namespace TP_Jueves.Pages.Reservations
         public string? Message { get; set; }
         public ApplicationUser? CurrentUser { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string? successMsg, string? errorMsg)
         {
             CurrentUser = await _userManager.GetUserAsync(User);
             if (CurrentUser == null)
@@ -35,7 +35,12 @@ namespace TP_Jueves.Pages.Reservations
                 return NotFound();
             }
 
-            // Buscar reservas del cliente autenticado
+            if (!string.IsNullOrEmpty(successMsg))
+                Message = successMsg;
+            else if (!string.IsNullOrEmpty(errorMsg))
+                Message = errorMsg;
+
+            // Buscar reservas del cliente autenticado (no canceladas)
             Reservas = await _db.Reservas
                 .Where(r => r.ClienteId == CurrentUser.Id && !r.IsCancelled)
                 .Include(r => r.Mesa)
@@ -45,34 +50,6 @@ namespace TP_Jueves.Pages.Reservations
                 .ToListAsync();
 
             return Page();
-        }
-
-        public async Task<IActionResult> OnPostCancelAsync(Guid id)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return NotFound();
-
-            var reserva = await _db.Reservas.FirstOrDefaultAsync(r => r.Id == id);
-            if (reserva == null)
-                return NotFound();
-
-            // Verificar que es su reserva
-            if (reserva.ClienteId != user.Id)
-                return Forbid();
-
-            // Verificar que no sea una reserva del pasado
-            if (reserva.Fecha.Date < DateTime.Today)
-            {
-                Message = "No se puede cancelar reservas pasadas.";
-                return RedirectToPage();
-            }
-
-            reserva.IsCancelled = true;
-            await _db.SaveChangesAsync();
-
-            Message = "Reserva cancelada correctamente.";
-            return RedirectToPage();
         }
     }
 }
