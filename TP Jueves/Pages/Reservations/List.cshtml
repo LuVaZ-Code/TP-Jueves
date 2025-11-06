@@ -12,73 +12,126 @@
 
 @if (!string.IsNullOrEmpty(Model.Message))
 {
-    <div class="alert alert-info mb-4" role="alert">
-        <i class="fas fa-info-circle"></i> @Model.Message
+    <div class="alert alert-info mb-4" role="alert" style="border-radius: 12px;">
+        @Model.Message
     </div>
 }
 
 @if (Model.Reservas.Any())
 {
-    <div style="overflow-x: auto;">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><i class="fas fa-calendar"></i> Fecha</th>
-                    <th><i class="fas fa-clock"></i> Horario</th>
-                    <th><i class="fas fa-users"></i> Personas</th>
-                    <th><i class="fas fa-leaf"></i> Dieta</th>
-                    <th><i class="fas fa-chair"></i> Mesa</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var reserva in Model.Reservas)
-                {
-                    <tr>
-                        <td><strong>@reserva.Fecha.ToString("dd/MM/yyyy")</strong></td>
-                        <td>@reserva.Horario</td>
-                        <td>
-                            <span class="badge bg-info">@reserva.CantPersonas</span>
-                        </td>
-                        <td>@reserva.Dieta</td>
-                        <td>
-                            @if (reserva.Mesa != null)
+    <div style="display: grid; gap: 1.5rem; margin-bottom: 2rem;">
+        @foreach (var reserva in Model.Reservas)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <!-- Información Principal -->
+                        <div>
+                            <h5 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">
+                                @reserva.Restaurante?.Nombre ?? "Restaurante"
+                            </h5>
+
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <div>
+                                    <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Fecha</p>
+                                    <p style="font-weight: 600; margin: 0;">@reserva.Fecha.ToString("dd/MM/yyyy")</p>
+                                </div>
+
+                                <div>
+                                    <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Horario</p>
+                                    <p style="font-weight: 600; margin: 0;">@reserva.Horario</p>
+                                </div>
+
+                                <div>
+                                    <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0;">Personas</p>
+                                    <p style="font-weight: 600; margin: 0;">@reserva.CantPersonas</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div style="text-align: right;">
+                            @if (reserva.Fecha.Date < DateTime.Today)
                             {
-                                <span class="badge bg-success">Mesa @reserva.Mesa.Id</span>
+                                <span class="badge bg-secondary" style="font-size: 0.95rem; padding: 0.5rem 1rem;">
+                                    Pasada
+                                </span>
+                            }
+                            else if (reserva.Fecha.Date == DateTime.Today)
+                            {
+                                <span class="badge bg-warning" style="font-size: 0.95rem; padding: 0.5rem 1rem;">
+                                    Hoy
+                                </span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary">N/A</span>
+                                <span class="badge bg-success" style="font-size: 0.95rem; padding: 0.5rem 1rem;">
+                                    Confirmada
+                                </span>
                             }
-                        </td>
-                        <td>
-                            <div class="btn-group" style="gap: 0.5rem;">
-                                <a href="#" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> Ver
-                                </a>
-                                <form method="post" asp-page-handler="delete" style="display: inline;">
-                                    <input type="hidden" name="id" value="@reserva.Id" />
-                                    <button type="submit" class="btn btn-sm btn-danger" 
-                                            onclick="return confirm('Estas seguro de cancelar esta reserva?')">
-                                        <i class="fas fa-trash"></i> Cancelar
-                                    </button>
-                                </form>
+                        </div>
+                    </div>
+
+                    <!-- Detalles -->
+                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                            <div>
+                                <p style="color: #7f8c8d; margin: 0.5rem 0;">Dieta Solicitada</p>
+                                <p style="margin: 0; font-weight: 600;">@reserva.Dieta</p>
                             </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+
+                            @if (reserva.Mesa != null)
+                            {
+                                <div>
+                                    <p style="color: #7f8c8d; margin: 0.5rem 0;">Mesa Asignada</p>
+                                    <p style="margin: 0; font-weight: 600;">Mesa @reserva.Mesa.Id (@reserva.Mesa.Capacidad personas)</p>
+                                </div>
+                            }
+
+                            @if (reserva.Restaurante != null)
+                            {
+                                <div>
+                                    <p style="color: #7f8c8d; margin: 0.5rem 0;">Ubicación</p>
+                                    <p style="margin: 0; font-weight: 600;">@reserva.Restaurante.Direccion</p>
+                                </div>
+
+                                <div>
+                                    <p style="color: #7f8c8d; margin: 0.5rem 0;">Contacto</p>
+                                    <p style="margin: 0; font-weight: 600;">@reserva.Restaurante.Telefono</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    @if (reserva.Fecha.Date >= DateTime.Today)
+                    {
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="#" class="btn btn-sm btn-info" style="flex: 1;">
+                                Ver Detalles
+                            </a>
+                            <form method="post" asp-page-handler="Cancel" style="display: inline; flex: 1;">
+                                <input type="hidden" name="id" value="@reserva.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger w-100"
+                                        onclick="return confirm('¿Cancelar esta reserva?')">
+                                    Cancelar
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
 }
 else
 {
     <div style="text-align: center; padding: 3rem;">
         <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
-        <div class="alert alert-warning" role="alert" style="display: inline-block; border-radius: 12px;">
-            <p style="margin: 0; font-size: 1.1rem;">
+        <div class="alert alert-warning" role="alert" style="display: inline-block; border-radius: 12px; background-color: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem;">
+            <p style="margin: 0; font-size: 1.1rem; color: #856404;">
                 No tienes reservas aun. 
-                <a asp-page="/Reserve" style="font-weight: 600; color: #e74c3c;">Haz una ahora!</a>
+                <a asp-page="/Restaurants/Browse" style="font-weight: 600; color: #e74c3c;">¡Busca restaurantes y haz una!</a>
             </p>
         </div>
     </div>
@@ -86,9 +139,9 @@ else
 
 <div style="margin-top: 2rem; text-align: center;">
     <a asp-page="/Index" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Volver al Inicio
+        Volver al Inicio
     </a>
-    <a asp-page="/Reserve" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Nueva Reserva
+    <a asp-page="/Restaurants/Browse" class="btn btn-primary">
+        Buscar Restaurante
     </a>
 </div>

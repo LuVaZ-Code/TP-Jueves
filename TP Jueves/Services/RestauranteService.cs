@@ -51,7 +51,7 @@ namespace TP_Jueves.Services
 
             foreach (var mesa in mesas)
             {
-                bool occupied = mesa.Reservas.Any(r => r.Fecha.Date == targetDate && r.Horario == horario);
+                bool occupied = mesa.Reservas.Any(r => r.Fecha.Date == targetDate && r.Horario == horario && !r.IsCancelled);
                 if (occupied)
                 {
                     // No return/break; continue to next mesa
@@ -73,10 +73,29 @@ namespace TP_Jueves.Services
         }
 
         /// <summary>
-        /// Attempts to create a reservation.
+        /// Verifica si un turno tiene disponibilidad.
+        /// </summary>
+        public async Task<bool> VerificarDisponibilidadTurnoAsync(int restauranteId, DateTime fecha, Horario horario, int cantPersonas, CancellationToken cancellationToken = default)
+        {
+            var turnoDisponible = await _db.TurnosDisponibles
+                .FirstOrDefaultAsync(t => 
+                    t.RestauranteId == restauranteId && 
+                    t.Fecha.Date == fecha.Date && 
+                    t.Horario == horario && 
+                    t.IsActive,
+                cancellationToken);
+
+            if (turnoDisponible == null)
+                return false;
+
+            // Verificar si hay capacidad restante
+            return turnoDisponible.CapacidadRestante >= cantPersonas;
+        }
+
+        /// <summary>
+        /// Intenta crear una reserva.
         /// If successful, returns Success=true and ReservaId.
         /// If not, Success=false and Suggestions populated.
-        /// Single return pattern: use result variable.
         /// </summary>
         public async Task<ReservationResult> ReservarAsync(string dni, Dieta dieta, int partySize, DateTime fecha, Horario horario, CancellationToken cancellationToken = default)
         {
@@ -122,7 +141,7 @@ namespace TP_Jueves.Services
                 return result;
             }
 
-            // No mesa available for requested slot — compute suggestions (same day other horarios first)
+            // No mesa available for requested slot – compute suggestions (same day other horarios first)
             var allHorarios = Enum.GetValues(typeof(Horario)).Cast<Horario>().ToList();
 
             foreach (var altHorario in allHorarios)
@@ -151,7 +170,7 @@ namespace TP_Jueves.Services
                             result.Suggestions.Add((d, slot));
                         }
                     }
-                    if (result.Suggestions.Count >= 6) break; // gather up to some suggestions
+                    if (result.Suggestions.Count >= 6) break;
                 }
             }
 
@@ -166,7 +185,10 @@ namespace TP_Jueves.Services
         /// </summary>
         public async Task<Reserva?> VerReservaPorIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var reserva = await _db.Reservas.Include(r => r.Mesa).FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+            var reserva = await _db.Reservas
+                .Include(r => r.Mesa)
+                .Include(r => r.Restaurante)
+                .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
             return reserva;
         }
 
@@ -176,8 +198,10 @@ namespace TP_Jueves.Services
         public async Task<List<Reserva>> VerReservasPorDniAsync(string dni, CancellationToken cancellationToken = default)
         {
             var norm = dni.Trim();
-            var reservas = await _db.Reservas.Include(r => r.Mesa)
-                .Where(r => r.DniCliente == norm)
+            var reservas = await _db.Reservas
+                .Include(r => r.Mesa)
+                .Include(r => r.Restaurante)
+                .Where(r => r.DniCliente == norm && !r.IsCancelled)
                 .OrderBy(r => r.Fecha).ThenBy(r => r.Horario)
                 .ToListAsync(cancellationToken);
             return reservas;
