@@ -1,0 +1,50 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Mesas.DeleteModel
+@{
+    ViewData["Title"] = "Eliminar Mesa";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+    <h1>Eliminar Mesa</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="alert alert-danger" role="alert" style="border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+        <h4 style="color: #721c24; margin-bottom: 1rem; font-weight: 700;">
+            Estas a punto de eliminar una mesa
+        </h4>
+        
+        <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0.5rem 0; color: #2c3e50;">
+                <strong>Mesa:</strong> #@Model.Mesa?.Id
+            </p>
+            <p style="margin: 0.5rem 0; color: #2c3e50;">
+                <strong>Capacidad:</strong> @Model.Mesa?.Capacidad personas
+            </p>
+            <p style="margin: 0.5rem 0; color: #2c3e50;">
+                <strong>Reservas:</strong> @Model.Mesa?.Reservas.Count ?? 0
+            </p>
+        </div>
+
+        @if ((Model.Mesa?.Reservas.Count ?? 0) > 0)
+        {
+            <div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+                <strong>Advertencia:</strong> Hay @Model.Mesa?.Reservas.Count reserva(s) asignadas a esta mesa.
+            </div>
+        }
+
+        <form method="post" style="margin-bottom: 1rem;">
+            <input type="hidden" name="id" value="@Model.Mesa?.Id" />
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-danger btn-lg" style="flex: 1;">
+                    S, Eliminar Mesa
+                </button>
+                <a asp-page="Index" asp-route-restauranteId="@Model.Mesa?.RestauranteId" class="btn btn-secondary btn-lg" style="flex: 1;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

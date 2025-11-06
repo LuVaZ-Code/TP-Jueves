@@ -1,0 +1,64 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Mesas.IndexModel
+@{
+    ViewData["Title"] = "Gestionar Mesas";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Gestionar Mesas</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div style="margin-bottom: 2rem;">
+    <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary btn-lg">
+        Agregar Mesa
+    </a>
+    <a asp-page="../View" asp-route-id="@Model.Restaurante?.Id" class="btn btn-secondary btn-lg">
+        Volver
+    </a>
+</div>
+
+@if (Model.Mesas.Any())
+{
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+        @foreach (var mesa in Model.Mesas)
+        {
+            <div class="card">
+                <div class="card-body" style="text-align: center;">
+                    <h5 style="color: #2c3e50; margin-bottom: 0.5rem; font-weight: 700;">Mesa @mesa.Id</h5>
+                    <p style="color: #7f8c8d; font-size: 1.2rem; margin-bottom: 1rem;">
+                        @mesa.Capacidad @(mesa.Capacidad == 1 ? "Persona" : "Personas")
+                    </p>
+                    
+                    <div style="padding-top: 1rem; border-top: 1px solid #eee;">
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">
+                            Reservas: @(mesa.Reservas?.Count ?? 0)
+                        </p>
+                    </div>
+
+                    <div class="btn-group" style="width: 100%; margin-top: 1rem; gap: 0.5rem;">
+                        <a asp-page="Edit" asp-route-id="@mesa.Id" class="btn btn-sm btn-secondary" style="flex: 1;">
+                            Editar
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@mesa.Id" class="btn btn-sm btn-danger" style="flex: 1;">
+                            Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
+        <div class="alert alert-info" role="alert" style="display: inline-block; border-radius: 12px;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                No hay mesas aun.
+                <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" style="font-weight: 600;">Crea una ahora!</a>
+            </p>
+        </div>
+    </div>
+}

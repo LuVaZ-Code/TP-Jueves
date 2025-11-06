@@ -1,0 +1,53 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Mesas.CreateModel
+@{
+    ViewData["Title"] = "Agregar Mesa";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Agregar Nueva Mesa</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div class="reserve-form" style="max-width: 600px;">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="RestauranteId" />
+
+        <!-- CAPACIDAD -->
+        <div class="form-group">
+            <label asp-for="Mesa.Capacidad" class="form-label">
+                Capacidad de Personas
+            </label>
+            <input asp-for="Mesa.Capacidad" type="number" class="form-control" min="1" max="20" placeholder="Ej: 4" />
+            <span asp-validation-for="Mesa.Capacidad" class="text-danger"></span>
+            <small class="form-text">Numero de personas que pueden sentarse en esta mesa (1-20)</small>
+        </div>
+
+        <!-- EJEMPLOS -->
+        <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0 0 0.5rem; color: #7f8c8d; font-weight: 500;">Capacidades comunes:</p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.querySelector('input[name=\"Mesa.Capacidad\"]').value = '2'; return false;">2 Personas</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.querySelector('input[name=\"Mesa.Capacidad\"]').value = '4'; return false;">4 Personas</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.querySelector('input[name=\"Mesa.Capacidad\"]').value = '6'; return false;">6 Personas</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.querySelector('input[name=\"Mesa.Capacidad\"]').value = '8'; return false;">8 Personas</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="document.querySelector('input[name=\"Mesa.Capacidad\"]').value = '10'; return false;">10 Personas</button>
+            </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                Agregar Mesa
+            </button>
+            <a asp-page="Index" asp-route-restauranteId="@Model.RestauranteId" class="btn btn-secondary btn-lg" style="flex: 1;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

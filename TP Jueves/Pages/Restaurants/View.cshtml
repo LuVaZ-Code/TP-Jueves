@@ -49,58 +49,60 @@
         </div>
     </div>
 
-    <!-- MESAS DISPONIBLES -->
-    <div class="card">
-        <div class="card-body">
-            <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Mesas</h3>
-            
-            @if (Model.Restaurante?.Mesas?.Any() ?? false)
-            {
-                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    @foreach (var mesa in Model.Restaurante.Mesas.OrderBy(m => m.Capacidad))
-                    {
-                        <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
-                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Mesa @mesa.Id</p>
-                            <p style="margin: 0.5rem 0 0; font-size: 1.3rem; font-weight: 700;">
-                                @mesa.Capacidad Personas
-                            </p>
-                        </div>
-                    }
-                </div>
+    <!-- MESAS Y TURNOS -->
+    <div>
+        <!-- MESAS DISPONIBLES -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-body">
+                <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Mesas</h3>
+                
+                @if (Model.Restaurante?.Mesas?.Any() ?? false)
+                {
+                    <p style="margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
+                        <strong>Total:</strong> @(Model.Restaurante.Mesas.Count) mesa(s)
+                    </p>
 
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #7f8c8d;">
-                    <strong>Total:</strong> @(Model.Restaurante.Mesas.Count) mesa(s)
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                        @foreach (var mesa in Model.Restaurante.Mesas.OrderBy(m => m.Capacidad).Take(3))
+                        {
+                            <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 0.8rem; border-radius: 6px; font-size: 0.9rem; text-align: center;">
+                                Mesa @mesa.Id - @mesa.Capacidad personas
+                            </div>
+                        }
+                        @if (Model.Restaurante.Mesas.Count > 3)
+                        {
+                            <div style="text-align: center; padding: 0.5rem; color: #7f8c8d; font-size: 0.85rem;">
+                                +@(Model.Restaurante.Mesas.Count - 3) mesas más
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div style="background: #fff3cd; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <p style="margin: 0; color: #856404; font-size: 0.9rem;">No hay mesas disponibles</p>
+                    </div>
+                }
+
+                <a asp-page="Mesas/Index" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-info w-100" style="font-size: 0.9rem;">
+                    Gestionar Mesas
+                </a>
+            </div>
+        </div>
+
+        <!-- HORARIOS DISPONIBLES -->
+        <div class="card">
+            <div class="card-body">
+                <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Horarios</h3>
+                
+                <p style="margin-bottom: 1rem; color: #7f8c8d; font-size: 0.85rem;">
+                    Configura horarios disponibles para reservas
                 </p>
 
-                <button class="btn btn-info w-100" style="margin-top: 1rem;" disabled>
-                    Agregar Mesa (Proximamente)
-                </button>
-            }
-            else
-            {
-                <div class="alert alert-warning mb-0">
-                    <p style="margin: 0;">No hay mesas disponibles. Agregalas para comenzar a recibir reservas.</p>
-                </div>
-
-                <button class="btn btn-info w-100" style="margin-top: 1rem;" disabled>
-                    Agregar Mesa (Proximamente)
-                </button>
-            }
+                <a asp-page="Turnos/Index" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary w-100">
+                    Gestionar Horarios
+                </a>
+            </div>
         </div>
-    </div>
-</div>
-
-<!-- HORARIOS DISPONIBLES -->
-<div class="card">
-    <div class="card-body">
-        <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Horarios Disponibles</h3>
-        
-        <p style="margin-bottom: 1.5rem; color: #7f8c8d;">
-            Configura los horarios y capacidades disponibles para reservas.
-        </p>
-
-        <a asp-page="Turnos/Index" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary w-100">
-            Gestionar Horarios
-        </a>
     </div>
 </div>

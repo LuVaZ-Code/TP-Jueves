@@ -1,0 +1,41 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Mesas.EditModel
+@{
+    ViewData["Title"] = "Editar Mesa";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Editar Mesa</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div class="reserve-form" style="max-width: 600px;">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="Mesa.Id" />
+
+        <!-- CAPACIDAD -->
+        <div class="form-group">
+            <label asp-for="Mesa.Capacidad" class="form-label">
+                Capacidad de Personas
+            </label>
+            <input asp-for="Mesa.Capacidad" type="number" class="form-control" min="1" max="20" />
+            <span asp-validation-for="Mesa.Capacidad" class="text-danger"></span>
+            <small class="form-text">Numero de personas que pueden sentarse en esta mesa</small>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                Guardar Cambios
+            </button>
+            <a asp-page="Index" asp-route-restauranteId="@Model.Mesa.RestauranteId" class="btn btn-secondary btn-lg" style="flex: 1;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
