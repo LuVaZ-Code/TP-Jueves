@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,9 @@ namespace TP_Jueves.Pages
     /// <summary>
     /// PageModel for reservation form.
     /// Handles GET (form) and POST (attempt to reservar).
+    /// Requires authentication.
     /// </summary>
+    [Authorize]
     public class ReserveModel : PageModel
     {
         private readonly RestauranteService _restaurante;

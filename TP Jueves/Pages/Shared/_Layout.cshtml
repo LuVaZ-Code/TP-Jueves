@@ -2,40 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TP Jueves</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/site.css" />
-    <style>
-        /* Inline background rule using Url.Content to ensure correct path resolution regardless of app base path */
-        body.has-restaurant-bg {
-            background-image: url('@Url.Content("~/images/restaurant-bg.jpg")');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-        }
-        body.has-restaurant-bg::before{
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.25);
-            pointer-events: none;
-        }
-    </style>
 </head>
-<body class="@(ViewData["BodyClass"] ?? "")">
-    <header>
-        <nav>
-            <a asp-page="/Index">Inicio</a> |
-            <a asp-page="/Reserve">Reservar</a>
-        </nav>
-    </header>
-    <main role="main" class="content">
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">??? TP Jueves</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Index">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Reserve">Reservar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Reservations/List">Mis Reservas</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ?? @(User.Identity?.Name?.Split('@')[0] ?? "Usuario")
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-page="/Account/Profile">Mi Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" asp-page="/Account/Logout">
+                                        <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Index">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Account/Login">Ingresar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Account/Register">Registrarse</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
         @RenderBody()
     </main>
+
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; @DateTime.UtcNow.Year - TP Jueves</p>
+        <p>&copy; 2024 TP Jueves - Sistema de Reservas de Restaurantes | Todos los derechos reservados</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

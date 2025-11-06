@@ -1,0 +1,77 @@
+@page
+@model TP_Jueves.Pages.Account.ProfileModel
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <!-- ENCABEZADO DEL PERFIL -->
+    <div class="profile-section">
+        <div class="profile-header">
+            <div class="profile-avatar">??</div>
+            <h2 class="profile-name">@Model.Input.Nombre @Model.Input.Apellido</h2>
+            <p class="profile-email">@Model.Input.Email</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="alert alert-success" role="alert">
+                <i class="fas fa-check-circle"></i> @Model.Message
+            </div>
+        }
+
+        <form method="post" novalidate>
+            <!-- NOMBRE -->
+            <div class="form-group">
+                <label asp-for="Input.Nombre" class="form-label">
+                    <i class="fas fa-user"></i> Nombre
+                </label>
+                <input asp-for="Input.Nombre" class="form-control" />
+                <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+            </div>
+
+            <!-- APELLIDO -->
+            <div class="form-group">
+                <label asp-for="Input.Apellido" class="form-label">
+                    <i class="fas fa-user"></i> Apellido
+                </label>
+                <input asp-for="Input.Apellido" class="form-control" />
+                <span asp-validation-for="Input.Apellido" class="text-danger"></span>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group">
+                <label asp-for="Input.Email" class="form-label">
+                    <i class="fas fa-envelope"></i> Correo Electrónico
+                </label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="btn-group" style="width: 100%; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <a asp-page="/Index" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- INFORMACIÓN ADICIONAL -->
+    <div class="profile-section">
+        <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">
+            <i class="fas fa-info-circle"></i> Información de la Cuenta
+        </h3>
+        <div style="color: #7f8c8d;">
+            <p><strong>Se pueden editar:</strong> Nombre, Apellido y Email</p>
+            <p><strong>Para cambiar la contraseña:</strong> Comunícate con soporte</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

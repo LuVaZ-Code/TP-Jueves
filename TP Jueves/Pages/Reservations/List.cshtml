@@ -1,0 +1,94 @@
+@page
+@model TP_Jueves.Pages.Reservations.ListModel
+@{
+    ViewData["Title"] = "Mis Reservas";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>?? Mis Reservas</h1>
+    <p>Gestiona y ve el estado de todas tus reservas</p>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-info mb-4" role="alert">
+        <i class="fas fa-info-circle"></i> @Model.Message
+    </div>
+}
+
+@if (Model.Reservas.Any())
+{
+    <div style="overflow-x: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-calendar"></i> Fecha</th>
+                    <th><i class="fas fa-clock"></i> Horario</th>
+                    <th><i class="fas fa-users"></i> Personas</th>
+                    <th><i class="fas fa-leaf"></i> Dieta</th>
+                    <th><i class="fas fa-chair"></i> Mesa</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reserva in Model.Reservas)
+                {
+                    <tr>
+                        <td><strong>@reserva.Fecha.ToString("dd/MM/yyyy")</strong></td>
+                        <td>@reserva.Horario</td>
+                        <td>
+                            <span class="badge bg-info">@reserva.CantPersonas</span>
+                        </td>
+                        <td>@reserva.Dieta</td>
+                        <td>
+                            @if (reserva.Mesa != null)
+                            {
+                                <span class="badge bg-success">Mesa @reserva.Mesa.Id</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" style="gap: 0.5rem;">
+                                <a href="#" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> Ver
+                                </a>
+                                <form method="post" asp-page-handler="delete" style="display: inline;">
+                                    <input type="hidden" name="id" value="@reserva.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                            onclick="return confirm('Estas seguro de cancelar esta reserva?')">
+                                        <i class="fas fa-trash"></i> Cancelar
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
+        <div class="alert alert-warning" role="alert" style="display: inline-block; border-radius: 12px;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                No tienes reservas aun. 
+                <a asp-page="/Reserve" style="font-weight: 600; color: #e74c3c;">Haz una ahora!</a>
+            </p>
+        </div>
+    </div>
+}
+
+<div style="margin-top: 2rem; text-align: center;">
+    <a asp-page="/Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Volver al Inicio
+    </a>
+    <a asp-page="/Reserve" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nueva Reserva
+    </a>
+</div>

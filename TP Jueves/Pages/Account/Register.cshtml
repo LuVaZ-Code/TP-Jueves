@@ -1,0 +1,82 @@
+@page
+@model TP_Jueves.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Crear Cuenta";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- HEADER -->
+        <div class="auth-card-header">
+            <h2>Crear Cuenta</h2>
+            <p style="margin: 0.5rem 0 0; font-size: 0.9rem; opacity: 0.9;">Unete a TP Jueves hoy</p>
+        </div>
+
+        <!-- BODY -->
+        <div class="auth-card-body">
+            <form method="post" novalidate>
+                <!-- NOMBRE -->
+                <div class="form-group">
+                    <label asp-for="Input.Nombre" class="form-label">
+                        <i class="fas fa-user"></i> Nombre
+                    </label>
+                    <input asp-for="Input.Nombre" class="form-control" placeholder="Juan" />
+                    <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                </div>
+
+                <!-- APELLIDO -->
+                <div class="form-group">
+                    <label asp-for="Input.Apellido" class="form-label">
+                        <i class="fas fa-user"></i> Apellido
+                    </label>
+                    <input asp-for="Input.Apellido" class="form-control" placeholder="Perez" />
+                    <span asp-validation-for="Input.Apellido" class="text-danger"></span>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-group">
+                    <label asp-for="Input.Email" class="form-label">
+                        <i class="fas fa-envelope"></i> Correo Electronico
+                    </label>
+                    <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <!-- CONTRASEÑA -->
+                <div class="form-group">
+                    <label asp-for="Input.Password" class="form-label">
+                        <i class="fas fa-lock"></i> Contrasena
+                    </label>
+                    <input asp-for="Input.Password" class="form-control" placeholder="Minimo 6 caracteres" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <small class="form-text">
+                        Debe contener: minusculas y numeros
+                    </small>
+                </div>
+
+                <!-- CONFIRMAR CONTRASEÑA -->
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword" class="form-label">
+                        <i class="fas fa-lock"></i> Confirmar Contrasena
+                    </label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repetir contrasena" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <!-- BOTÓN REGISTRAR -->
+                <button type="submit" class="btn btn-primary w-100 btn-lg" style="margin-top: 1.5rem;">
+                    Crear Cuenta
+                </button>
+            </form>
+
+            <!-- LINK A LOGIN -->
+            <div class="auth-link">
+                Tienes cuenta? <a asp-page="Login">Ingresa aqui</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

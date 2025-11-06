@@ -1,0 +1,73 @@
+@page
+@model TP_Jueves.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Iniciar Sesion";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- HEADER -->
+        <div class="auth-card-header">
+            <h2>Iniciar Sesion</h2>
+            <p style="margin: 0.5rem 0 0; font-size: 0.9rem; opacity: 0.9;">Accede a tu cuenta</p>
+        </div>
+
+        <!-- BODY -->
+        <div class="auth-card-body">
+            @if (ViewData.ModelState[""]?.Errors.Any() ?? false)
+            {
+                <div class="alert alert-danger" role="alert" style="margin-bottom: 1.5rem;">
+                    <strong>Error de Login:</strong>
+                    @foreach (var error in ViewData.ModelState[""].Errors)
+                    {
+                        <p style="margin: 0.5rem 0 0;">@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            <form method="post" novalidate>
+                <!-- EMAIL -->
+                <div class="form-group">
+                    <label asp-for="Input.Email" class="form-label">
+                        <i class="fas fa-envelope"></i> Correo Electronico
+                    </label>
+                    <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <!-- CONTRASEÑA -->
+                <div class="form-group">
+                    <label asp-for="Input.Password" class="form-label">
+                        <i class="fas fa-lock"></i> Contrasena
+                    </label>
+                    <input asp-for="Input.Password" class="form-control" placeholder="Tu contrasena" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <!-- RECORDARME -->
+                <div class="form-group mb-4">
+                    <div class="form-check">
+                        <input asp-for="Input.RememberMe" class="form-check-input" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">
+                            Recordarme en este dispositivo
+                        </label>
+                    </div>
+                </div>
+
+                <!-- BOTÓN INGRESAR -->
+                <button type="submit" class="btn btn-primary w-100 btn-lg">
+                    Ingresar
+                </button>
+            </form>
+
+            <!-- LINK A REGISTRO -->
+            <div class="auth-link">
+                No tienes cuenta? <a asp-page="Register">Registrate aqui</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,135 +1,169 @@
 @page
 @model TP_Jueves.Pages.ReserveModel
 @{
-    ViewData["Title"] = "Reservar";
+    ViewData["Title"] = "Hacer una Reserva";
     var todayMin = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
-<h1>Reservar una mesa</h1>
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>?? Hacer una Reserva</h1>
+    <p>Completa el formulario para reservar tu mesa</p>
+</section>
 
-<!-- Remove 'novalidate' to allow HTML5 validation for required/pattern/minlength -->
-<form method="post" aria-labelledby="reserveFormTitle" id="reserveForm">
-    <div>
-        <label for="dni">DNI</label>
-        <!--
-            - type="tel" gives numeric keypad on mobile and avoids 'e' on desktop number inputs
-            - required + minlength enforces 8 digits with browser validation
-            - oninput sanitizes any non-digit characters immediately and enforces max length
-        -->
-        <input id="dni" name="Dni" value="@Model.Dni" type="tel" inputmode="numeric" pattern="\d{8}" minlength="8" maxlength="8" required aria-describedby="dniHelp" autocomplete="off"
-               oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
-        <small id="dniHelp">Ingrese 8 dígitos sin puntos ni espacios.</small>
-        <span asp-validation-for="Dni" class="validation-message"></span>
-    </div>
+<div class="reserve-form">
+    <form method="post" novalidate>
+        <!-- FILA 1: DNI y CANTIDAD -->
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Dni" class="form-label">
+                    <i class="fas fa-id-card"></i> DNI
+                </label>
+                <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
+                       class="form-control" placeholder="12345678"
+                       oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
+                <span asp-validation-for="Dni" class="text-danger"></span>
+                <small class="form-text">8 digitos sin puntos ni espacios</small>
+            </div>
 
-    <div>
-        <label for="dieta">Dieta</label>
-        <select id="dieta" name="Dieta" aria-label="Dieta">
-            @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
-            {
-                <option value="@((int)d)" selected="@(d == Model.Dieta ? "selected" : null)">@d</option>
-            }
-        </select>
-    </div>
+            <div class="form-group">
+                <label asp-for="CantPersonas" class="form-label">
+                    <i class="fas fa-users"></i> Cantidad de Personas
+                </label>
+                <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control" />
+                <span asp-validation-for="CantPersonas" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div>
-        <label for="cant">Cantidad de personas</label>
-        <input id="cant" type="number" name="CantPersonas" min="1" max="20" value="@Model.CantPersonas" required />
-    </div>
+        <!-- FILA 2: FECHA y HORARIO -->
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Fecha" class="form-label">
+                    <i class="fas fa-calendar"></i> Fecha
+                </label>
+                <input asp-for="Fecha" type="date" min="@todayMin" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
 
-    <div>
-        <label for="fecha">Fecha</label>
-        <input id="fecha" type="date" name="Fecha" min="@todayMin" value="@Model.Fecha.ToString("yyyy-MM-dd")" required />
-        <span asp-validation-for="Fecha" class="validation-message"></span>
-    </div>
+            <div class="form-group">
+                <label asp-for="Horario" class="form-label">
+                    <i class="fas fa-clock"></i> Horario
+                </label>
+                <select asp-for="Horario" class="form-control">
+                    @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
+                    {
+                        <option value="@((int)h)" selected="@(h == Model.Horario ? "selected" : null)">@h</option>
+                    }
+                </select>
+            </div>
+        </div>
 
-    <div>
-        <label for="horario">Horario</label>
-        <select id="horario" name="Horario">
-            @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
-            {
-                <option value="@((int)h)" selected="@(h == Model.Horario ? "selected" : null)">@h</option>
-            }
-        </select>
-    </div>
+        <!-- DIETA -->
+        <div class="form-group">
+            <label asp-for="Dieta" class="form-label">
+                <i class="fas fa-leaf"></i> Preferencia Dietetica
+            </label>
+            <select asp-for="Dieta" class="form-control">
+                @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
+                {
+                    <option value="@((int)d)" selected="@(d == Model.Dieta ? "selected" : null)">@d</option>
+                }
+            </select>
+        </div>
 
-    <button type="submit" class="btn">Reservar</button>
-</form>
+        <!-- BOTON RESERVAR -->
+        <button type="submit" class="btn btn-primary btn-lg w-100" style="margin-top: 2rem;">
+            <i class="fas fa-check-circle"></i> Confirmar Reserva
+        </button>
+    </form>
+</div>
 
+<!-- RESULTADO DE RESERVA -->
 @if (Model.ReservaId != null)
 {
-    <div role="status" aria-live="polite">
-        <p>Reserva creada correctamente. ID: <strong>@Model.ReservaId</strong></p>
+    <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
+        <div class="alert alert-success" role="alert" style="border-radius: 12px; padding: 1.5rem;">
+            <h4 style="color: #155724; margin-bottom: 1rem;">
+                <i class="fas fa-check-circle"></i> Reserva Confirmada!
+            </h4>
+            <p><strong>ID de Reserva:</strong> @Model.ReservaId</p>
+            <p style="margin-bottom: 1rem;">
+                Tu reserva ha sido registrada exitosamente. Pronto recibiras una confirmacion por correo.
+            </p>
+            <a asp-page="/Reservations/List" class="btn btn-success">Ver mis Reservas</a>
+            <a asp-page="/Index" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
     </div>
 }
 else if (!string.IsNullOrEmpty(Model.Message))
 {
-    <div role="status" aria-live="polite">
-        <p>@Model.Message</p>
+    <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
+        <div class="alert alert-warning" role="alert" style="border-radius: 12px; padding: 1.5rem;">
+            <h4 style="color: #856404; margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle"></i> @Model.Message
+            </h4>
 
-        @if (Model.Suggestions.Any())
-        {
-            <p>Alternativas disponibles:</p>
-            <ul>
-                @foreach (var s in Model.Suggestions)
-                {
-                    <li>@s.fecha.ToString("yyyy-MM-dd") - @s.horario</li>
-                }
-            </ul>
-            <p>Podés reintentar con una de estas opciones.</p>
-        }
-        else
-        {
-            <p>No hay opciones cercanas disponibles.</p>
-        }
+            @if (Model.Suggestions.Any())
+            {
+                <p style="margin-bottom: 1rem;"><strong>Alternativas disponibles:</strong></p>
+                <div class="table-responsive">
+                    <table class="table table-sm" style="background: white; margin-bottom: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model.Suggestions.Take(5))
+                            {
+                                <tr>
+                                    <td>@s.fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@s.horario</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-light">Podes intentar nuevamente con una de estas opciones.</p>
+            }
+            else
+            {
+                <p>No hay opciones cercanas disponibles en este momento.</p>
+            }
+        </div>
     </div>
 }
 
 <style>
-    .btn { padding:0.5rem 0.8rem; background:#0078d4;color:#fff;border-radius:4px;text-decoration:none; }
-    label { display:block; margin-top:0.6rem; }
-    input, select { padding:0.4rem; width:100%; max-width:320px; }
-    .validation-message { color: #a61b1b; font-size: .9rem; }
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         (function () {
-            const dniInput = document.getElementById('dni');
-            const fechaInput = document.getElementById('fecha');
-            const form = document.getElementById('reserveForm');
+            const form = document.querySelector('form');
+            if (!form) return;
 
-            // Additional JS handlers kept as defense-in-depth: input and paste sanitize
-            dniInput.addEventListener('input', function (e) {
-                const cleaned = this.value.replace(/\D/g, '').slice(0, 8);
-                if (this.value !== cleaned) {
-                    this.value = cleaned;
-                }
-            });
-
-            dniInput.addEventListener('paste', function (e) {
-                e.preventDefault();
-                const text = (e.clipboardData || window.clipboardData).getData('text') || '';
-                const cleaned = text.replace(/\D/g, '').slice(0, 8);
-                const prior = this.value.slice(0, 8 - cleaned.length);
-                this.value = (prior + cleaned).slice(0,8);
-            });
-
-            // On submit, validate DNI length and fecha not in past (defense-in-depth)
             form.addEventListener('submit', function (e) {
-                // Clear previous client-side messages
-                const existing = document.querySelectorAll('.client-error');
-                existing.forEach(el => el.remove());
-
-                let hasError = false;
-
+                const dniInput = document.querySelector('input[name="Dni"]');
+                const fechaInput = document.querySelector('input[name="Fecha"]');
+                
                 const dniVal = dniInput.value.trim();
                 if (!/^\d{8}$/.test(dniVal)) {
-                    const err = document.createElement('div');
-                    err.className = 'client-error validation-message';
-                    err.textContent = 'DNI debe contener exactamente 8 dígitos.';
-                    dniInput.parentNode.appendChild(err);
-                    hasError = true;
+                    e.preventDefault();
+                    dniInput.focus();
+                    return false;
                 }
 
                 const fechaVal = fechaInput.value;
@@ -137,15 +171,8 @@ else if (!string.IsNullOrEmpty(Model.Message))
                 today.setHours(0,0,0,0);
                 const sel = fechaVal ? new Date(fechaVal) : null;
                 if (!sel || sel < today) {
-                    const err = document.createElement('div');
-                    err.className = 'client-error validation-message';
-                    err.textContent = 'La fecha debe ser hoy o futura.';
-                    fechaInput.parentNode.appendChild(err);
-                    hasError = true;
-                }
-
-                if (hasError) {
                     e.preventDefault();
+                    fechaInput.focus();
                     return false;
                 }
 

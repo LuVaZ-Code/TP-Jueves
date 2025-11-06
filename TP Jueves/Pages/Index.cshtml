@@ -1,19 +1,109 @@
 @page
 @model TP_Jueves.Pages.IndexModel
 @{
-    ViewData["Title"] = "Bienvenida";
+    ViewData["Title"] = "Inicio";
 }
 
-<!-- Accessible welcome modal triggered on load -->
-<div id="welcomeModal" role="dialog" aria-labelledby="welcomeTitle" aria-modal="true" class="modal" style="display:block;">
-    <div class="modal-content" role="document" style="max-width:600px;margin:3rem auto;padding:1.5rem;border:1px solid #ccc;background:#fff;">
-        <h2 id="welcomeTitle">Bienvenido a @Model.RestaurantName</h2>
-        <p>Reservá tu mesa online de forma rápida.</p>
-        <a class="btn" asp-page="/Reserve">Reservar</a>
-    </div>
-</div>
+<!-- HERO SECTION -->
+<section class="hero">
+    <h1>??? Bienvenido a @Model.RestaurantName</h1>
+    <p>Reserva tu mesa online de forma rapida, facil y segura</p>
+</section>
 
-<style>
-    /* minimal styling ensuring no <br> usage */
-    .btn { display:inline-block; padding:0.6rem 1rem; background:#0078d4;color:#fff;text-decoration:none;border-radius:4px; }
-</style>
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <!-- USUARIO AUTENTICADO -->
+    <div class="feature-cards">
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Nueva Reserva</h3>
+            <p>Reserva una mesa para tu proxima visita en nuestro restaurante.</p>
+            <a asp-page="/Reserve" class="btn btn-primary">Reservar Ahora</a>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Mis Reservas</h3>
+            <p>Ver, gestionar y cancelar todas tus reservas registradas.</p>
+            <a asp-page="/Reservations/List" class="btn btn-info">Ver Mis Reservas</a>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Mi Perfil</h3>
+            <p>Edita tu informacion personal y preferencias.</p>
+            <a asp-page="/Account/Profile" class="btn btn-secondary">Ir a Perfil</a>
+        </div>
+    </div>
+
+    <!-- INFORMACION ADICIONAL -->
+    <div class="info-section" style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 3rem;">
+        <h2 style="color: #2c3e50; margin-bottom: 1.5rem; font-weight: 700;">Informacion Util</h2>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h4 style="color: #e74c3c; font-weight: 600;">Horarios de Atencion</h4>
+                <p><strong>Lunes a Jueves:</strong> 18:00 - 23:00</p>
+                <p><strong>Viernes a Domingo:</strong> 18:00 - 00:00</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h4 style="color: #27ae60; font-weight: 600;">Opciones de Dieta</h4>
+                <p>? Normal • ? Vegetariana • ? Vegana</p>
+                <p>? Sin Gluten • ? Celiaco</p>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- USUARIO NO AUTENTICADO -->
+    <div style="text-align: center; padding: 3rem 1rem;">
+        <div class="alert alert-info mb-4" role="alert" style="border-radius: 12px; font-size: 1.1rem;">
+            Para continuar, debes <strong>iniciar sesion</strong> o <strong>crear una cuenta</strong>.
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;">
+            <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Ingresar</a>
+            <a asp-page="/Account/Register" class="btn btn-success btn-lg">Registrarse</a>
+        </div>
+    </div>
+
+    <!-- CARACTERISTICAS PARA NO AUTENTICADOS -->
+    <h2 style="text-align: center; color: #2c3e50; margin: 3rem 0 2rem; font-weight: 700;">Por que elegir TP Jueves?</h2>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <span class="icon">?</span>
+            <h3>Rapido y Facil</h3>
+            <p>Reserva en segundos sin complicaciones. Solo necesitas algunos datos basicos.</p>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Seguro</h3>
+            <p>Tus datos estan protegidos con los mas altos estandares de seguridad.</p>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Accesible</h3>
+            <p>Reserva desde cualquier dispositivo, en cualquier momento y lugar.</p>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Confirmacion</h3>
+            <p>Recibe confirmacion inmediata de tu reserva al completar el formulario.</p>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">??</span>
+            <h3>Gestiona</h3>
+            <p>Modifica o cancela tus reservas cuando lo necesites desde tu cuenta.</p>
+        </div>
+
+        <div class="feature-card">
+            <span class="icon">???????????</span>
+            <h3>Grupos</h3>
+            <p>Realiza reservas para grupos de hasta 20 personas con especificaciones dieteticas.</p>
+        </div>
+    </div>
+}
