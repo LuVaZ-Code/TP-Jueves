@@ -16,6 +16,7 @@ namespace TP_Jueves.Data
 
         public DbSet<Restaurante> Restaurantes { get; set; } = null!;
         public DbSet<Mesa> Mesas { get; set; } = null!;
+        public DbSet<TurnoDisponible> TurnosDisponibles { get; set; } = null!;
         public DbSet<Reserva> Reservas { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,6 +37,13 @@ namespace TP_Jueves.Data
                 .HasForeignKey(m => m.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure TurnoDisponible -> Restaurante relationship
+            modelBuilder.Entity<TurnoDisponible>()
+                .HasOne(t => t.Restaurante)
+                .WithMany()
+                .HasForeignKey(t => t.RestauranteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Configure Reserva -> Restaurante relationship
             modelBuilder.Entity<Reserva>()
                 .HasOne(res => res.Restaurante)
@@ -48,7 +56,14 @@ namespace TP_Jueves.Data
                 .HasOne(res => res.Mesa)
                 .WithMany(m => m.Reservas)
                 .HasForeignKey(res => res.MesaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure Reserva -> TurnoDisponible relationship
+            modelBuilder.Entity<Reserva>()
+                .HasOne(res => res.TurnoDisponible)
+                .WithMany(t => t.Reservas)
+                .HasForeignKey(res => res.TurnoDisponibleId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Configure Reserva -> Cliente (ApplicationUser) relationship
             modelBuilder.Entity<Reserva>()

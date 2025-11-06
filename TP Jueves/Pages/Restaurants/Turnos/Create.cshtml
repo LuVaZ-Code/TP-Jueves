@@ -1,0 +1,65 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Turnos.CreateModel
+@{
+    ViewData["Title"] = "Agregar Horario";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Agregar Horario Disponible</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div class="reserve-form" style="max-width: 600px;">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="RestauranteId" />
+
+        <!-- FECHA -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.Fecha" class="form-label">
+                Fecha
+            </label>
+            <input asp-for="TurnoDisponible.Fecha" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="TurnoDisponible.Fecha" class="text-danger"></span>
+        </div>
+
+        <!-- HORARIO -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.Horario" class="form-label">
+                Horario
+            </label>
+            <select asp-for="TurnoDisponible.Horario" class="form-control">
+                <option value="">-- Seleccionar Horario --</option>
+                @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
+                {
+                    <option value="@((int)h)">@h</option>
+                }
+            </select>
+            <span asp-validation-for="TurnoDisponible.Horario" class="text-danger"></span>
+        </div>
+
+        <!-- CAPACIDAD MAXIMA -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.CapacidadMaxima" class="form-label">
+                Capacidad Maxima
+            </label>
+            <input asp-for="TurnoDisponible.CapacidadMaxima" type="number" class="form-control" min="1" max="100" />
+            <span asp-validation-for="TurnoDisponible.CapacidadMaxima" class="text-danger"></span>
+            <small class="form-text">Numero maximo de personas que pueden reservar este horario</small>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                Agregar Horario
+            </button>
+            <a asp-page="Index" asp-route-restauranteId="@Model.RestauranteId" class="btn btn-secondary btn-lg" style="flex: 1;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

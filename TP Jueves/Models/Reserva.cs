@@ -58,8 +58,15 @@ namespace TP_Jueves.Models
         /// Assigned mesa id and navigation.
         /// </summary>
         [ForeignKey(nameof(Mesa))]
-        public int MesaId { get; set; }
+        public int? MesaId { get; set; }
         public Mesa? Mesa { get; set; }
+
+        /// <summary>
+        /// FK to the available turno (optional, for future tracking).
+        /// </summary>
+        [ForeignKey(nameof(TurnoDisponible))]
+        public int? TurnoDisponibleId { get; set; }
+        public TurnoDisponible? TurnoDisponible { get; set; }
 
         /// <summary>
         /// Created timestamp in UTC.

@@ -1,0 +1,78 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Turnos.EditModel
+@{
+    ViewData["Title"] = "Editar Horario";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Editar Horario</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div class="reserve-form" style="max-width: 600px;">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="TurnoDisponible.Id" />
+
+        <!-- FECHA -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.Fecha" class="form-label">
+                Fecha
+            </label>
+            <input asp-for="TurnoDisponible.Fecha" type="date" class="form-control" />
+            <span asp-validation-for="TurnoDisponible.Fecha" class="text-danger"></span>
+        </div>
+
+        <!-- HORARIO -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.Horario" class="form-label">
+                Horario
+            </label>
+            <select asp-for="TurnoDisponible.Horario" class="form-control">
+                @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
+                {
+                    <option value="@((int)h)" selected="@(h == Model.TurnoDisponible.Horario ? "selected" : null)">@h</option>
+                }
+            </select>
+            <span asp-validation-for="TurnoDisponible.Horario" class="text-danger"></span>
+        </div>
+
+        <!-- CAPACIDAD MAXIMA -->
+        <div class="form-group">
+            <label asp-for="TurnoDisponible.CapacidadMaxima" class="form-label">
+                Capacidad Maxima
+            </label>
+            <input asp-for="TurnoDisponible.CapacidadMaxima" type="number" class="form-control" min="1" max="100" />
+            <span asp-validation-for="TurnoDisponible.CapacidadMaxima" class="text-danger"></span>
+        </div>
+
+        <!-- CAPACIDAD USADA (Solo lectura) -->
+        <div class="form-group">
+            <label class="form-label">Capacidad Usada</label>
+            <input type="number" class="form-control" value="@Model.TurnoDisponible.CapacidadUsada" disabled />
+            <small class="form-text">No se puede editar directamente</small>
+        </div>
+
+        <!-- ESTADO -->
+        <div class="form-group">
+            <label class="form-label">
+                <input type="checkbox" asp-for="TurnoDisponible.IsActive" />
+                Activo (disponible para reservas)
+            </label>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                Guardar Cambios
+            </button>
+            <a asp-page="Index" asp-route-restauranteId="@Model.TurnoDisponible.RestauranteId" class="btn btn-secondary btn-lg" style="flex: 1;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

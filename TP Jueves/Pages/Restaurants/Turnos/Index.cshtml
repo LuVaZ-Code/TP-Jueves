@@ -1,0 +1,86 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Turnos.IndexModel
+@{
+    ViewData["Title"] = "Horarios Disponibles";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Horarios Disponibles</h1>
+    <p>@Model.Restaurante?.Nombre</p>
+</section>
+
+<div style="margin-bottom: 2rem;">
+    <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary btn-lg">
+        Agregar Horario Disponible
+    </a>
+    <a asp-page="../View" asp-route-id="@Model.Restaurante?.Id" class="btn btn-secondary btn-lg">
+        Volver
+    </a>
+</div>
+
+@if (Model.Turnos.Any())
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Horario</th>
+                    <th>Capacidad Maxima</th>
+                    <th>Capacidad Usada</th>
+                    <th>Disponible</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turno in Model.Turnos)
+                {
+                    <tr>
+                        <td><strong>@turno.Fecha.ToString("dd/MM/yyyy")</strong></td>
+                        <td>@turno.Horario</td>
+                        <td>@turno.CapacidadMaxima</td>
+                        <td>@turno.CapacidadUsada</td>
+                        <td>@turno.CapacidadRestante</td>
+                        <td>
+                            @if (turno.EstaLleno)
+                            {
+                                <span class="badge bg-danger">Lleno</span>
+                            }
+                            else if (turno.CapacidadRestante <= 5)
+                            {
+                                <span class="badge bg-warning">Casi Lleno</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Disponible</span>
+                            }
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a asp-page="Edit" asp-route-id="@turno.Id" class="btn btn-sm btn-secondary">
+                                    Editar
+                                </a>
+                                <a asp-page="Delete" asp-route-id="@turno.Id" class="btn btn-sm btn-danger">
+                                    Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div class="alert alert-info" role="alert" style="display: inline-block; border-radius: 12px;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                No hay horarios disponibles aun.
+                <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" style="font-weight: 600;">Crea uno ahora!</a>
+            </p>
+        </div>
+    </div>
+}

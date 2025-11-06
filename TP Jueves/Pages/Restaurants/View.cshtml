@@ -89,3 +89,18 @@
         </div>
     </div>
 </div>
+
+<!-- HORARIOS DISPONIBLES -->
+<div class="card">
+    <div class="card-body">
+        <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Horarios Disponibles</h3>
+        
+        <p style="margin-bottom: 1.5rem; color: #7f8c8d;">
+            Configura los horarios y capacidades disponibles para reservas.
+        </p>
+
+        <a asp-page="Turnos/Index" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary w-100">
+            Gestionar Horarios
+        </a>
+    </div>
+</div>
