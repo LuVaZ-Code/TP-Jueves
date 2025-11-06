@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TP_Jueves.Models
 {
     /// <summary>
-    /// Reservation record resulting from Restaurante.Reservar.
+    /// Reservation record linking Cliente, Restaurante, Mesa, and timing info.
     /// </summary>
     public class Reserva
     {
@@ -13,12 +13,18 @@ namespace TP_Jueves.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// DNI del cliente (8 dígitos, stored as string to preserve leading zeros).
+        /// DNI del cliente (8 digitos, stored as string to preserve leading zeros).
         /// </summary>
         [Required]
         [StringLength(8, MinimumLength = 8)]
-        [RegularExpression("^\\d{8}$", ErrorMessage = "DNI debe contener exactamente 8 dígitos.")]
+        [RegularExpression("^\\d{8}$", ErrorMessage = "DNI debe contener exactamente 8 digitos.")]
         public string DniCliente { get; set; } = string.Empty;
+
+        /// <summary>
+        /// FK to the client/user making the reservation.
+        /// </summary>
+        public string? ClienteId { get; set; }
+        public ApplicationUser? Cliente { get; set; }
 
         /// <summary>
         /// Dieta solicitada.
@@ -42,6 +48,13 @@ namespace TP_Jueves.Models
         public Horario Horario { get; set; }
 
         /// <summary>
+        /// FK to the restaurant where reservation is made.
+        /// </summary>
+        [ForeignKey(nameof(Restaurante))]
+        public int RestauranteId { get; set; }
+        public Restaurante? Restaurante { get; set; }
+
+        /// <summary>
         /// Assigned mesa id and navigation.
         /// </summary>
         [ForeignKey(nameof(Mesa))]
@@ -52,5 +65,10 @@ namespace TP_Jueves.Models
         /// Created timestamp in UTC.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Soft delete / cancellation flag.
+        /// </summary>
+        public bool IsCancelled { get; set; } = false;
     }
 }

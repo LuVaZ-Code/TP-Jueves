@@ -21,10 +21,10 @@ builder.Services.Configure<RequestLocalizationOptions>(opts =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=tpjueves.db"));
 
-// Identity
+// Identity with Roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false; // per user request
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
@@ -39,6 +39,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 // Application services
 builder.Services.AddScoped<RestauranteService>();
+builder.Services.AddScoped<DataSeederService>();
 
 var app = builder.Build();
 
@@ -60,11 +61,28 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// Ensure DB created
+// Ensure DB created, roles initialized, and data seeded
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var seeder = scope.ServiceProvider.GetRequiredService<DataSeederService>();
+    
     db.Database.Migrate();
+
+    // Create roles if they don't exist
+    string[] roleNames = { "Cliente", "Restaurantero", "Admin" };
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    // Seed initial data
+    await seeder.SeedRestaurantesAsync();
 }
 
 app.Run();

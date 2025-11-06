@@ -1,0 +1,91 @@
+@page
+@model TP_Jueves.Pages.Restaurants.ViewModel
+@{
+    ViewData["Title"] = Model.Restaurante?.Nombre ?? "Restaurante";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>@Model.Restaurante?.Nombre</h1>
+    <p>@Model.Restaurante?.Direccion</p>
+</section>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- INFORMACION PRINCIPAL -->
+    <div class="card">
+        <div class="card-body">
+            <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Sobre tu Restaurante</h3>
+            
+            <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 1.5rem;">
+                @Model.Restaurante?.Descripcion
+            </p>
+
+            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Informacion de Contacto</h4>
+                
+                <div style="margin-bottom: 1rem;">
+                    <p style="margin: 0.5rem 0; color: #7f8c8d;">
+                        <strong>Telefono:</strong>
+                    </p>
+                    <p style="margin: 0;">@Model.Restaurante?.Telefono</p>
+                </div>
+
+                <div>
+                    <p style="margin: 0.5rem 0; color: #7f8c8d;">
+                        <strong>Email:</strong>
+                    </p>
+                    <p style="margin: 0;">@Model.Restaurante?.Email</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <a asp-page="Edit" asp-route-id="@Model.Restaurante?.Id" class="btn btn-primary" style="flex: 1;">
+                    Editar
+                </a>
+                <a asp-page="Index" class="btn btn-secondary" style="flex: 1;">
+                    Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MESAS DISPONIBLES -->
+    <div class="card">
+        <div class="card-body">
+            <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Mesas</h3>
+            
+            @if (Model.Restaurante?.Mesas?.Any() ?? false)
+            {
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    @foreach (var mesa in Model.Restaurante.Mesas.OrderBy(m => m.Capacidad))
+                    {
+                        <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Mesa @mesa.Id</p>
+                            <p style="margin: 0.5rem 0 0; font-size: 1.3rem; font-weight: 700;">
+                                @mesa.Capacidad Personas
+                            </p>
+                        </div>
+                    }
+                </div>
+
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: #7f8c8d;">
+                    <strong>Total:</strong> @(Model.Restaurante.Mesas.Count) mesa(s)
+                </p>
+
+                <button class="btn btn-info w-100" style="margin-top: 1rem;" disabled>
+                    Agregar Mesa (Proximamente)
+                </button>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-0">
+                    <p style="margin: 0;">No hay mesas disponibles. Agregalas para comenzar a recibir reservas.</p>
+                </div>
+
+                <button class="btn btn-info w-100" style="margin-top: 1rem;" disabled>
+                    Agregar Mesa (Proximamente)
+                </button>
+            }
+        </div>
+    </div>
+</div>

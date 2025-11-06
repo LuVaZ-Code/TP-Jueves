@@ -1,0 +1,77 @@
+@page
+@model TP_Jueves.Pages.Restaurants.IndexModel
+@{
+    ViewData["Title"] = "Mis Restaurantes";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Mis Restaurantes</h1>
+    <p>Gestiona tus restaurantes y sus mesas</p>
+</section>
+
+<div style="margin-bottom: 2rem;">
+    <a asp-page="Create" class="btn btn-primary btn-lg">
+        Agregar Restaurante
+    </a>
+</div>
+
+@if (Model.Restaurantes.Any())
+{
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem;">
+        @foreach (var restaurante in Model.Restaurantes)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@restaurante.Nombre</h5>
+                    <p class="card-text">@restaurante.Descripcion</p>
+                    
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <p style="margin: 0.5rem 0;">
+                            <strong>Direccion:</strong> @restaurante.Direccion
+                        </p>
+                        <p style="margin: 0.5rem 0;">
+                            <strong>Telefono:</strong> @restaurante.Telefono
+                        </p>
+                        <p style="margin: 0.5rem 0;">
+                            <strong>Email:</strong> @restaurante.Email
+                        </p>
+                        <p style="margin: 0.5rem 0;">
+                            <strong>Mesas:</strong> @(restaurante.Mesas?.Count ?? 0)
+                        </p>
+                    </div>
+
+                    <div class="btn-group" style="width: 100%; margin-top: 1.5rem;">
+                        <a asp-page="View" asp-route-id="@restaurante.Id" class="btn btn-sm btn-info">
+                            Ver
+                        </a>
+                        <a asp-page="Edit" asp-route-id="@restaurante.Id" class="btn btn-sm btn-secondary">
+                            Editar
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@restaurante.Id" class="btn btn-sm btn-danger">
+                            Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
+        <div class="alert alert-info" role="alert" style="display: inline-block; border-radius: 12px;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                No tienes restaurantes aun.
+                <a asp-page="Create" style="font-weight: 600; color: #e74c3c;">Crea uno ahora!</a>
+            </p>
+        </div>
+    </div>
+}
+
+<div style="margin-top: 2rem; text-align: center;">
+    <a asp-page="/Index" class="btn btn-secondary">
+        Volver al Inicio
+    </a>
+</div>

@@ -1,0 +1,77 @@
+@page
+@model TP_Jueves.Pages.Restaurants.EditModel
+@{
+    ViewData["Title"] = "Editar Restaurante";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Editar Restaurante</h1>
+    <p>@Model.Restaurante.Nombre</p>
+</section>
+
+<div class="reserve-form" style="max-width: 700px;">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="Restaurante.Id" />
+
+        <!-- NOMBRE -->
+        <div class="form-group">
+            <label asp-for="Restaurante.Nombre" class="form-label">
+                Nombre del Restaurante
+            </label>
+            <input asp-for="Restaurante.Nombre" class="form-control" />
+            <span asp-validation-for="Restaurante.Nombre" class="text-danger"></span>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="form-group">
+            <label asp-for="Restaurante.Descripcion" class="form-label">
+                Descripcion
+            </label>
+            <textarea asp-for="Restaurante.Descripcion" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Restaurante.Descripcion" class="text-danger"></span>
+        </div>
+
+        <!-- FILA 1: DIRECCION Y TELEFONO -->
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Restaurante.Direccion" class="form-label">
+                    Direccion
+                </label>
+                <input asp-for="Restaurante.Direccion" class="form-control" />
+                <span asp-validation-for="Restaurante.Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Restaurante.Telefono" class="form-label">
+                    Telefono
+                </label>
+                <input asp-for="Restaurante.Telefono" class="form-control" />
+                <span asp-validation-for="Restaurante.Telefono" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+            <label asp-for="Restaurante.Email" class="form-label">
+                Email
+            </label>
+            <input asp-for="Restaurante.Email" type="email" class="form-control" />
+            <span asp-validation-for="Restaurante.Email" class="text-danger"></span>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                Guardar Cambios
+            </button>
+            <a asp-page="Index" class="btn btn-secondary btn-lg" style="flex: 1;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

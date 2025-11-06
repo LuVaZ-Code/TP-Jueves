@@ -43,6 +43,10 @@ namespace TP_Jueves.Pages.Account
             [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
             [Display(Name = "Confirmar contraseña")]
             public string ConfirmPassword { get; set; } = string.Empty;
+
+            [Required]
+            [Display(Name = "Tipo de Cuenta")]
+            public string Rol { get; set; } = "Cliente";
         }
 
         public void OnGet()
@@ -67,6 +71,17 @@ namespace TP_Jueves.Pages.Account
             var result = await _userManager.CreateAsync(user, Input.Password);
             if (result.Succeeded)
             {
+                // Asignar rol
+                var roleResult = await _userManager.AddToRoleAsync(user, Input.Rol);
+                if (!roleResult.Succeeded)
+                {
+                    foreach (var error in roleResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return Page();
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToPage("/Index");
             }

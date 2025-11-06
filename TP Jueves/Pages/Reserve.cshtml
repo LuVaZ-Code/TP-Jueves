@@ -7,9 +7,26 @@
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem;">
-    <h1>?? Hacer una Reserva</h1>
-    <p>Completa el formulario para reservar tu mesa</p>
+    <h1>Hacer una Reserva</h1>
+    @if (Model.RestauranteSeleccionado != null)
+    {
+        <p>en <strong>@Model.RestauranteSeleccionado.Nombre</strong></p>
+    }
+    else
+    {
+        <p>Completa el formulario para reservar tu mesa</p>
+    }
 </section>
+
+@if (Model.RestauranteSeleccionado != null)
+{
+    <div style="background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h3 style="margin: 0 0 1rem; font-weight: 700;">@Model.RestauranteSeleccionado.Nombre</h3>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">@Model.RestauranteSeleccionado.Direccion</p>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">Telefono: @Model.RestauranteSeleccionado.Telefono</p>
+        <p style="margin: 0.5rem 0; opacity: 0.95;">Email: @Model.RestauranteSeleccionado.Email</p>
+    </div>
+}
 
 <div class="reserve-form">
     <form method="post" novalidate>
@@ -17,7 +34,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label asp-for="Dni" class="form-label">
-                    <i class="fas fa-id-card"></i> DNI
+                    DNI
                 </label>
                 <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
                        class="form-control" placeholder="12345678"
@@ -28,7 +45,7 @@
 
             <div class="form-group">
                 <label asp-for="CantPersonas" class="form-label">
-                    <i class="fas fa-users"></i> Cantidad de Personas
+                    Cantidad de Personas
                 </label>
                 <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control" />
                 <span asp-validation-for="CantPersonas" class="text-danger"></span>
@@ -39,7 +56,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label asp-for="Fecha" class="form-label">
-                    <i class="fas fa-calendar"></i> Fecha
+                    Fecha
                 </label>
                 <input asp-for="Fecha" type="date" min="@todayMin" class="form-control" />
                 <span asp-validation-for="Fecha" class="text-danger"></span>
@@ -47,7 +64,7 @@
 
             <div class="form-group">
                 <label asp-for="Horario" class="form-label">
-                    <i class="fas fa-clock"></i> Horario
+                    Horario
                 </label>
                 <select asp-for="Horario" class="form-control">
                     @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
@@ -61,7 +78,7 @@
         <!-- DIETA -->
         <div class="form-group">
             <label asp-for="Dieta" class="form-label">
-                <i class="fas fa-leaf"></i> Preferencia Dietetica
+                Preferencia Dietetica
             </label>
             <select asp-for="Dieta" class="form-control">
                 @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
@@ -73,7 +90,7 @@
 
         <!-- BOTON RESERVAR -->
         <button type="submit" class="btn btn-primary btn-lg w-100" style="margin-top: 2rem;">
-            <i class="fas fa-check-circle"></i> Confirmar Reserva
+            Confirmar Reserva
         </button>
     </form>
 </div>
@@ -84,7 +101,7 @@
     <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
         <div class="alert alert-success" role="alert" style="border-radius: 12px; padding: 1.5rem;">
             <h4 style="color: #155724; margin-bottom: 1rem;">
-                <i class="fas fa-check-circle"></i> Reserva Confirmada!
+                Reserva Confirmada!
             </h4>
             <p><strong>ID de Reserva:</strong> @Model.ReservaId</p>
             <p style="margin-bottom: 1rem;">
@@ -100,7 +117,7 @@ else if (!string.IsNullOrEmpty(Model.Message))
     <div style="max-width: 600px; margin: 2rem auto; animation: slideIn 0.3s ease;">
         <div class="alert alert-warning" role="alert" style="border-radius: 12px; padding: 1.5rem;">
             <h4 style="color: #856404; margin-bottom: 1rem;">
-                <i class="fas fa-exclamation-triangle"></i> @Model.Message
+                @Model.Message
             </h4>
 
             @if (Model.Suggestions.Any())

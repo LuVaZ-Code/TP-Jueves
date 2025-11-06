@@ -18,7 +18,7 @@
                 <!-- NOMBRE -->
                 <div class="form-group">
                     <label asp-for="Input.Nombre" class="form-label">
-                        <i class="fas fa-user"></i> Nombre
+                        Nombre
                     </label>
                     <input asp-for="Input.Nombre" class="form-control" placeholder="Juan" />
                     <span asp-validation-for="Input.Nombre" class="text-danger"></span>
@@ -27,7 +27,7 @@
                 <!-- APELLIDO -->
                 <div class="form-group">
                     <label asp-for="Input.Apellido" class="form-label">
-                        <i class="fas fa-user"></i> Apellido
+                        Apellido
                     </label>
                     <input asp-for="Input.Apellido" class="form-control" placeholder="Perez" />
                     <span asp-validation-for="Input.Apellido" class="text-danger"></span>
@@ -36,16 +36,31 @@
                 <!-- EMAIL -->
                 <div class="form-group">
                     <label asp-for="Input.Email" class="form-label">
-                        <i class="fas fa-envelope"></i> Correo Electronico
+                        Correo Electronico
                     </label>
                     <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
 
-                <!-- CONTRASEÑA -->
+                <!-- ROL -->
+                <div class="form-group">
+                    <label asp-for="Input.Rol" class="form-label">
+                        Tipo de Cuenta
+                    </label>
+                    <select asp-for="Input.Rol" class="form-control">
+                        <option value="Cliente">Cliente - Hacer reservas</option>
+                        <option value="Restaurantero">Restaurantero - Gestionar restaurante</option>
+                    </select>
+                    <span asp-validation-for="Input.Rol" class="text-danger"></span>
+                    <small class="form-text" style="color: #7f8c8d;">
+                        Puedes cambiar esto mas adelante si lo deseas.
+                    </small>
+                </div>
+
+                <!-- CONTRASENA -->
                 <div class="form-group">
                     <label asp-for="Input.Password" class="form-label">
-                        <i class="fas fa-lock"></i> Contrasena
+                        Contrasena
                     </label>
                     <input asp-for="Input.Password" class="form-control" placeholder="Minimo 6 caracteres" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
@@ -54,16 +69,16 @@
                     </small>
                 </div>
 
-                <!-- CONFIRMAR CONTRASEÑA -->
+                <!-- CONFIRMAR CONTRASENA -->
                 <div class="form-group">
                     <label asp-for="Input.ConfirmPassword" class="form-label">
-                        <i class="fas fa-lock"></i> Confirmar Contrasena
+                        Confirmar Contrasena
                     </label>
                     <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repetir contrasena" />
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
 
-                <!-- BOTÓN REGISTRAR -->
+                <!-- BOTON REGISTRAR -->
                 <button type="submit" class="btn btn-primary w-100 btn-lg" style="margin-top: 1.5rem;">
                     Crear Cuenta
                 </button>
