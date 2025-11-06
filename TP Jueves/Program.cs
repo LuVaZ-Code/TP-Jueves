@@ -40,6 +40,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 // Application services
 builder.Services.AddScoped<RestauranteService>();
 builder.Services.AddScoped<DataSeederService>();
+builder.Services.AddScoped<AdminInitializerService>();
 
 var app = builder.Build();
 
@@ -67,6 +68,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var seeder = scope.ServiceProvider.GetRequiredService<DataSeederService>();
+    var adminInitializer = scope.ServiceProvider.GetRequiredService<AdminInitializerService>();
     
     db.Database.Migrate();
 

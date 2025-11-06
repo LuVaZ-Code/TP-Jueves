@@ -1,0 +1,88 @@
+@page
+@model TP_Jueves.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Gestionar Usuarios";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem;">
+    <h1>Gestionar Usuarios</h1>
+    <p>Asignar y cambiar roles de usuarios</p>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-success" role="alert" style="margin-bottom: 2rem; border-radius: 12px;">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Users.Any())
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Roles Actuales</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var userItem in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            <strong>@userItem.User.Nombre @userItem.User.Apellido</strong>
+                        </td>
+                        <td>@userItem.User.Email</td>
+                        <td>
+                            @if (userItem.Roles.Any())
+                            {
+                                <div>
+                                    @foreach (var role in userItem.Roles)
+                                    {
+                                        <span class="badge bg-info">@role</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Sin Rol</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" style="gap: 0.5rem;">
+                                <form method="post" asp-page-handler="AssignRole" style="display: inline;">
+                                    <input type="hidden" name="userId" value="@userItem.User.Id" />
+                                    <select name="role" class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                                        <option value="">-- Seleccionar Rol --</option>
+                                        <option value="Cliente">Cliente</option>
+                                        <option value="Restaurantero">Restaurantero</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">Asignar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div class="alert alert-info" role="alert">
+            No hay usuarios registrados.
+        </div>
+    </div>
+}
+
+<div style="margin-top: 2rem; text-align: center;">
+    <a asp-page="/Index" class="btn btn-secondary">
+        Volver al Inicio
+    </a>
+</div>

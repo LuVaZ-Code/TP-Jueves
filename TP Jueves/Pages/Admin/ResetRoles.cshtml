@@ -1,0 +1,101 @@
+@page
+@model TP_Jueves.Pages.Admin.ResetRolesModel
+@{
+    ViewData["Title"] = "Resetear Roles (Desarrollo)";
+}
+
+<!-- HERO SECTION -->
+<section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+    <h1>Resetear Roles</h1>
+    <p>Herramienta de desarrollo - Solo disponible en modo Development</p>
+</section>
+
+<div class="alert alert-warning" role="alert" style="margin-bottom: 2rem; border-radius: 12px;">
+    <strong>Advertencia:</strong> Esta pagina solo esta disponible en modo Desarrollo.
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-success" role="alert" style="margin-bottom: 2rem; border-radius: 12px;">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Users.Any())
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Roles Actuales</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            <strong>@user.Email</strong>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(user.Roles))
+                            {
+                                <span class="badge bg-info">@user.Roles</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Sin Rol</span>
+                            }
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <!-- Asignar Cliente -->
+                                <form method="post" asp-page-handler="AssignRole" style="display: inline;">
+                                    <input type="hidden" name="email" value="@user.Email" />
+                                    <input type="hidden" name="role" value="Cliente" />
+                                    <button type="submit" class="btn btn-sm btn-info">Cliente</button>
+                                </form>
+
+                                <!-- Asignar Restaurantero -->
+                                <form method="post" asp-page-handler="AssignRole" style="display: inline;">
+                                    <input type="hidden" name="email" value="@user.Email" />
+                                    <input type="hidden" name="role" value="Restaurantero" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Restaurantero</button>
+                                </form>
+
+                                <!-- Asignar Admin -->
+                                <form method="post" asp-page-handler="AssignRole" style="display: inline;">
+                                    <input type="hidden" name="email" value="@user.Email" />
+                                    <input type="hidden" name="role" value="Admin" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Admin</button>
+                                </form>
+
+                                <!-- Remover todos los roles -->
+                                <form method="post" asp-page-handler="RemoveAllRoles" style="display: inline;">
+                                    <input type="hidden" name="email" value="@user.Email" />
+                                    <button type="submit" class="btn btn-sm btn-secondary" onclick="return confirm('Remover todos los roles?')">Limpiar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align: center; padding: 3rem;">
+        <div class="alert alert-info" role="alert">
+            No hay usuarios registrados.
+        </div>
+    </div>
+}
+
+<div style="margin-top: 2rem; text-align: center;">
+    <a asp-page="/Index" class="btn btn-secondary">
+        Volver al Inicio
+    </a>
+</div>
