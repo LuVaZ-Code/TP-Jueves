@@ -18,6 +18,7 @@ namespace TP_Jueves.Data
         public DbSet<Mesa> Mesas { get; set; } = null!;
         public DbSet<TurnoDisponible> TurnosDisponibles { get; set; } = null!;
         public DbSet<Reserva> Reservas { get; set; } = null!;
+        public DbSet<HorarioRestaurante> HorariosRestaurante { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,13 @@ namespace TP_Jueves.Data
                 .HasOne(m => m.Restaurante)
                 .WithMany(r => r.Mesas)
                 .HasForeignKey(m => m.RestauranteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure HorarioRestaurante -> Restaurante relationship
+            modelBuilder.Entity<HorarioRestaurante>()
+                .HasOne(h => h.Restaurante)
+                .WithMany(r => r.Horarios)
+                .HasForeignKey(h => h.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configure TurnoDisponible -> Restaurante relationship

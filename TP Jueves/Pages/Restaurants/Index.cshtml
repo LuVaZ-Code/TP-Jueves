@@ -6,13 +6,13 @@
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem;">
-    <h1>Mis Restaurantes</h1>
-    <p>Gestiona tus restaurantes y sus mesas</p>
+    <h1>&#127978; Mis Restaurantes</h1>
+    <p>Gestiona tus restaurantes y sus reservas</p>
 </section>
 
 <div style="margin-bottom: 2rem;">
-    <a asp-page="Create" class="btn btn-primary btn-lg">
-        Agregar Restaurante
+    <a asp-page="Create" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 1rem 2rem; font-weight: 700;">
+        &#10133; Crear Nuevo Restaurante
     </a>
 </div>
 
@@ -21,35 +21,82 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem;">
         @foreach (var restaurante in Model.Restaurantes)
         {
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@restaurante.Nombre</h5>
-                    <p class="card-text">@restaurante.Descripcion</p>
+            var estadoColor = restaurante.Estado switch
+            {
+                TP_Jueves.Models.EstadoRestaurante.Activo => "#27ae60",
+                TP_Jueves.Models.EstadoRestaurante.Pausado => "#f39c12",
+                TP_Jueves.Models.EstadoRestaurante.EnConfiguracion => "#3498db",
+                _ => "#95a5a6"
+            };
+
+            var estadoIcon = restaurante.Estado switch
+            {
+                TP_Jueves.Models.EstadoRestaurante.Activo => "&#9989;",
+                TP_Jueves.Models.EstadoRestaurante.Pausado => "&#9208;",
+                TP_Jueves.Models.EstadoRestaurante.EnConfiguracion => "&#9881;",
+                _ => "&#9898;"
+            };
+
+            <div class="card" style="border: none; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s;">
+                <!-- ESTADO BADGE -->
+                <div style="background: @estadoColor; color: white; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; font-size: 0.9rem;">@Html.Raw(estadoIcon) @restaurante.Estado</span>
+                    @if (!restaurante.ConfiguracionCompletada)
+                    {
+                        <span style="background: rgba(255,255,255,0.3); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem;">
+                            @restaurante.PorcentajeConfiguracion% configurado
+                        </span>
+                    }
+                </div>
+
+                <div class="card-body" style="padding: 2rem;">
+                    <h5 class="card-title" style="font-weight: 800; font-size: 1.5rem; color: #2c3e50; margin-bottom: 0.75rem;">
+                        @restaurante.Nombre
+                    </h5>
+                    <p class="card-text" style="color: #7f8c8d; margin-bottom: 1.5rem; min-height: 60px;">
+                        @(string.IsNullOrEmpty(restaurante.Descripcion) ? "Sin descripci&oacute;n" : restaurante.Descripcion)
+                    </p>
                     
-                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
-                        <p style="margin: 0.5rem 0;">
-                            <strong>Direccion:</strong> @restaurante.Direccion
-                        </p>
-                        <p style="margin: 0.5rem 0;">
-                            <strong>Telefono:</strong> @restaurante.Telefono
-                        </p>
-                        <p style="margin: 0.5rem 0;">
-                            <strong>Email:</strong> @restaurante.Email
-                        </p>
-                        <p style="margin: 0.5rem 0;">
-                            <strong>Mesas:</strong> @(restaurante.Mesas?.Count ?? 0)
-                        </p>
+                    <div style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.1rem;">&#128205;</span>
+                                <span style="color: #7f8c8d; font-size: 0.9rem;">@restaurante.Direccion</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.1rem;">&#128222;</span>
+                                <span style="color: #7f8c8d; font-size: 0.9rem;">@restaurante.Telefono</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="btn-group" style="width: 100%; margin-top: 1.5rem;">
-                        <a asp-page="View" asp-route-id="@restaurante.Id" class="btn btn-sm btn-info">
-                            Ver
+                    @if (!restaurante.ConfiguracionCompletada)
+                    {
+                        <a asp-page="Setup/Wizard" asp-route-id="@restaurante.Id" asp-route-step="2" 
+                           style="display: block; width: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; margin-bottom: 1rem; transition: all 0.3s;">
+                            &#128640; Completar Configuraci&oacute;n
                         </a>
-                        <a asp-page="Edit" asp-route-id="@restaurante.Id" class="btn btn-sm btn-secondary">
-                            Editar
+                    }
+                    else
+                    {
+                        <a asp-page="Dashboard" asp-route-id="@restaurante.Id" 
+                           style="display: block; width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; margin-bottom: 1rem; transition: all 0.3s;">
+                            &#128202; Ver Dashboard
                         </a>
-                        <a asp-page="Delete" asp-route-id="@restaurante.Id" class="btn btn-sm btn-danger">
-                            Eliminar
+                    }
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                        <a asp-page="Edit" asp-route-id="@restaurante.Id" 
+                           style="background: #3498db; color: white; padding: 0.75rem; border-radius: 8px; text-align: center; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s;">
+                            &#9998; Editar
+                        </a>
+                        <a asp-page="Mesas/Index" asp-route-restauranteId="@restaurante.Id" 
+                           style="background: #9b59b6; color: white; padding: 0.75rem; border-radius: 8px; text-align: center; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s;">
+                            &#128186; Mesas
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@restaurante.Id" 
+                           style="background: #e74c3c; color: white; padding: 0.75rem; border-radius: 8px; text-align: center; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s;">
+                            &#128465; Eliminar
                         </a>
                     </div>
                 </div>
@@ -59,19 +106,32 @@
 }
 else
 {
-    <div style="text-align: center; padding: 3rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">??</div>
-        <div class="alert alert-info" role="alert" style="display: inline-block; border-radius: 12px;">
-            <p style="margin: 0; font-size: 1.1rem;">
-                No tienes restaurantes aun.
-                <a asp-page="Create" style="font-weight: 600; color: #e74c3c;">Crea uno ahora!</a>
-            </p>
-        </div>
+    <div style="text-align: center; padding: 4rem; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div style="font-size: 5rem; margin-bottom: 1.5rem;">&#127978;</div>
+        <h2 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">&iexcl;Comienza tu Negocio!</h2>
+        <p style="color: #7f8c8d; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            No tienes restaurantes todav&iacute;a. Crea tu primer restaurante y comienza a recibir reservas de tus clientes.
+        </p>
+        <a asp-page="Create" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem 3rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);">
+            &#128640; Crear Mi Primer Restaurante
+        </a>
     </div>
 }
 
-<div style="margin-top: 2rem; text-align: center;">
-    <a asp-page="/Index" class="btn btn-secondary">
-        Volver al Inicio
+<div style="margin-top: 3rem; text-align: center;">
+    <a asp-page="/Index" class="btn btn-secondary" style="padding: 0.75rem 2rem; border-radius: 10px;">
+        &#127968; Volver al Inicio
     </a>
 </div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    }
+
+    a[style*="background"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+</style>

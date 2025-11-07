@@ -7,21 +7,21 @@
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
     <h1>Eliminar Restaurante</h1>
-    <p>Advertencia: Esta accion no se puede deshacer</p>
+    <p>Advertencia: Esta acci&oacute;n no se puede deshacer</p>
 </section>
 
 <div style="max-width: 600px; margin: 0 auto;">
     <div class="alert alert-danger" role="alert" style="border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
         <h4 style="color: #721c24; margin-bottom: 1rem; font-weight: 700;">
-            Estas a punto de eliminar un restaurante
+            Est&aacute;s a punto de eliminar un restaurante
         </h4>
         
         <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0.5rem 0; color: #2c3e50;">
-                <strong>Nombre:</strong> @Model.Restaurante?.Nombre
+                <strong>Nombre:</strong> @(Model.Restaurante?.Nombre ?? "")
             </p>
             <p style="margin: 0.5rem 0; color: #2c3e50;">
-                <strong>Direccion:</strong> @Model.Restaurante?.Direccion
+                <strong>Direcci&oacute;n:</strong> @(Model.Restaurante?.Direccion ?? "")
             </p>
             <p style="margin: 0.5rem 0; color: #2c3e50;">
                 <strong>Mesas:</strong> @(Model.Restaurante?.Mesas?.Count ?? 0)
@@ -29,13 +29,13 @@
         </div>
 
         <p style="color: #721c24; margin-bottom: 1.5rem; font-weight: 500;">
-            Una vez eliminado, el restaurante desaparecera del catalogo publico y no se podran hacer nuevas reservas.
+            Una vez eliminado, el restaurante desaparecer&aacute; del cat&aacute;logo p&uacute;blico y no se podr&aacute;n hacer nuevas reservas.
         </p>
 
         <form method="post" style="margin-bottom: 1rem;">
             <div style="display: flex; gap: 1rem;">
                 <button type="submit" class="btn btn-danger btn-lg" style="flex: 1;">
-                    S, Eliminar Definitivamente
+                    S&iacute;, Eliminar Definitivamente
                 </button>
                 <a asp-page="Index" class="btn btn-secondary btn-lg" style="flex: 1;">
                     Cancelar

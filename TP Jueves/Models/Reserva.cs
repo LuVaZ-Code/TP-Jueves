@@ -43,8 +43,16 @@ namespace TP_Jueves.Models
         public DateTime Fecha { get; set; }
 
         /// <summary>
-        /// Horario del turno.
+        /// Hora específica de la reserva en formato "HH:mm" (ej: "12:00", "20:30").
         /// </summary>
+        [Required]
+        [StringLength(5)]
+        public string HoraReserva { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Horario del turno (DEPRECADO - mantener por compatibilidad).
+        /// </summary>
+        [Obsolete("Usar HoraReserva en su lugar")]
         public Horario Horario { get; set; }
 
         /// <summary>

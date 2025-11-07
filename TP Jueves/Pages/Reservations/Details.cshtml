@@ -6,7 +6,7 @@
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem;">
-    <h1>?? Detalles de Reserva</h1>
+    <h1>&#128197; Detalles de Reserva</h1>
     <p>@Model.Reserva?.Restaurante?.Nombre</p>
 </section>
 
@@ -18,36 +18,36 @@
             @if (Model.Reserva.Fecha.Date < DateTime.Today)
             {
                 <span class="badge bg-secondary" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
-                    ? Reserva Pasada
+                    &#10003; Reserva Pasada
                 </span>
             }
             else if (Model.Reserva.Fecha.Date == DateTime.Today)
             {
                 <span class="badge bg-warning text-dark" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
-                    ? Hoy
+                    &#9888; Hoy
                 </span>
             }
             else
             {
                 <span class="badge bg-success" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
-                    ? Confirmada
+                    &#9989; Confirmada
                 </span>
             }
         </div>
 
-        <!-- INFORMACIÓN DEL RESTAURANTE -->
+        <!-- INFORMACION DEL RESTAURANTE -->
         <div class="card" style="margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
             <div style="background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%); color: white; padding: 2rem; border-radius: 12px 12px 0 0;">
                 <h3 style="margin: 0; font-weight: 700;">@Model.Reserva.Restaurante?.Nombre</h3>
-                <p style="margin: 0.5rem 0 0; opacity: 0.9;">?? @Model.Reserva.Restaurante?.Direccion</p>
+                <p style="margin: 0.5rem 0 0; opacity: 0.9;">&#128205; @Model.Reserva.Restaurante?.Direccion</p>
             </div>
 
             <div class="card-body">
-                <h5 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Información del Restaurante</h5>
+                <h5 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Informaci&oacute;n del Restaurante</h5>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                     <div>
-                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Teléfono</p>
+                        <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Tel&eacute;fono</p>
                         <p style="font-weight: 600; margin: 0;">@Model.Reserva.Restaurante?.Telefono</p>
                     </div>
                     <div>
@@ -83,7 +83,7 @@
                             <p style="font-weight: 600; margin: 0;">@Model.Reserva.CantPersonas</p>
                         </div>
                         <div>
-                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Preferencia Dietética</p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 0.5rem 0;">Preferencia Diet&eacute;tica</p>
                             <p style="font-weight: 600; margin: 0;">@Model.Reserva.Dieta</p>
                         </div>
                     </div>
@@ -157,10 +157,10 @@
 else
 {
     <div style="text-align: center; padding: 3rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">?</div>
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#10067;</div>
         <div class="alert alert-danger" role="alert" style="display: inline-block; border-radius: 12px;">
             <p style="margin: 0; font-size: 1.1rem;">
-                No se encontró la reserva.
+                No se encontr&oacute; la reserva.
             </p>
         </div>
         <div style="margin-top: 2rem;">

@@ -51,7 +51,19 @@ namespace TP_Jueves.Pages.Account
                 return RedirectToPage("/Index");
             }
 
-            ModelState.AddModelError(string.Empty, "Intento de login no válido.");
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError(string.Empty, "Tu cuenta ha sido bloqueada temporalmente por m&uacute;ltiples intentos fallidos. Int&eacute;ntalo m&aacute;s tarde.");
+            }
+            else if (result.IsNotAllowed)
+            {
+                ModelState.AddModelError(string.Empty, "Debes confirmar tu email antes de iniciar sesi&oacute;n.");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Email o contrase&ntilde;a incorrectos. Por favor verifica tus credenciales.");
+            }
+            
             return Page();
         }
     }

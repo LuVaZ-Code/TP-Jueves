@@ -2,13 +2,66 @@
 @model TP_Jueves.Pages.ReserveModel
 @{
     ViewData["Title"] = "Hacer una Reserva";
-    var todayMin = DateTime.Today.ToString("yyyy-MM-dd");
-    var maxDate = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
 }
+
+<style>
+    .wizard-progress {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        gap: 1rem;
+    }
+    .step-indicator {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+    .step-indicator.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .step-indicator.completed {
+        background: #27ae60;
+        color: white;
+    }
+    .step-line {
+        width: 60px;
+        height: 3px;
+        background: #e0e0e0;
+    }
+    .horario-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .horario-card:hover {
+        border-color: #667eea;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .horario-card.selected {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #f8f9ff 0%, #e9ecff 100%);
+    }
+    .horario-card.no-disponible {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <h1>?? Reservar Mesa</h1>
+    <h1>&#128197; Reservar Mesa</h1>
     @if (Model.RestauranteSeleccionado != null)
     {
         <p>@Model.RestauranteSeleccionado.Nombre</p>
@@ -22,191 +75,127 @@
 <!-- RESTAURANTE INFO -->
 @if (Model.RestauranteSeleccionado != null)
 {
-    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); max-width: 800px; margin-left: auto; margin-right: auto;">
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
             <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
-                ???
+                &#127860;
             </div>
             <div style="flex: 1;">
                 <h2 style="margin: 0; font-weight: 800; font-size: 1.8rem;">@Model.RestauranteSeleccionado.Nombre</h2>
-                <p style="margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.1rem;">?? @Model.RestauranteSeleccionado.Direccion</p>
-            </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
-            <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 8px;">
-                <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Teléfono</p>
-                <p style="margin: 0.25rem 0 0; font-weight: 600; font-size: 1.1rem;">@Model.RestauranteSeleccionado.Telefono</p>
-            </div>
-            <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 8px;">
-                <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Email</p>
-                <p style="margin: 0.25rem 0 0; font-weight: 600; font-size: 1.1rem;">@Model.RestauranteSeleccionado.Email</p>
+                <p style="margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.1rem;">&#128205; @Model.RestauranteSeleccionado.Direccion</p>
             </div>
         </div>
     </div>
 }
 
-<!-- SUCCESS MESSAGE -->
-@if (Model.IsSuccess && Model.ReservaId.HasValue)
-{
-    <div style="max-width: 800px; margin: 0 auto 2rem; animation: slideInDown 0.5s ease;">
-        <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 50px rgba(17, 153, 142, 0.3);">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 3rem;">
-                    ?
-                </div>
-                <h2 style="margin: 0; font-weight: 800; font-size: 2rem;">¡Reserva Confirmada!</h2>
-                <p style="margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.1rem;">Tu mesa está reservada</p>
-            </div>
+<!-- WIZARD PROGRESS -->
+<div class="wizard-progress" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+    <div class="step-indicator @(Model.Step >= 1 ? "active" : "") @(Model.Step > 1 ? "completed" : "")">
+        @if (Model.Step > 1) { <span>&#10003;</span> } else { <span>1</span> }
+    </div>
+    <div class="step-line"></div>
+    <div class="step-indicator @(Model.Step >= 2 ? "active" : "")">2</div>
+</div>
 
-            <div style="background: rgba(255,255,255,0.15); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Restaurante</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.RestauranteSeleccionado?.Nombre</p>
+<div style="max-width: 800px; margin: 0 auto;">
+    @if (Model.IsSuccess && Model.ReservaId.HasValue)
+    {
+        <!-- SUCCESS MESSAGE -->
+        <div style="animation: slideInDown 0.5s ease;">
+            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 50px rgba(17, 153, 142, 0.3);">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 3rem;">
+                        &#10003;
                     </div>
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Código de Reserva</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem; font-family: monospace;">@Model.ReservaId.ToString().Substring(0, 8)</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Fecha</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.Fecha.ToString("dd/MM/yyyy")</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Horario</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.Horario</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Comensales</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.CantPersonas personas</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Preferencia</p>
-                        <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.Dieta</p>
+                    <h2 style="margin: 0; font-weight: 800; font-size: 2rem;">&iexcl;Reserva Confirmada!</h2>
+                    <p style="margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.1rem;">Tu mesa est&aacute; reservada</p>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.15); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Restaurante</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.RestauranteSeleccionado?.Nombre</p>
+                        </div>
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">C&oacute;digo de Reserva</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem; font-family: monospace;">@Model.ReservaId.ToString().Substring(0, 8)</p>
+                        </div>
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Fecha</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.Fecha.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Horario</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.HoraSeleccionada</p>
+                        </div>
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Comensales</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.CantPersonas personas</p>
+                        </div>
+                        <div>
+                            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Preferencia</p>
+                            <p style="margin: 0.25rem 0 0; font-weight: 700; font-size: 1.2rem;">@Model.Dieta</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                <a asp-page="/Reservations/List" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s;">
-                    ?? Mis Reservas
-                </a>
-                <a asp-page="/Restaurants/Browse" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s;">
-                    ??? Explorar Más
-                </a>
-                <a asp-page="/Index" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s;">
-                    ?? Inicio
-                </a>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <a asp-page="/Reservations/List" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700;">
+                        &#128197; Mis Reservas
+                    </a>
+                    <a asp-page="/Restaurants/Browse" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700;">
+                        &#128269; Explorar M&aacute;s
+                    </a>
+                    <a asp-page="/Index" style="background: rgba(255,255,255,0.9); color: #11998e; padding: 1rem; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 700;">
+                        &#127968; Inicio
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <!-- RESERVATION FORM -->
-    <div style="max-width: 900px; margin: 0 auto;">
-        <div class="card" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden;">
-            <!-- FORM HEADER -->
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; text-align: center;">
-                <h3 style="margin: 0; font-weight: 800; font-size: 1.8rem;">Completa tu Reserva</h3>
-                <p style="margin: 0.5rem 0 0; opacity: 0.95;">Estamos a un paso de confirmar tu mesa</p>
+    }
+    else if (Model.Step == 1)
+    {
+        <!-- PASO 1: FECHA Y CANTIDAD -->
+        <div class="card" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 16px 16px 0 0;">
+                <h3 style="margin: 0; font-weight: 800; font-size: 1.8rem;">Paso 1: Fecha y Comensales</h3>
+                <p style="margin: 0.5rem 0 0; opacity: 0.95;">Cu&aacute;ndo y cu&aacute;ntos?</p>
             </div>
 
             <div class="card-body" style="padding: 2.5rem;">
-                @if (!string.IsNullOrEmpty(Model.Message) && !Model.IsSuccess)
-                {
-                    <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2d3436; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid #fdcb6e;">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span style="font-size: 2rem;">??</span>
-                            <div style="flex: 1;">
-                                <p style="margin: 0; font-weight: 700; font-size: 1.1rem;">@Model.Message</p>
-                                @if (Model.Suggestions.Any())
-                                {
-                                    <p style="margin: 0.5rem 0 0; font-weight: 600;">Alternativas disponibles:</p>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-                                        @foreach (var sugg in Model.Suggestions.Take(5))
-                                        {
-                                            <span style="background: rgba(255,255,255,0.8); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;">
-                                                @sugg.fecha.ToString("dd/MM") - @sugg.horario
-                                            </span>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
+                <form method="post" asp-page-handler="Step1">
+                    <input type="hidden" asp-for="RestauranteId" />
 
-                <form method="post" novalidate>
-                    <!-- PERSONAL INFO -->
-                    <div style="margin-bottom: 2.5rem;">
-                        <h4 style="color: #2d3436; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">1</span>
-                            Información Personal
-                        </h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label asp-for="Dni" class="form-label">
-                                    <span style="color: #e74c3c;">*</span> DNI
-                                </label>
-                                <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
-                                       class="form-control" placeholder="12345678"
-                                       oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);" />
-                                <span asp-validation-for="Dni" class="text-danger"></span>
-                                <small class="form-text">8 dígitos sin puntos</small>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="CantPersonas" class="form-label">
-                                    <span style="color: #e74c3c;">*</span> Comensales
-                                </label>
-                                <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control" />
-                                <span asp-validation-for="CantPersonas" class="text-danger"></span>
-                                <small class="form-text">1 a 20 personas</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DATE & TIME -->
-                    <div style="margin-bottom: 2.5rem;">
-                        <h4 style="color: #2d3436; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">2</span>
-                            Fecha y Horario
-                        </h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label asp-for="Fecha" class="form-label">
-                                    <span style="color: #e74c3c;">*</span> Fecha
-                                </label>
-                                <input asp-for="Fecha" type="date" min="@todayMin" max="@maxDate" class="form-control" />
-                                <span asp-validation-for="Fecha" class="text-danger"></span>
-                                <small class="form-text">Próximos 30 días</small>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="Horario" class="form-label">
-                                    <span style="color: #e74c3c;">*</span> Horario
-                                </label>
-                                <select asp-for="Horario" class="form-control">
-                                    @foreach (var h in Enum.GetValues(typeof(TP_Jueves.Models.Horario)).Cast<TP_Jueves.Models.Horario>())
-                                    {
-                                        <option value="@((int)h)">@h</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="Horario" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PREFERENCES -->
-                    <div style="margin-bottom: 2.5rem;">
-                        <h4 style="color: #2d3436; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">3</span>
-                            Preferencias
-                        </h4>
+                    <div style="display: grid; gap: 2rem;">
                         <div class="form-group">
-                            <label asp-for="Dieta" class="form-label">Preferencia Dietética</label>
-                            <select asp-for="Dieta" class="form-control">
+                            <label class="form-label" style="font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem;">
+                                &#128197; Fecha de la Reserva
+                            </label>
+                            <input asp-for="Fecha" type="date" class="form-control" 
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                                   max="@DateTime.Today.AddDays(30).ToString("yyyy-MM-dd")"
+                                   style="border-radius: 10px; border: 2px solid #e0e0e0; padding: 1rem; font-size: 1rem;" />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                            <small class="form-text" style="color: #95a5a6; font-size: 0.85rem;">Selecciona una fecha hasta 30 d&iacute;as adelante</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem;">
+                                &#128101; Cantidad de Comensales
+                            </label>
+                            <input asp-for="CantPersonas" type="number" min="1" max="20" class="form-control"
+                                   style="border-radius: 10px; border: 2px solid #e0e0e0; padding: 1rem; font-size: 1rem;" />
+                            <span asp-validation-for="CantPersonas" class="text-danger"></span>
+                            <small class="form-text" style="color: #95a5a6; font-size: 0.85rem;">De 1 a 20 personas</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem;">
+                                &#127860; Preferencia Diet&eacute;tica
+                            </label>
+                            <select asp-for="Dieta" class="form-control"
+                                    style="border-radius: 10px; border: 2px solid #e0e0e0; padding: 1rem; font-size: 1rem;">
                                 @foreach (var d in Enum.GetValues(typeof(TP_Jueves.Models.Dieta)).Cast<TP_Jueves.Models.Dieta>())
                                 {
                                     <option value="@((int)d)">@d</option>
@@ -215,158 +204,158 @@ else
                         </div>
                     </div>
 
-                    <!-- AVAILABLE SLOTS -->
-                    @if (Model.HorariosDisponibles.Any())
-                    {
-                        <div style="margin-bottom: 2.5rem;">
-                            <h4 style="color: #2d3436; font-weight: 700; margin-bottom: 1.5rem;">?? Horarios Disponibles</h4>
-                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; max-height: 300px; overflow-y: auto;">
-                                <div style="display: grid; gap: 0.75rem;">
-                                    @foreach (var turno in Model.HorariosDisponibles.Take(10))
-                                    {
-                                        var bgColor = turno.EstaLleno ? "#e74c3c" : turno.CapacidadRestante <= 5 ? "#f39c12" : "#27ae60";
-                                        var textColor = "white";
-                                        <div style="background: @bgColor; color: @textColor; padding: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <span style="font-weight: 700; font-size: 1.1rem;">@turno.Fecha.ToString("dd/MM/yyyy")</span>
-                                                <span style="opacity: 0.9; margin-left: 1rem;">@turno.Horario</span>
-                                            </div>
-                                            <div style="text-align: right;">
-                                                @if (turno.EstaLleno)
-                                                {
-                                                    <span style="font-weight: 700;">LLENO</span>
-                                                }
-                                                else
-                                                {
-                                                    <span style="font-weight: 700;">@turno.CapacidadRestante disponibles</span>
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    <!-- SUBMIT BUTTONS -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
-                        <a asp-page="/Restaurants/Browse" style="background: #95a5a6; color: white; padding: 1.2rem; border-radius: 12px; text-align: center; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s;">
-                            ? Cancelar
-                        </a>
-                        <button type="submit" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.2rem; border-radius: 12px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;">
-                            ? Confirmar Reserva
+                    <div style="margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 1.2rem; font-weight: 700; font-size: 1.1rem;">
+                            Siguiente: Seleccionar Horario &rarr;
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+    }
+    else if (Model.Step == 2)
+    {
+        <!-- PASO 2: SELECCIONAR HORARIO -->
+        <div class="card" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 16px 16px 0 0;">
+                <h3 style="margin: 0; font-weight: 800; font-size: 1.8rem;">Paso 2: Selecciona el Horario</h3>
+                <p style="margin: 0.5rem 0 0; opacity: 0.95;">
+                    @Model.Fecha.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES")) - @Model.CantPersonas @(Model.CantPersonas == 1 ? "persona" : "personas")
+                </p>
+            </div>
+
+            <div class="card-body" style="padding: 2.5rem;">
+                @if (!string.IsNullOrEmpty(Model.Message) && !Model.IsSuccess)
+                {
+                    <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2d3436; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <p style="margin: 0; font-weight: 700;">&#9888; @Html.Raw(Model.Message)</p>
+                    </div>
+                }
+
+                @if (Model.HorariosDisponibles.Any())
+                {
+                    <form method="post" asp-page-handler="Step2" id="reservaForm">
+                    <input type="hidden" asp-for="RestauranteId" />
+                    <input type="hidden" asp-for="Fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" asp-for="CantPersonas" />
+                    <input type="hidden" asp-for="Dieta" />
+                    <input type="hidden" asp-for="HoraSeleccionada" id="horaSeleccionadaInput" />
+                    <input type="hidden" asp-for="Step" value="2" />
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label class="form-label" style="font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem;">
+                            &#128100; DNI
+                        </label>
+                        <input asp-for="Dni" type="tel" inputmode="numeric" pattern="\d{8}" maxlength="8" 
+                               class="form-control" placeholder="12345678"
+                               oninput="this.value = this.value.replace(/\D/g,'').slice(0,8);"
+                               style="border-radius: 10px; border: 2px solid #e0e0e0; padding: 1rem; font-size: 1rem;" />
+                        <span asp-validation-for="Dni" class="text-danger"></span>
+                        <small class="form-text" style="color: #95a5a6; font-size: 0.85rem;">8 d&iacute;gitos sin puntos</small>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: #2c3e50; font-weight: 700; margin-bottom: 1rem;">&#9200; Horarios Disponibles</h4>
+                        
+                        @if (Model.HorariosDisponibles.Any())
+                        {
+                            <div style="display: grid; gap: 1rem;">
+                                @foreach (var horario in Model.HorariosDisponibles)
+                                {
+                                    var disponible = Model.DisponibilidadPorHorario.ContainsKey(horario.Hora) 
+                                        ? Model.DisponibilidadPorHorario[horario.Hora] 
+                                        : 0;
+                                    var hayDisponibilidad = disponible >= Model.CantPersonas;
+                                    
+                                    <div class="horario-card @(!hayDisponibilidad ? "no-disponible" : "")" 
+                                         onclick="@(hayDisponibilidad ? $"selectHorario('{horario.Hora}')" : "")"
+                                         data-hora="@horario.Hora"
+                                         style="@(!hayDisponibilidad ? "pointer-events: none;" : "")">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-size: 1.5rem; font-weight: 800; color: #2c3e50;">@horario.Hora</div>
+                                                @if (!string.IsNullOrEmpty(horario.Descripcion))
+                                                {
+                                                    <div style="color: #7f8c8d; font-size: 0.9rem;">@horario.Descripcion</div>
+                                                }
+                                            </div>
+                                            <div style="text-align: right;">
+                                                @if (hayDisponibilidad)
+                                                {
+                                                    <div style="color: #27ae60; font-weight: 700;">
+                                                        &#10003; Disponible
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div style="color: #e74c3c; font-weight: 700;">
+                                                        &#10005; No disponible
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+                                <p style="margin: 0; color: #7f8c8d;">No hay horarios configurados para este restaurante.</p>
+                            </div>
+                        }
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <a asp-page="Reserve" asp-route-restauranteId="@Model.RestauranteId" asp-route-step="1" 
+                           class="btn btn-secondary btn-lg" style="flex: 1;">
+                            &larr; Volver
+                        </a>
+                        <button type="submit" id="confirmarBtn" class="btn btn-success btn-lg" style="flex: 2;" disabled>
+                            &#10003; Confirmar Reserva
+                        </button>
+                    </div>
+                </form>
+                }
+                else if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <!-- Mensaje cuando no hay mesas suficientes -->
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1.5rem;">&#128683;</div>
+                        <p style="color: #7f8c8d; font-size: 1.1rem; margin-bottom: 2rem;">
+                            Intenta con menos personas o contacta al restaurante directamente.
+                        </p>
+                        <a asp-page="Reserve" asp-route-restauranteId="@Model.RestauranteId" asp-route-step="1" 
+                           class="btn btn-primary btn-lg">
+                            &larr; Volver a intentar
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 }
-
-<style>
-    @@keyframes slideInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-label {
-        font-weight: 700;
-        color: #2d3436;
-        margin-bottom: 0.5rem;
-        font-size: 1rem;
-    }
-
-    .form-control {
-        border-radius: 10px;
-        border: 2px solid #e0e0e0;
-        padding: 0.9rem;
-        font-size: 1rem;
-        transition: all 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        outline: none;
-    }
-
-    .form-text {
-        color: #95a5a6;
-        font-size: 0.85rem;
-        margin-top: 0.25rem;
-    }
-
-    @@media (max-width: 768px) {
-        .form-row {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    button[type="submit"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-    }
-
-    a:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        (function () {
-            const form = document.querySelector('form');
-            if (!form) return;
-
-            form.addEventListener('submit', function (e) {
-                const dniInput = document.querySelector('input[name="Dni"]');
-                const fechaInput = document.querySelector('input[name="Fecha"]');
-                
-                if (dniInput) {
-                    const dniVal = dniInput.value.trim();
-                    if (!/^\d{8}$/.test(dniVal)) {
-                        e.preventDefault();
-                        dniInput.focus();
-                        alert('DNI debe contener exactamente 8 dígitos');
-                        return false;
-                    }
-                }
-
-                if (fechaInput) {
-                    const fechaVal = fechaInput.value;
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const sel = fechaVal ? new Date(fechaVal) : null;
-                    if (!sel || sel < today) {
-                        e.preventDefault();
-                        fechaInput.focus();
-                        alert('Selecciona una fecha válida');
-                        return false;
-                    }
-                }
-
-                return true;
+        function selectHorario(hora) {
+            // Remover selección anterior
+            document.querySelectorAll('.horario-card').forEach(card => {
+                card.classList.remove('selected');
             });
-        })();
+            
+            // Seleccionar nueva hora
+            const selectedCard = document.querySelector(`[data-hora="${hora}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            // Actualizar input hidden
+            document.getElementById('horaSeleccionadaInput').value = hora;
+            
+            // Habilitar botón
+            document.getElementById('confirmarBtn').disabled = false;
+        }
     </script>
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using TP_Jueves.Data;
 using TP_Jueves.Models;
 
@@ -21,7 +22,7 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
         }
 
         [BindProperty]
-        public TurnoDisponible TurnoDisponible { get; set; } = new();
+        public HorarioInput Input { get; set; } = new();
 
         [BindProperty]
         public int RestauranteId { get; set; }
@@ -43,8 +44,6 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
                 return Forbid();
 
             RestauranteId = restauranteId;
-            TurnoDisponible.Fecha = DateTime.Today;
-            TurnoDisponible.CapacidadMaxima = 50;
 
             return Page();
         }
@@ -52,7 +51,10 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
+                Restaurante = await _db.Restaurantes.FirstOrDefaultAsync(r => r.Id == RestauranteId);
                 return Page();
+            }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -66,14 +68,39 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
             if (Restaurante.PropietarioId != user.Id)
                 return Forbid();
 
-            TurnoDisponible.RestauranteId = RestauranteId;
-            TurnoDisponible.CreatedAt = DateTime.UtcNow;
-            TurnoDisponible.CapacidadUsada = 0;
+            // Verificar si ya existe ese horario
+            var existe = await _db.HorariosRestaurante
+                .AnyAsync(h => h.RestauranteId == RestauranteId && h.Hora == Input.Hora);
 
-            _db.TurnosDisponibles.Add(TurnoDisponible);
+            if (existe)
+            {
+                ModelState.AddModelError(string.Empty, $"Ya existe un horario para las {Input.Hora}");
+                return Page();
+            }
+
+            var nuevoHorario = new HorarioRestaurante
+            {
+                RestauranteId = RestauranteId,
+                Hora = Input.Hora,
+                Descripcion = Input.Descripcion,
+                EstaActivo = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _db.HorariosRestaurante.Add(nuevoHorario);
             await _db.SaveChangesAsync();
 
             return RedirectToPage("Index", new { restauranteId = RestauranteId });
+        }
+
+        public class HorarioInput
+        {
+            [Required(ErrorMessage = "La hora es requerida")]
+            [RegularExpression(@"^([01]?[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "Formato de hora inválido (HH:MM)")]
+            public string Hora { get; set; } = string.Empty;
+
+            [StringLength(50)]
+            public string? Descripcion { get; set; }
         }
     }
 }

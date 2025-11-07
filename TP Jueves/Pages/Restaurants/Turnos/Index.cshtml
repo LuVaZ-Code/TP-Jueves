@@ -1,86 +1,143 @@
 @page
 @model TP_Jueves.Pages.Restaurants.Turnos.IndexModel
 @{
-    ViewData["Title"] = "Horarios Disponibles";
+    ViewData["Title"] = "Gestionar Horarios";
 }
 
+<style>
+    .horario-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        border-left: 4px solid #667eea;
+    }
+
+    .horario-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .horario-card.inactivo {
+        border-left-color: #95a5a6;
+        opacity: 0.6;
+    }
+</style>
+
 <!-- HERO SECTION -->
-<section class="hero" style="margin-bottom: 2rem;">
-    <h1>Horarios Disponibles</h1>
+<section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <h1>&#9200; Gestionar Horarios</h1>
     <p>@Model.Restaurante?.Nombre</p>
 </section>
 
-<div style="margin-bottom: 2rem;">
-    <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary btn-lg">
-        Agregar Horario Disponible
-    </a>
-    <a asp-page="../View" asp-route-id="@Model.Restaurante?.Id" class="btn btn-secondary btn-lg">
-        Volver
-    </a>
-</div>
-
-@if (Model.Turnos.Any())
-{
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Horario</th>
-                    <th>Capacidad Maxima</th>
-                    <th>Capacidad Usada</th>
-                    <th>Disponible</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var turno in Model.Turnos)
-                {
-                    <tr>
-                        <td><strong>@turno.Fecha.ToString("dd/MM/yyyy")</strong></td>
-                        <td>@turno.Horario</td>
-                        <td>@turno.CapacidadMaxima</td>
-                        <td>@turno.CapacidadUsada</td>
-                        <td>@turno.CapacidadRestante</td>
-                        <td>
-                            @if (turno.EstaLleno)
-                            {
-                                <span class="badge bg-danger">Lleno</span>
-                            }
-                            else if (turno.CapacidadRestante <= 5)
-                            {
-                                <span class="badge bg-warning">Casi Lleno</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">Disponible</span>
-                            }
-                        </td>
-                        <td>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <a asp-page="Edit" asp-route-id="@turno.Id" class="btn btn-sm btn-secondary">
-                                    Editar
-                                </a>
-                                <a asp-page="Delete" asp-route-id="@turno.Id" class="btn btn-sm btn-danger">
-                                    Eliminar
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
-else
-{
-    <div style="text-align: center; padding: 3rem;">
-        <div class="alert alert-info" role="alert" style="display: inline-block; border-radius: 12px;">
-            <p style="margin: 0; font-size: 1.1rem;">
-                No hay horarios disponibles aun.
-                <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" style="font-weight: 600;">Crea uno ahora!</a>
+<div style="max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h2 style="margin: 0; color: #2c3e50; font-weight: 700;">Horarios Configurados</h2>
+            <p style="margin: 0.5rem 0 0; color: #7f8c8d;">
+                Los horarios definen cu&aacute;ndo tu restaurante acepta reservas
             </p>
         </div>
+        <div style="display: flex; gap: 1rem;">
+            <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" 
+               class="btn btn-primary btn-lg" 
+               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                &#10133; Agregar Horario
+            </a>
+            <a asp-page="../Dashboard" asp-route-id="@Model.Restaurante?.Id" class="btn btn-secondary btn-lg">
+                &larr; Volver al Dashboard
+            </a>
+        </div>
     </div>
-}
+
+    @if (Model.Horarios.Any())
+    {
+        <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+            <p style="margin: 0; color: #1565c0;">
+                <strong>&#8505; Informaci&oacute;n:</strong> La disponibilidad real se calcula autom&aacute;ticamente seg&uacute;n las mesas f&iacute;sicas disponibles en cada horario.
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+            @foreach (var horario in Model.Horarios)
+            {
+                <div class="horario-card @(!horario.EstaActivo ? "inactivo" : "")">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 2rem; font-weight: 800; color: #2c3e50; margin-bottom: 0.5rem;">
+                                @horario.Hora
+                            </div>
+                            @if (!string.IsNullOrEmpty(horario.Descripcion))
+                            {
+                                <div style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                    @horario.Descripcion
+                                </div>
+                            }
+                            <div>
+                                @if (horario.EstaActivo)
+                                {
+                                    <span style="background: #27ae60; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                                        &#9989; ACTIVO
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="background: #95a5a6; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                                        &#9208; INACTIVO
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem;">
+                        <form method="post" asp-page-handler="Toggle" asp-route-id="@horario.Id" style="margin: 0;">
+                            <button type="submit" class="btn btn-sm w-100" 
+                                    style="background: @(horario.EstaActivo ? "#f39c12" : "#27ae60"); color: white; border: none; padding: 0.5rem;">
+                                @if (horario.EstaActivo)
+                                {
+                                    <text>&#9208; Desactivar</text>
+                                }
+                                else
+                                {
+                                    <text>&#9654; Activar</text>
+                                }
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@horario.Id" 
+                              onsubmit="return confirm('¿Seguro que deseas eliminar este horario?')" style="margin: 0;">
+                            <button type="submit" class="btn btn-sm btn-danger w-100" style="padding: 0.5rem;">
+                                &#128465; Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+            <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">&#128161; Consejos</h4>
+            <ul style="color: #7f8c8d; line-height: 1.8;">
+                <li>Los horarios <strong>activos</strong> aparecer&aacute;n disponibles para que los clientes hagan reservas</li>
+                <li>Puedes <strong>desactivar</strong> temporalmente un horario sin eliminarlo</li>
+                <li>La disponibilidad se calcula autom&aacute;ticamente: cada mesa solo puede tener una reserva por horario</li>
+                <li>Considera agregar horarios cada 30 minutos para mayor flexibilidad (ej: 12:00, 12:30, 13:00)</li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 4rem; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div style="font-size: 5rem; margin-bottom: 1.5rem;">&#9200;</div>
+            <h2 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">No hay horarios configurados</h2>
+            <p style="color: #7f8c8d; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Agrega los horarios en los que tu restaurante aceptar&aacute; reservas. Por ejemplo: 12:00, 13:00, 20:00, 21:00
+            </p>
+            <a asp-page="Create" asp-route-restauranteId="@Model.Restaurante?.Id" 
+               style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem 3rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);">
+                &#10133; Agregar Primer Horario
+            </a>
+        </div>
+    }
+</div>

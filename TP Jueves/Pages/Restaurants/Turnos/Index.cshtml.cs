@@ -21,7 +21,7 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
         }
 
         public Restaurante? Restaurante { get; set; }
-        public List<TurnoDisponible> Turnos { get; set; } = new();
+        public List<HorarioRestaurante> Horarios { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int restauranteId)
         {
@@ -29,7 +29,10 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
             if (user == null)
                 return NotFound();
 
-            Restaurante = await _db.Restaurantes.FirstOrDefaultAsync(r => r.Id == restauranteId);
+            Restaurante = await _db.Restaurantes
+                .Include(r => r.Horarios)
+                .FirstOrDefaultAsync(r => r.Id == restauranteId);
+            
             if (Restaurante == null)
                 return NotFound();
 
@@ -37,13 +40,47 @@ namespace TP_Jueves.Pages.Restaurants.Turnos
             if (Restaurante.PropietarioId != user.Id)
                 return Forbid();
 
-            Turnos = await _db.TurnosDisponibles
-                .Where(t => t.RestauranteId == restauranteId && t.IsActive)
-                .OrderBy(t => t.Fecha)
-                .ThenBy(t => t.Horario)
-                .ToListAsync();
+            Horarios = Restaurante.Horarios
+                .OrderBy(h => h.Hora)
+                .ToList();
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostToggleAsync(int id)
+        {
+            var horario = await _db.HorariosRestaurante.FindAsync(id);
+            if (horario == null)
+                return NotFound();
+
+            // Verificar propiedad del restaurante
+            var user = await _userManager.GetUserAsync(User);
+            var restaurante = await _db.Restaurantes.FindAsync(horario.RestauranteId);
+            if (restaurante?.PropietarioId != user?.Id)
+                return Forbid();
+
+            horario.EstaActivo = !horario.EstaActivo;
+            await _db.SaveChangesAsync();
+
+            return RedirectToPage(new { restauranteId = horario.RestauranteId });
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var horario = await _db.HorariosRestaurante.FindAsync(id);
+            if (horario == null)
+                return NotFound();
+
+            // Verificar propiedad del restaurante
+            var user = await _userManager.GetUserAsync(User);
+            var restaurante = await _db.Restaurantes.FindAsync(horario.RestauranteId);
+            if (restaurante?.PropietarioId != user?.Id)
+                return Forbid();
+
+            _db.HorariosRestaurante.Remove(horario);
+            await _db.SaveChangesAsync();
+
+            return RedirectToPage(new { restauranteId = horario.RestauranteId });
         }
     }
 }

@@ -60,6 +60,15 @@ namespace TP_Jueves.Pages.Account
                 return Page();
             }
 
+            // Validar si ya existe un usuario con ese email
+            var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError(string.Empty, 
+                    $"Ya existe una cuenta registrada con el email {Input.Email}. Por favor usa otro email o inicia sesi&oacute;n.");
+                return Page();
+            }
+
             var user = new ApplicationUser
             {
                 UserName = Input.Email,
@@ -86,9 +95,23 @@ namespace TP_Jueves.Pages.Account
                 return RedirectToPage("/Index");
             }
 
+            // Traducir errores comunes de Identity al español
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                var errorMessage = error.Code switch
+                {
+                    "DuplicateUserName" => $"El email {Input.Email} ya est&aacute; registrado.",
+                    "DuplicateEmail" => $"El email {Input.Email} ya est&aacute; registrado.",
+                    "InvalidEmail" => "El formato del email no es v&aacute;lido.",
+                    "PasswordTooShort" => "La contrase&ntilde;a debe tener al menos 6 caracteres.",
+                    "PasswordRequiresDigit" => "La contrase&ntilde;a debe contener al menos un n&uacute;mero.",
+                    "PasswordRequiresLower" => "La contrase&ntilde;a debe contener al menos una letra min&uacute;scula.",
+                    "PasswordRequiresUpper" => "La contrase&ntilde;a debe contener al menos una letra may&uacute;scula.",
+                    "PasswordRequiresNonAlphanumeric" => "La contrase&ntilde;a debe contener al menos un car&aacute;cter especial.",
+                    _ => error.Description
+                };
+                
+                ModelState.AddModelError(string.Empty, errorMessage);
             }
 
             return Page();

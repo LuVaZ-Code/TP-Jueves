@@ -37,11 +37,14 @@ namespace TP_Jueves.Pages.Restaurants
 
             Restaurante.PropietarioId = user.Id;
             Restaurante.CreatedAt = DateTime.UtcNow;
+            Restaurante.Estado = EstadoRestaurante.EnConfiguracion;
+            Restaurante.ConfiguracionCompletada = false;
 
             _db.Restaurantes.Add(Restaurante);
             await _db.SaveChangesAsync();
 
-            return RedirectToPage("Index");
+            // Redirigir al wizard de configuración en lugar de Index
+            return RedirectToPage("/Restaurants/Setup/Wizard", new { id = Restaurante.Id, step = 2 });
         }
     }
 }

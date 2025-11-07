@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TP_Jueves.Models
 {
@@ -33,6 +34,16 @@ namespace TP_Jueves.Models
         public ApplicationUser? Propietario { get; set; }
 
         /// <summary>
+        /// Estado actual del restaurante.
+        /// </summary>
+        public EstadoRestaurante Estado { get; set; } = EstadoRestaurante.EnConfiguracion;
+
+        /// <summary>
+        /// Indica si el wizard de configuración inicial fue completado.
+        /// </summary>
+        public bool ConfiguracionCompletada { get; set; } = false;
+
+        /// <summary>
         /// Navigation to mesas in this restaurant.
         /// </summary>
         public List<Mesa> Mesas { get; set; } = new();
@@ -43,6 +54,11 @@ namespace TP_Jueves.Models
         public List<Reserva> Reservas { get; set; } = new();
 
         /// <summary>
+        /// Horarios específicos configurados por el restaurante.
+        /// </summary>
+        public List<HorarioRestaurante> Horarios { get; set; } = new();
+
+        /// <summary>
         /// Creation timestamp in UTC.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -51,5 +67,28 @@ namespace TP_Jueves.Models
         /// Soft delete flag.
         /// </summary>
         public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
+        /// Verifica si el restaurante está listo para recibir reservas.
+        /// </summary>
+        [NotMapped]
+        public bool EstaListo => Mesas.Any() && Estado == EstadoRestaurante.Activo;
+
+        /// <summary>
+        /// Obtiene el porcentaje de configuración completado.
+        /// </summary>
+        [NotMapped]
+        public int PorcentajeConfiguracion
+        {
+            get
+            {
+                int puntos = 0;
+                if (!string.IsNullOrEmpty(Nombre)) puntos += 25;
+                if (!string.IsNullOrEmpty(Direccion)) puntos += 25;
+                if (Mesas.Any()) puntos += 30;
+                if (ConfiguracionCompletada) puntos += 20;
+                return puntos;
+            }
+        }
     }
 }

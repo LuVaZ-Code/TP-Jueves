@@ -1,0 +1,356 @@
+@page
+@model TP_Jueves.Pages.Restaurants.DashboardModel
+@{
+    ViewData["Title"] = $"Dashboard - {Model.Restaurante?.Nombre}";
+    var estadoColor = Model.Restaurante?.Estado switch
+    {
+        TP_Jueves.Models.EstadoRestaurante.Activo => "#27ae60",
+        TP_Jueves.Models.EstadoRestaurante.Pausado => "#f39c12",
+        TP_Jueves.Models.EstadoRestaurante.EnConfiguracion => "#3498db",
+        _ => "#95a5a6"
+    };
+}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0.5rem 0;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .reserva-card {
+        background: white;
+        border-left: 4px solid #667eea;
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+    .reserva-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateX(5px);
+    }
+
+    .quick-action {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .quick-action:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        text-decoration: none;
+    }
+
+    .estado-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+</style>
+
+<!-- HEADER -->
+<div class="dashboard-header">
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div style="flex: 1;">
+            <h1 style="margin: 0 0 0.5rem; font-weight: 800; font-size: 2rem;">@Model.Restaurante?.Nombre</h1>
+            <p style="margin: 0; opacity: 0.9; font-size: 1.1rem;">&#128205; @Model.Restaurante?.Direccion</p>
+            <div style="margin-top: 1rem;">
+                <span class="estado-badge" style="background: @estadoColor; color: white;">
+                    @if (Model.Restaurante?.Estado == TP_Jueves.Models.EstadoRestaurante.Activo)
+                    {
+                        <span>&#9989;</span>
+                    }
+                    else if (Model.Restaurante?.Estado == TP_Jueves.Models.EstadoRestaurante.Pausado)
+                    {
+                        <span>&#9208;</span>
+                    }
+                    else
+                    {
+                        <span>&#9881;</span>
+                    }
+                    <span>@Model.Restaurante?.Estado</span>
+                </span>
+            </div>
+        </div>
+        <div>
+            @if (Model.Restaurante?.Estado == TP_Jueves.Models.EstadoRestaurante.Activo)
+            {
+                <form method="post" asp-page-handler="CambiarEstado" asp-route-id="@Model.Id" asp-route-nuevoEstado="@((int)TP_Jueves.Models.EstadoRestaurante.Pausado)">
+                    <button type="submit" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s;">
+                        &#9208; Pausar Reservas
+                    </button>
+                </form>
+            }
+            else if (Model.Restaurante?.Estado == TP_Jueves.Models.EstadoRestaurante.Pausado)
+            {
+                <form method="post" asp-page-handler="CambiarEstado" asp-route-id="@Model.Id" asp-route-nuevoEstado="@((int)TP_Jueves.Models.EstadoRestaurante.Activo)">
+                    <button type="submit" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s;">
+                        &#9654; Reactivar
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- STATS GRID -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    @if (Model.Stats.TotalMesas > 0)
+    {
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                &#128186;
+            </div>
+            <div class="stat-value" style="color: #667eea;">@Model.Stats.TotalMesas</div>
+            <div class="stat-label">Mesas Totales</div>
+        </div>
+    }
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            &#128197;
+        </div>
+        <div class="stat-value" style="color: #f5576c;">
+            @if (Model.Stats.ReservasHoy > 0)
+            {
+                @Model.Stats.ReservasHoy
+            }
+            else
+            {
+                <span style="font-size: 1.2rem; color: #95a5a6;">Sin reservas</span>
+            }
+        </div>
+        <div class="stat-label">Reservas Hoy</div>
+    </div>
+
+    @if (Model.Stats.PersonasHoy > 0)
+    {
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                &#128101;
+            </div>
+            <div class="stat-value" style="color: #4facfe;">@Model.Stats.PersonasHoy</div>
+            <div class="stat-label">Comensales Hoy</div>
+        </div>
+    }
+
+    @if (Model.Stats.TasaOcupacionHoy > 0)
+    {
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
+                &#128202;
+            </div>
+            <div class="stat-value" style="color: #43e97b;">@Model.Stats.TasaOcupacionHoy%</div>
+            <div class="stat-label">Ocupaci&oacute;n Hoy</div>
+        </div>
+    }
+
+    @if (Model.Stats.TotalReservasActivas > 0)
+    {
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                &#9200;
+            </div>
+            <div class="stat-value" style="color: #fa709a;">@Model.Stats.TotalReservasActivas</div>
+            <div class="stat-label">Reservas Activas</div>
+        </div>
+    }
+</div>
+
+<!-- MAIN CONTENT -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- RESERVAS HOY -->
+    <div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+            <h3 style="margin: 0 0 1.5rem; color: #2c3e50; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">&#128197;</span>
+                Reservas de Hoy
+            </h3>
+
+            @if (Model.ReservasHoy.Any())
+            {
+                <div style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var reserva in Model.ReservasHoy)
+                    {
+                        var horaDisplay = !string.IsNullOrEmpty(reserva.HoraReserva) 
+                            ? reserva.HoraReserva 
+                            : reserva.Horario.ToString();
+                        
+                        <div class="reserva-card">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <div>
+                                    <strong style="font-size: 1.1rem; color: #2c3e50;">
+                                        @(reserva.Cliente?.Nombre ?? "Cliente") @(reserva.Cliente?.Apellido ?? "")
+                                    </strong>
+                                    <p style="margin: 0.25rem 0 0; color: #7f8c8d; font-size: 0.9rem;">
+                                        DNI: @reserva.DniCliente
+                                    </p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="background: #667eea; color: white; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; font-size: 0.9rem;">
+                                        @horaDisplay
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; font-size: 0.85rem; color: #7f8c8d;">
+                                <div>
+                                    <span>&#128101; @reserva.CantPersonas personas</span>
+                                </div>
+                                <div>
+                                    <span>&#127860; @reserva.Dieta</span>
+                                </div>
+                                <div>
+                                    <span>&#128186; Mesa #@(reserva.MesaId ?? 0)</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 3rem; color: #95a5a6;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">&#128237;</div>
+                    <p style="margin: 0; font-size: 1.1rem;">No hay reservas para hoy</p>
+                </div>
+            }
+        </div>
+
+        <!-- PROXIMAS RESERVAS -->
+        <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-top: 2rem;">
+            <h3 style="margin: 0 0 1.5rem; color: #2c3e50; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">&#128302;</span>
+                Pr&oacute;ximas Reservas
+            </h3>
+
+            @if (Model.ReservasProximas.Any())
+            {
+                <div style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var reserva in Model.ReservasProximas)
+                    {
+                        var horaDisplay = !string.IsNullOrEmpty(reserva.HoraReserva) 
+                            ? reserva.HoraReserva 
+                            : reserva.Horario.ToString();
+                        
+                        <div class="reserva-card" style="border-left-color: #3498db;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <div>
+                                    <strong style="color: #2c3e50;">@reserva.Fecha.ToString("dd/MM/yyyy") - @horaDisplay</strong>
+                                    <p style="margin: 0.25rem 0 0; color: #7f8c8d; font-size: 0.9rem;">
+                                        @(reserva.Cliente?.Nombre ?? "Cliente") - @reserva.CantPersonas personas
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 2rem; color: #95a5a6;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#128197;</div>
+                    <p style="margin: 0;">No hay reservas pr&oacute;ximas</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ACCIONES RAPIDAS -->
+    <div>
+        <h3 style="margin: 0 0 1.5rem; color: #2c3e50; font-weight: 700;">&#9889; Acciones R&aacute;pidas</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a asp-page="Edit" asp-route-id="@Model.Id" class="quick-action">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#9998;</div>
+                <strong style="color: #2c3e50;">Editar Informaci&oacute;n</strong>
+                <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.85rem;">Actualizar datos del restaurante</p>
+            </a>
+
+            <a asp-page="Mesas/Index" asp-route-restauranteId="@Model.Id" class="quick-action">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#128186;</div>
+                <strong style="color: #2c3e50;">Gestionar Mesas</strong>
+                <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.85rem;">
+                    @if (Model.Stats.TotalMesas > 0)
+                    {
+                        <text>@Model.Stats.TotalMesas mesa(s) configurada(s)</text>
+                    }
+                    else
+                    {
+                        <text>Configurar mesas del restaurante</text>
+                    }
+                </p>
+            </a>
+
+            <a asp-page="Turnos/Index" asp-route-restauranteId="@Model.Id" class="quick-action">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#9200;</div>
+                <strong style="color: #2c3e50;">Gestionar Horarios</strong>
+                <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.85rem;">Configurar disponibilidad</p>
+            </a>
+
+            <a asp-page="/Restaurants/Details" asp-route-id="@Model.Id" class="quick-action" target="_blank">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#128065;</div>
+                <strong style="color: #2c3e50;">Vista de Cliente</strong>
+                <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.85rem;">Ver c&oacute;mo ven los clientes</p>
+            </a>
+
+            <a asp-page="Index" class="quick-action" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">&#127968;</div>
+                <strong>Mis Restaurantes</strong>
+                <p style="margin: 0.5rem 0 0; opacity: 0.9; font-size: 0.85rem;">Ver todos</p>
+            </a>
+        </div>
+    </div>
+</div>

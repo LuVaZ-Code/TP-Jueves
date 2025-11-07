@@ -8,7 +8,7 @@
     <!-- ENCABEZADO DEL PERFIL -->
     <div class="profile-section">
         <div class="profile-header">
-            <div class="profile-avatar">??</div>
+            <div class="profile-avatar">&#128100;</div>
             <h2 class="profile-name">@Model.Input.Nombre @Model.Input.Apellido</h2>
             <p class="profile-email">@Model.Input.Email</p>
         </div>
@@ -16,7 +16,7 @@
         @if (!string.IsNullOrEmpty(Model.Message))
         {
             <div class="alert alert-success" role="alert">
-                <i class="fas fa-check-circle"></i> @Model.Message
+                &#10003; @Model.Message
             </div>
         }
 
@@ -24,7 +24,7 @@
             <!-- NOMBRE -->
             <div class="form-group">
                 <label asp-for="Input.Nombre" class="form-label">
-                    <i class="fas fa-user"></i> Nombre
+                    &#128100; Nombre
                 </label>
                 <input asp-for="Input.Nombre" class="form-control" />
                 <span asp-validation-for="Input.Nombre" class="text-danger"></span>
@@ -33,7 +33,7 @@
             <!-- APELLIDO -->
             <div class="form-group">
                 <label asp-for="Input.Apellido" class="form-label">
-                    <i class="fas fa-user"></i> Apellido
+                    &#128100; Apellido
                 </label>
                 <input asp-for="Input.Apellido" class="form-control" />
                 <span asp-validation-for="Input.Apellido" class="text-danger"></span>
@@ -42,7 +42,7 @@
             <!-- EMAIL -->
             <div class="form-group">
                 <label asp-for="Input.Email" class="form-label">
-                    <i class="fas fa-envelope"></i> Correo Electrónico
+                    &#128231; Correo Electr&oacute;nico
                 </label>
                 <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -51,23 +51,23 @@
             <!-- BOTONES -->
             <div class="btn-group" style="width: 100%; margin-top: 2rem;">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="fas fa-save"></i> Guardar Cambios
+                    &#128190; Guardar Cambios
                 </button>
                 <a asp-page="/Index" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-arrow-left"></i> Volver
+                    &larr; Volver
                 </a>
             </div>
         </form>
     </div>
 
-    <!-- INFORMACIÓN ADICIONAL -->
+    <!-- INFORMACION ADICIONAL -->
     <div class="profile-section">
         <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">
-            <i class="fas fa-info-circle"></i> Información de la Cuenta
+            &#8505; Informaci&oacute;n de la Cuenta
         </h3>
         <div style="color: #7f8c8d;">
             <p><strong>Se pueden editar:</strong> Nombre, Apellido y Email</p>
-            <p><strong>Para cambiar la contraseña:</strong> Comunícate con soporte</p>
+            <p><strong>Para cambiar la contrase&ntilde;a:</strong> Comun&iacute;cate con soporte</p>
         </div>
     </div>
 </div>

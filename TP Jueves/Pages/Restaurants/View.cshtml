@@ -1,13 +1,13 @@
 @page
 @model TP_Jueves.Pages.Restaurants.ViewModel
 @{
-    ViewData["Title"] = Model.Restaurante?.Nombre ?? "Restaurante";
+    ViewData["Title"] = (Model.Restaurante?.Nombre ?? "Restaurante");
 }
 
 <!-- HERO SECTION -->
 <section class="hero" style="margin-bottom: 2rem;">
-    <h1>@Model.Restaurante?.Nombre</h1>
-    <p>@Model.Restaurante?.Direccion</p>
+    <h1>@(Model.Restaurante?.Nombre ?? "")</h1>
+    <p>@(Model.Restaurante?.Direccion ?? "")</p>
 </section>
 
 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
@@ -17,24 +17,24 @@
             <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Sobre tu Restaurante</h3>
             
             <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 1.5rem;">
-                @Model.Restaurante?.Descripcion
+                @(Model.Restaurante?.Descripcion ?? "")
             </p>
 
             <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Informacion de Contacto</h4>
+                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">Informaci&oacute;n de Contacto</h4>
                 
                 <div style="margin-bottom: 1rem;">
                     <p style="margin: 0.5rem 0; color: #7f8c8d;">
-                        <strong>Telefono:</strong>
+                        <strong>Tel&eacute;fono:</strong>
                     </p>
-                    <p style="margin: 0;">@Model.Restaurante?.Telefono</p>
+                    <p style="margin: 0;">@(Model.Restaurante?.Telefono ?? "")</p>
                 </div>
 
                 <div>
                     <p style="margin: 0.5rem 0; color: #7f8c8d;">
                         <strong>Email:</strong>
                     </p>
-                    <p style="margin: 0;">@Model.Restaurante?.Email</p>
+                    <p style="margin: 0;">@(Model.Restaurante?.Email ?? "")</p>
                 </div>
             </div>
 
@@ -72,7 +72,7 @@
                         @if (Model.Restaurante.Mesas.Count > 3)
                         {
                             <div style="text-align: center; padding: 0.5rem; color: #7f8c8d; font-size: 0.85rem;">
-                                +@(Model.Restaurante.Mesas.Count - 3) mesas más
+                                +@(Model.Restaurante.Mesas.Count - 3) mesas m&aacute;s
                             </div>
                         }
                     </div>

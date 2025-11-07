@@ -4,12 +4,10 @@
     ViewData["Title"] = "Inicio";
 }
 
-<!-- HERO SECTION -->
 <section class="hero">
     <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="font-size: 3.5rem; margin-bottom: 1rem; animation: fadeIn 0.8s ease;">TP Jueves</h1>
-        <p style="font-size: 1.5rem; margin-bottom: 2rem; animation: fadeIn 1s ease;">Sistema Inteligente de Reservas de Restaurantes</p>
-        <div style="height: 4px; width: 100px; background: white; margin: 0 auto; border-radius: 2px; opacity: 0.8;"></div>
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">TP Jueves</h1>
+        <p style="font-size: 1.5rem; margin-bottom: 2rem;">Sistema Inteligente de Reservas de Restaurantes</p>
     </div>
 </section>
 
@@ -17,35 +15,34 @@
 {
     @if (User.IsInRole("Restaurantero"))
     {
-        <!-- VISTA RESTAURANTERO -->
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-            <h2 style="text-align: center; color: var(--dark-color); margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Restaurantero</h2>
+            <h2 style="text-align: center; margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Restaurantero</h2>
             
             <div class="feature-cards">
                 <div class="feature-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
-                    <span class="icon">??</span>
+                    <span class="icon" style="font-size: 3.5rem;">&#127978;</span>
                     <h3 style="color: white;">Mis Restaurantes</h3>
                     <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Gestiona tus restaurantes, mesas y horarios disponibles.</p>
-                    <a asp-page="/Restaurants/Index" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                        Ver Restaurantes ?
+                    <a asp-page="/Restaurants/Index" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                        Ver Restaurantes &rarr;
                     </a>
                 </div>
 
                 <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                    <span class="icon">??</span>
+                    <span class="icon" style="font-size: 3.5rem;">&#128100;</span>
                     <h3 style="color: white;">Mi Perfil</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu información personal y preferencias de cuenta.</p>
-                    <a asp-page="/Account/Profile" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                        Ver Perfil ?
+                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu informaci&oacute;n personal y preferencias de cuenta.</p>
+                    <a asp-page="/Account/Profile" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                        Ver Perfil &rarr;
                     </a>
                 </div>
 
-                <div class="feature-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: var(--dark-color); border: none;">
-                    <span class="icon">??</span>
-                    <h3>Estadísticas</h3>
-                    <p style="margin-bottom: 1.5rem;">Próximamente: Reportes detallados de tus reservas y ocupación.</p>
-                    <button style="background: rgba(0,0,0,0.1); color: var(--dark-color); padding: 1rem 2rem; border-radius: 10px; border: none; font-weight: 700; cursor: not-allowed;" disabled>
-                        Próximamente
+                <div class="feature-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2c3e50; border: none;">
+                    <span class="icon" style="font-size: 3.5rem;">&#128202;</span>
+                    <h3>Estad&iacute;sticas</h3>
+                    <p style="margin-bottom: 1.5rem;">Pr&oacute;ximamente: Reportes detallados de tus reservas y ocupaci&oacute;n.</p>
+                    <button style="background: rgba(0,0,0,0.1); color: #2c3e50; padding: 1rem 2rem; border-radius: 10px; border: none; font-weight: 700; cursor: not-allowed;" disabled>
+                        Pr&oacute;ximamente
                     </button>
                 </div>
             </div>
@@ -53,35 +50,34 @@
     }
     else if (User.IsInRole("Cliente"))
     {
-        <!-- VISTA CLIENTE -->
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-            <h2 style="text-align: center; color: var(--dark-color); margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Cliente</h2>
+            <h2 style="text-align: center; margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Cliente</h2>
             
             <div class="feature-cards">
                 <div class="feature-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none;">
-                    <span class="icon">???</span>
+                    <span class="icon" style="font-size: 3.5rem;">&#128269;</span>
                     <h3 style="color: white;">Buscar Restaurante</h3>
                     <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Descubre y reserva en nuestros restaurantes asociados.</p>
-                    <a asp-page="/Restaurants/Browse" style="background: white; color: #11998e; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                        Ver Restaurantes ?
+                    <a asp-page="/Restaurants/Browse" style="background: white; color: #11998e; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                        Ver Restaurantes &rarr;
                     </a>
                 </div>
 
                 <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                    <span class="icon">??</span>
+                    <span class="icon" style="font-size: 3.5rem;">&#128197;</span>
                     <h3 style="color: white;">Mis Reservas</h3>
                     <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Ver, gestionar y cancelar tus reservas activas.</p>
-                    <a asp-page="/Reservations/List" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                        Ver Reservas ?
+                    <a asp-page="/Reservations/List" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                        Ver Reservas &rarr;
                     </a>
                 </div>
 
                 <div class="feature-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
-                    <span class="icon">??</span>
+                    <span class="icon" style="font-size: 3.5rem;">&#128100;</span>
                     <h3 style="color: white;">Mi Perfil</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu información personal y configuración.</p>
-                    <a asp-page="/Account/Profile" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                        Ver Perfil ?
+                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu informaci&oacute;n personal y configuraci&oacute;n.</p>
+                    <a asp-page="/Account/Profile" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                        Ver Perfil &rarr;
                     </a>
                 </div>
             </div>
@@ -89,16 +85,15 @@
     }
     else
     {
-        <!-- USUARIO SIN ROL -->
         <div style="max-width: 700px; margin: 3rem auto; padding: 0 1rem;">
-            <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">??</div>
-                <h3 style="color: var(--dark-color); font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">Advertencia</h3>
-                <p style="color: var(--dark-color); font-size: 1.2rem; margin-bottom: 2rem;">
+            <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 3rem; border-radius: 16px; text-align: center;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">&#9888;</div>
+                <h3 style="color: #2c3e50; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">Advertencia</h3>
+                <p style="color: #2c3e50; font-size: 1.2rem; margin-bottom: 2rem;">
                     Tu cuenta no tiene un rol asignado. Por favor, contacta al administrador para obtener acceso.
                 </p>
-                <a asp-page="/Account/Logout" style="background: var(--danger-color); color: white; padding: 1rem 2.5rem; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-block;">
-                    Cerrar Sesión
+                <a asp-page="/Account/Logout" style="background: #e74c3c; color: white; padding: 1rem 2.5rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                    Cerrar Sesi&oacute;n
                 </a>
             </div>
         </div>
@@ -106,77 +101,73 @@
 }
 else
 {
-    <!-- VISTA NO AUTENTICADO -->
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-        <!-- CTA SECTION -->
         <div style="text-align: center; padding: 3rem 1rem; margin-bottom: 3rem;">
-            <div style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
-                <h3 style="color: white; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">¡Comienza Ahora!</h3>
+            <div style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; padding: 2.5rem; border-radius: 16px;">
+                <h3 style="color: white; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">&iexcl;Comienza Ahora!</h3>
                 <p style="color: rgba(255,255,255,0.95); font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    Explora nuestros restaurantes sin necesidad de registro, o <strong>inicia sesión</strong> para hacer reservas al instante.
+                    Explora nuestros restaurantes sin necesidad de registro, o <strong>inicia sesi&oacute;n</strong> para hacer reservas al instante.
                 </p>
 
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a asp-page="/Restaurants/Browse" style="background: white; color: #0984e3; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s;">
-                        ??? Ver Restaurantes
+                    <a asp-page="/Restaurants/Browse" style="background: white; color: #0984e3; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem;">
+                        &#127860; Ver Restaurantes
                     </a>
-                    <a asp-page="/Account/Login" style="background: rgba(255,255,255,0.2); color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem; border: 2px solid white; transition: all 0.3s;">
-                        Iniciar Sesión
+                    <a asp-page="/Account/Login" style="background: rgba(255,255,255,0.2); color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem; border: 2px solid white;">
+                        Iniciar Sesi&oacute;n
                     </a>
-                    <a asp-page="/Account/Register" style="background: #11998e; color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem; transition: all 0.3s;">
+                    <a asp-page="/Account/Register" style="background: #11998e; color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem;">
                         Registrarse
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- CARACTERÍSTICAS -->
-        <h2 style="text-align: center; color: var(--dark-color); margin: 4rem 0 2.5rem; font-weight: 800; font-size: 2.2rem;">
-            ¿Por qué elegir TP Jueves?
+        <h2 style="text-align: center; margin: 4rem 0 2.5rem; font-weight: 800; font-size: 2.2rem;">
+            &iquest;Por qu&eacute; elegir TP Jueves?
         </h2>
 
         <div class="feature-cards">
             <div class="feature-card">
-                <span class="icon">?</span>
-                <h3>Rápido y Fácil</h3>
-                <p>Reserva tu mesa en segundos. Solo necesitas algunos datos básicos y listo.</p>
+                <span class="icon">&#9889;</span>
+                <h3>R&aacute;pido y F&aacute;cil</h3>
+                <p>Reserva tu mesa en segundos. Solo necesitas algunos datos b&aacute;sicos y listo.</p>
             </div>
 
             <div class="feature-card">
-                <span class="icon">??</span>
+                <span class="icon">&#128274;</span>
                 <h3>Seguro</h3>
-                <p>Tus datos están protegidos con los más altos estándares de seguridad y encriptación.</p>
+                <p>Tus datos est&aacute;n protegidos con los m&aacute;s altos est&aacute;ndares de seguridad y encriptaci&oacute;n.</p>
             </div>
 
             <div class="feature-card">
-                <span class="icon">??</span>
+                <span class="icon">&#128241;</span>
                 <h3>Accesible</h3>
                 <p>Reserva desde cualquier dispositivo: celular, tablet o computadora, en cualquier momento.</p>
             </div>
 
             <div class="feature-card">
-                <span class="icon">??</span>
-                <h3>Confirmación</h3>
-                <p>Recibe confirmación inmediata de tu reserva al completar el formulario.</p>
+                <span class="icon">&#9989;</span>
+                <h3>Confirmaci&oacute;n</h3>
+                <p>Recibe confirmaci&oacute;n inmediata de tu reserva al completar el formulario.</p>
             </div>
 
             <div class="feature-card">
-                <span class="icon">??</span>
+                <span class="icon">&#127919;</span>
                 <h3>Gestiona</h3>
                 <p>Modifica o cancela tus reservas cuando lo necesites desde tu panel de control.</p>
             </div>
 
             <div class="feature-card">
-                <span class="icon">???????????</span>
+                <span class="icon">&#128101;</span>
                 <h3>Grupos</h3>
-                <p>Realiza reservas para grupos de hasta 20 personas con preferencias dietéticas especiales.</p>
+                <p>Realiza reservas para grupos de hasta 20 personas con preferencias diet&eacute;ticas especiales.</p>
             </div>
         </div>
 
-        <!-- HOW IT WORKS -->
-        <div style="margin: 5rem 0; background: white; padding: 3rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-            <h2 style="text-align: center; color: var(--dark-color); margin-bottom: 3rem; font-weight: 800; font-size: 2rem;">
-                ¿Cómo Funciona?
+        <div style="margin: 5rem 0; background: white; padding: 3rem; border-radius: 16px;">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-weight: 800; font-size: 2rem;">
+                &iquest;C&oacute;mo Funciona?
             </h2>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
@@ -184,7 +175,7 @@ else
                     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
                         1
                     </div>
-                    <h4 style="color: var(--dark-color); font-weight: 700; margin-bottom: 0.75rem;">Explora</h4>
+                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Explora</h4>
                     <p style="color: #636e72;">Busca entre nuestros restaurantes asociados</p>
                 </div>
 
@@ -192,40 +183,18 @@ else
                     <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
                         2
                     </div>
-                    <h4 style="color: var(--dark-color); font-weight: 700; margin-bottom: 0.75rem;">Reserva</h4>
-                    <p style="color: #636e72;">Elige fecha, horario y número de comensales</p>
+                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Reserva</h4>
+                    <p style="color: #636e72;">Elige fecha, horario y n&uacute;mero de comensales</p>
                 </div>
 
                 <div style="text-align: center;">
                     <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
                         3
                     </div>
-                    <h4 style="color: var(--dark-color); font-weight: 700; margin-bottom: 0.75rem;">Disfruta</h4>
-                    <p style="color: #636e72;">Llega y disfruta tu experiencia gastronómica</p>
+                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Disfruta</h4>
+                    <p style="color: #636e72;">Llega y disfruta tu experiencia gastron&oacute;mica</p>
                 </div>
             </div>
         </div>
     </div>
 }
-
-<style>
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .feature-card:hover {
-        transform: translateY(-10px) scale(1.02);
-    }
-
-    a:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
-    }
-</style>

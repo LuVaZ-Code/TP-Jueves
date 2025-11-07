@@ -26,7 +26,7 @@ namespace TP_Jueves.Pages.Restaurants
         public async Task OnGetAsync()
         {
             var query = _db.Restaurantes
-                .Where(r => !r.IsDeleted)
+                .Where(r => !r.IsDeleted && r.Estado == EstadoRestaurante.Activo && r.ConfiguracionCompletada)
                 .OrderBy(r => r.Nombre)
                 .AsQueryable();
 

@@ -14,6 +14,23 @@
 
         <!-- BODY -->
         <div class="auth-card-body">
+            <!-- MOSTRAR ERRORES GENERALES -->
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(string.Empty))
+            {
+                <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; animation: slideIn 0.3s ease;">
+                    <div style="display: flex; align-items: start; gap: 1rem;">
+                        <div style="font-size: 1.5rem;">&#9888;</div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 0.5rem 0; font-weight: 700; font-size: 1.1rem;">Error al crear la cuenta</h4>
+                            @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+                            {
+                                <p style="margin: 0.25rem 0; font-size: 0.95rem;">&#8226; @Html.Raw(error.ErrorMessage)</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
             <form method="post" novalidate>
                 <!-- NOMBRE -->
                 <div class="form-group">
@@ -36,7 +53,7 @@
                 <!-- EMAIL -->
                 <div class="form-group">
                     <label asp-for="Input.Email" class="form-label">
-                        Correo Electronico
+                        Correo Electr&oacute;nico
                     </label>
                     <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -53,28 +70,28 @@
                     </select>
                     <span asp-validation-for="Input.Rol" class="text-danger"></span>
                     <small class="form-text" style="color: #7f8c8d;">
-                        Puedes cambiar esto mas adelante si lo deseas.
+                        Puedes cambiar esto m&aacute;s adelante si lo deseas.
                     </small>
                 </div>
 
                 <!-- CONTRASENA -->
                 <div class="form-group">
                     <label asp-for="Input.Password" class="form-label">
-                        Contrasena
+                        Contrase&ntilde;a
                     </label>
-                    <input asp-for="Input.Password" class="form-control" placeholder="Minimo 6 caracteres" />
+                    <input asp-for="Input.Password" class="form-control" placeholder="M&iacute;nimo 6 caracteres" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                     <small class="form-text">
-                        Debe contener: minusculas y numeros
+                        Debe contener: min&uacute;sculas y n&uacute;meros
                     </small>
                 </div>
 
                 <!-- CONFIRMAR CONTRASENA -->
                 <div class="form-group">
                     <label asp-for="Input.ConfirmPassword" class="form-label">
-                        Confirmar Contrasena
+                        Confirmar Contrase&ntilde;a
                     </label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repetir contrasena" />
+                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repetir contrase&ntilde;a" />
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
 
@@ -86,7 +103,7 @@
 
             <!-- LINK A LOGIN -->
             <div class="auth-link">
-                Tienes cuenta? <a asp-page="Login">Ingresa aqui</a>
+                &iquest;Tienes cuenta? <a asp-page="Login">Ingresa aqu&iacute;</a>
             </div>
         </div>
     </div>
@@ -94,4 +111,17 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
+    <style>
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 }

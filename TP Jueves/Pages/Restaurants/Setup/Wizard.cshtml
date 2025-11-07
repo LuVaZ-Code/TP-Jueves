@@ -1,0 +1,493 @@
+@page
+@model TP_Jueves.Pages.Restaurants.Setup.WizardModel
+@{
+    ViewData["Title"] = "Configurar Restaurante";
+    var progressPercent = Model.Step * 25;
+}
+
+<style>
+    .wizard-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+
+    .progress-bar-custom {
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 3rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.5s ease;
+    }
+
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .step-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+    }
+
+    .step-item.active .step-circle {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        transform: scale(1.1);
+    }
+
+    .step-item.completed .step-circle {
+        background: #27ae60;
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .step-item.active .step-label {
+        color: #667eea;
+    }
+
+    .wizard-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        padding: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .wizard-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .wizard-subtitle {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 0.9rem;
+        font-size: 1rem;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+
+    .mesa-config {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .mesa-config-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .turno-item {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+
+    .turno-item.active {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+
+    .btn-wizard {
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary-wizard {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary-wizard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary-wizard {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .review-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .review-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 3rem;
+        color: white;
+    }
+</style>
+
+<!-- PROGRESS BAR -->
+<div class="wizard-container">
+    <div class="progress-bar-custom">
+        <div class="progress-fill" style="width: @progressPercent%"></div>
+    </div>
+
+    <!-- STEP INDICATOR -->
+    <div class="step-indicator">
+        <div class="step-item @(Model.Step >= 1 ? "active" : "") @(Model.Step > 1 ? "completed" : "")">
+            <div class="step-circle">
+                @if (Model.Step > 1)
+                {
+                    <span>?</span>
+                }
+                else
+                {
+                    <span>1</span>
+                }
+            </div>
+            <div class="step-label">Información</div>
+        </div>
+        <div class="step-item @(Model.Step >= 2 ? "active" : "") @(Model.Step > 2 ? "completed" : "")">
+            <div class="step-circle">
+                @if (Model.Step > 2)
+                {
+                    <span>?</span>
+                }
+                else
+                {
+                    <span>2</span>
+                }
+            </div>
+            <div class="step-label">Mesas</div>
+        </div>
+        <div class="step-item @(Model.Step >= 3 ? "active" : "") @(Model.Step > 3 ? "completed" : "")">
+            <div class="step-circle">
+                @if (Model.Step > 3)
+                {
+                    <span>?</span>
+                }
+                else
+                {
+                    <span>3</span>
+                }
+            </div>
+            <div class="step-label">Horarios</div>
+        </div>
+        <div class="step-item @(Model.Step >= 4 ? "active" : "")">
+            <div class="step-circle">4</div>
+            <div class="step-label">Revisar</div>
+        </div>
+    </div>
+
+    <!-- STEP CONTENT -->
+    @if (Model.Step == 1)
+    {
+        <div class="wizard-card">
+            <h1 class="wizard-title">&#128205; Informaci&oacute;n del Restaurante</h1>
+            <p class="wizard-subtitle">Cu&eacute;ntanos sobre tu restaurante</p>
+
+            <form method="post" asp-page-handler="Step1">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del Restaurante *</label>
+                    <input asp-for="Input.Nombre" class="form-control" placeholder="Ej: La Trattoria Italiana" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripci&oacute;n</label>
+                    <textarea asp-for="Input.Descripcion" class="form-control" rows="3" placeholder="Describe tu restaurante..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Direcci&oacute;n *</label>
+                    <input asp-for="Input.Direccion" class="form-control" placeholder="Calle y n&uacute;mero" required />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Tel&eacute;fono *</label>
+                        <input asp-for="Input.Telefono" class="form-control" placeholder="1123456789" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Input.Email" type="email" class="form-control" placeholder="contacto@restaurante.com" />
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a asp-page="/Restaurants/Index" class="btn-wizard btn-secondary-wizard" style="flex: 1; text-align: center; text-decoration: none;">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn-wizard btn-primary-wizard" style="flex: 1;">
+                        Siguiente &rarr;
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+    else if (Model.Step == 2)
+    {
+        <div class="wizard-card">
+            <h1 class="wizard-title">&#128186; Configurar Mesas</h1>
+            <p class="wizard-subtitle">Define la capacidad de tu restaurante</p>
+
+            <form method="post" asp-page-handler="Step2">
+                <input type="hidden" asp-for="Id" />
+                
+                <p style="color: #7f8c8d; margin-bottom: 1.5rem;">
+                    Indica cu&aacute;ntas mesas tienes de cada capacidad:
+                </p>
+
+                <div id="mesasContainer">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        var capacidad = (i + 1) * 2;
+                        <div class="mesa-config">
+                            <div class="mesa-config-item">
+                                <div>
+                                    <strong>Mesas para @capacidad personas</strong>
+                                    <p style="margin: 0; font-size: 0.85rem; color: #7f8c8d;">Capacidad ideal para grupos de @capacidad</p>
+                                </div>
+                                <div>
+                                    <input type="hidden" name="Mesas[@i].Capacidad" value="@capacidad" />
+                                    <input type="number" name="Mesas[@i].Cantidad" min="0" max="20" value="0" 
+                                           class="form-control" placeholder="Cantidad" 
+                                           style="text-align: center; font-size: 1.2rem; font-weight: 700;" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+                    <p style="margin: 0; color: #856404;">
+                        &#128161; <strong>Tip:</strong> Puedes modificar las mesas m&aacute;s tarde desde el panel de administraci&oacute;n
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a asp-page="Wizard" asp-route-id="@Model.Id" asp-route-step="1" class="btn-wizard btn-secondary-wizard" style="flex: 1; text-align: center; text-decoration: none;">
+                        &larr; Anterior
+                    </a>
+                    <button type="submit" class="btn-wizard btn-primary-wizard" style="flex: 1;">
+                        Siguiente &rarr;
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+    else if (Model.Step == 3)
+    {
+        <div class="wizard-card">
+            <h1 class="wizard-title">&#9200; Horarios del Restaurante</h1>
+            <p class="wizard-subtitle">Define los horarios en que aceptas reservas</p>
+
+            <form method="post" asp-page-handler="Step3">
+                <input type="hidden" asp-for="Id" />
+                
+                <p style="color: #7f8c8d; margin-bottom: 1.5rem;">
+                    Configura los horarios espec&iacute;ficos para las reservas (ej: 12:00, 13:00, 20:00, 21:00)
+                </p>
+
+                <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <p style="margin: 0; color: #1565c0; font-size: 0.9rem;">
+                        &#128161; <strong>Importante:</strong> La disponibilidad se calcular&aacute; autom&aacute;ticamente seg&uacute;n las mesas disponibles en cada horario.
+                    </p>
+                </div>
+
+                <div id="horariosContainer" style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                    @for (int i = 0; i < 10; i++)
+                    {
+                        var horasSugeridas = new[] { "12:00", "12:30", "13:00", "13:30", "14:00", "20:00", "20:30", "21:00", "21:30", "22:00" };
+                        <div class="turno-item" style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #e0e0e0;">
+                            <div style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; align-items: center;">
+                                <div>
+                                    <label style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.25rem; display: block;">Hora</label>
+                                    <input type="text" name="Horarios[@i].Hora" value="@horasSugeridas[i]" 
+                                           class="form-control" placeholder="HH:MM" maxlength="5"
+                                           pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
+                                           style="text-align: center; font-weight: 700;" />
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.25rem; display: block;">Descripci&oacute;n (opcional)</label>
+                                    <input type="text" name="Horarios[@i].Descripcion" 
+                                           value="@(i < 5 ? "Almuerzo" : "Cena")"
+                                           class="form-control" placeholder="Ej: Almuerzo, Cena" />
+                                </div>
+                                <div style="text-align: center;">
+                                    <label style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.25rem; display: block;">Activo</label>
+                                    <input type="checkbox" name="Horarios[@i].Activo" value="true" checked
+                                           style="width: 24px; height: 24px; cursor: pointer;" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div style="background: #d1ecf1; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+                    <p style="margin: 0; color: #0c5460;">
+                        &#8505; <strong>Nota:</strong> Puedes modificar estos horarios m&aacute;s tarde desde el panel de administraci&oacute;n.
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a asp-page="Wizard" asp-route-id="@Model.Id" asp-route-step="2" class="btn-wizard btn-secondary-wizard" style="flex: 1; text-align: center; text-decoration: none;">
+                        &larr; Anterior
+                    </a>
+                    <button type="submit" class="btn-wizard btn-primary-wizard" style="flex: 1;">
+                        Siguiente &rarr;
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+    else if (Model.Step == 4)
+    {
+        <div class="wizard-card" style="text-align: center;">
+            <div class="success-icon">&#10003;</div>
+            <h1 class="wizard-title">&iexcl;Todo Listo!</h1>
+            <p class="wizard-subtitle">Revisa la configuraci&oacute;n de tu restaurante</p>
+
+            <div class="review-section" style="text-align: left;">
+                <h4 style="margin-bottom: 1rem; color: #2c3e50;">&#128205; Informaci&oacute;n B&aacute;sica</h4>
+                <div class="review-item">
+                    <span style="color: #7f8c8d;">Nombre:</span>
+                    <strong>@Model.Restaurante?.Nombre</strong>
+                </div>
+                <div class="review-item">
+                    <span style="color: #7f8c8d;">Direcci&oacute;n:</span>
+                    <strong>@Model.Restaurante?.Direccion</strong>
+                </div>
+                <div class="review-item">
+                    <span style="color: #7f8c8d;">Tel&eacute;fono:</span>
+                    <strong>@Model.Restaurante?.Telefono</strong>
+                </div>
+            </div>
+
+            <div class="review-section" style="text-align: left;">
+                <h4 style="margin-bottom: 1rem; color: #2c3e50;">&#128186; Mesas Configuradas</h4>
+                <div class="review-item">
+                    <span style="color: #7f8c8d;">Total de mesas:</span>
+                    <strong>@(Model.Restaurante?.Mesas.Count ?? 0) mesas</strong>
+                </div>
+                @if (Model.Restaurante?.Mesas.Any() ?? false)
+                {
+                    var mesasPorCapacidad = Model.Restaurante.Mesas.GroupBy(m => m.Capacidad);
+                    foreach (var grupo in mesasPorCapacidad)
+                    {
+                        <div class="review-item">
+                            <span style="color: #7f8c8d;">Mesas para @grupo.Key personas:</span>
+                            <strong>@grupo.Count() mesa(s)</strong>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                <p style="margin: 0; font-size: 1.1rem;">
+                    &#127881; <strong>&iexcl;Tu restaurante est&aacute; listo para recibir reservas!</strong>
+                </p>
+            </div>
+
+            <form method="post" asp-page-handler="Complete">
+                <input type="hidden" asp-for="Id" />
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a asp-page="Wizard" asp-route-id="@Model.Id" asp-route-step="3" class="btn-wizard btn-secondary-wizard" style="flex: 1; text-align: center; text-decoration: none;">
+                        &larr; Anterior
+                    </a>
+                    <button type="submit" class="btn-wizard btn-primary-wizard" style="flex: 2;">
+                        Activar Restaurante &#128640;
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
