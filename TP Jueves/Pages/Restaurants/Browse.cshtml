@@ -1,146 +1,140 @@
 @page
 @model TP_Jueves.Pages.Restaurants.BrowseModel
 @{
-    ViewData["Title"] = "Restaurantes";
+    ViewData["Title"] = "Restaurantes - Restaurancito";
 }
 
-<!-- HERO SECTION -->
-<section class="hero" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-    <h1>&#127860; Restaurantes Disponibles</h1>
-    <p>Descubre tu pr&oacute;xima experiencia gastron&oacute;mica perfecta</p>
-</section>
-
-<!-- SEARCH BAR -->
-<div style="max-width: 800px; margin: -30px auto 3rem; position: relative; z-index: 10;">
-    <form method="get" novalidate style="background: white; padding: 1rem; border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.15);">
-        <div style="display: flex; gap: 1rem; align-items: center;">
-            <input type="text" name="searchTerm" class="form-control" 
-                   placeholder="&#128269; Buscar por nombre, cocina o ubicaci&oacute;n..." 
-                   value="@Model.SearchTerm" 
-                   style="flex: 1; border: 2px solid #e0e0e0; border-radius: 12px; padding: 1.2rem; font-size: 1.1rem;" />
+<!-- AIRBNB-STYLE HEADER -->
+<div class="browse-header">
+    <div class="browse-container">
+        <h1 class="browse-title">Restaurantes en tu zona</h1>
+        
+        <!-- AIRBNB SEARCH BAR -->
+        <form method="get" class="airbnb-search-bar">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" 
+                       name="searchTerm" 
+                       class="search-input" 
+                       placeholder="Buscar restaurantes..." 
+                       value="@Model.SearchTerm" />
+            </div>
             
-            <button type="submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+            <button type="submit" class="search-button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
                 Buscar
             </button>
             
             @if (!string.IsNullOrEmpty(Model.SearchTerm))
             {
-                <a asp-page="Browse" style="background: #95a5a6; color: white; padding: 1.2rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; transition: all 0.3s; white-space: nowrap;">
-                    Limpiar
-                </a>
+                <a asp-page="Browse" class="clear-button">Limpiar</a>
             }
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+
 
 <!-- RESULTS COUNT -->
 @if (Model.Restaurantes.Any())
 {
-    <div style="max-width: 1200px; margin: 0 auto 2rem; padding: 0 1rem;">
-        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center;">
-            <p style="margin: 0; color: #2c3e50; font-size: 1.1rem;">
-                Se encontraron <strong style="color: #f5576c; font-size: 1.3rem;">@Model.Restaurantes.Count</strong> restaurante(s)
-                @if (!string.IsNullOrEmpty(Model.SearchTerm))
-                {
-                    <span>para "<strong>@Model.SearchTerm</strong>"</span>
-                }
-            </p>
-        </div>
+    <div class="browse-container">
+        <p class="results-count">
+            @Model.Restaurantes.Count restaurante@(Model.Restaurantes.Count != 1 ? "s" : "")
+            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+            {
+                <span class="search-term">· "@Model.SearchTerm"</span>
+            }
+        </p>
     </div>
 
-    <!-- RESTAURANT GRID -->
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 2.5rem;">
+    <!-- AIRBNB RESTAURANT GRID -->
+    <div class="browse-container">
+        <div class="restaurant-grid">
             @foreach (var restaurante in Model.Restaurantes)
             {
-                <div class="card" style="border-radius: 20px; overflow: hidden; transition: all 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" 
-                     onmouseover="this.style.transform='translateY(-12px)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.2)';" 
-                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)';">
-                    
-                    <!-- HEADER -->
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                        
-                        <div style="position: relative; z-index: 2;">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
-                                    &#127860;
-                                </div>
-                                <h5 style="margin: 0; font-size: 1.6rem; font-weight: 800; flex: 1;">@restaurante.Nombre</h5>
-                            </div>
-                            <p style="margin: 0; font-size: 1rem; opacity: 0.95; display: flex; align-items: center; gap: 0.5rem;">
-                                &#128205; @restaurante.Direccion
-                            </p>
+                <div class="restaurant-card">
+                    <!-- IMAGE PLACEHOLDER -->
+                    <div class="card-image">
+                        <div class="image-placeholder">
+                            <span class="restaurant-emoji">🍽️</span>
                         </div>
+                        <button class="favorite-button">
+                            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 28c-0.25 0-0.5-0.094-0.688-0.281l-9.75-9.406c-0.125-0.109-3.563-3.375-3.563-7.188 0-4.781 3.656-8.125 8-8.125 2.219 0 4.438 0.969 6 2.469 1.563-1.5 3.781-2.469 6-2.469 4.344 0 8 3.344 8 8.125 0 3.813-3.438 7.078-3.563 7.188l-9.75 9.406c-0.188 0.187-0.438 0.281-0.688 0.281z"></path>
+                            </svg>
+                        </button>
                     </div>
-
-                    <!-- BODY -->
-                    <div class="card-body" style="padding: 2rem;">
-                        <p style="color: #636e72; line-height: 1.8; margin-bottom: 1.5rem; min-height: 80px;">
-                            @if (!string.IsNullOrEmpty(restaurante.Descripcion))
-                            {
-                                @restaurante.Descripcion
-                            }
-                            else
-                            {
-                                <em style="opacity: 0.7;">Descubre las delicias que este restaurante tiene para ofrecer.</em>
-                            }
-                        </p>
-
-                        <!-- CONTACT INFO -->
-                        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                            <div style="display: grid; gap: 1rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <span style="font-size: 1.2rem;">&#128222;</span>
-                                    <div>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Tel&eacute;fono</p>
-                                        <p style="margin: 0; font-weight: 700; color: #2c3e50;">@restaurante.Telefono</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <span style="font-size: 1.2rem;">&#128231;</span>
-                                    <div style="flex: 1; overflow: hidden;">
-                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Email</p>
-                                        <p style="margin: 0; font-weight: 700; color: #2c3e50; overflow: hidden; text-overflow: ellipsis;">@restaurante.Email</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <span style="font-size: 1.2rem;">&#128186;</span>
-                                    <div>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #95a5a6; font-weight: 600;">Mesas</p>
-                                        <p style="margin: 0; font-weight: 700; color: #2c3e50;">@(restaurante.Mesas?.Count ?? 0) disponibles</p>
-                                    </div>
-                                </div>
+                    
+                    <!-- CARD CONTENT -->
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3 class="card-title">@restaurante.Nombre</h3>
+                            <div class="card-rating">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                </svg>
+                                <span>4.9</span>
                             </div>
                         </div>
-
-                        <!-- ACTIONS -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                            <a asp-page="Details" asp-route-id="@restaurante.Id" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                &#128065; Ver M&aacute;s
-                            </a>
+                        
+                        <p class="card-location">@restaurante.Direccion</p>
+                        
+                        @if (!string.IsNullOrEmpty(restaurante.Descripcion))
+                        {
+                            <p class="card-description">@restaurante.Descripcion</p>
+                        }
+                        
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <span>@restaurante.Telefono</span>
+                            </div>
                             
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span>@(restaurante.Mesas?.Count ?? 0) mesas</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
                             @if (User?.Identity?.IsAuthenticated ?? false)
                             {
                                 @if (User.IsInRole("Cliente"))
                                 {
-                                    <a asp-page="/Reserve" asp-route-restauranteId="@restaurante.Id" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                        &#128197; Reservar
+                                    <a asp-page="/Reserve" asp-route-restauranteId="@restaurante.Id" class="btn-reserve">
+                                        Reservar
                                     </a>
                                 }
                                 else
                                 {
-                                    <button disabled style="background: #95a5a6; color: white; padding: 1rem; border-radius: 10px; border: none; font-weight: 700; cursor: not-allowed;">
-                                        Solo Clientes
+                                    <button disabled class="btn-reserve btn-disabled">
+                                        Solo clientes
                                     </button>
                                 }
                             }
                             else
                             {
-                                <a asp-page="/Account/Login" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                    &#128273; Ingresar
+                                <a asp-page="/Account/Login" class="btn-reserve">
+                                    Iniciar sesión para reservar
                                 </a>
                             }
+                            
+                            <a asp-page="Details" asp-route-id="@restaurante.Id" class="btn-details">
+                                Ver detalles
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -150,44 +144,426 @@
 }
 else
 {
-    <!-- NO RESULTS -->
-    <div style="max-width: 700px; margin: 3rem auto; padding: 0 1rem;">
-        <div style="background: white; padding: 4rem 2rem; border-radius: 20px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.1);">
-            <div style="font-size: 5rem; margin-bottom: 1.5rem;">&#128533;</div>
-            <h3 style="color: #2c3e50; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">
-                No encontramos resultados
-            </h3>
-            <p style="color: #636e72; font-size: 1.1rem; margin-bottom: 2rem;">
+    <!-- NO RESULTS - AIRBNB STYLE -->
+    <div class="browse-container">
+        <div class="no-results">
+            <div class="no-results-icon">
+                <svg viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
+                    <path d="M22 22l20 20M42 22l-20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h2 class="no-results-title">No se encontraron resultados</h2>
+            <p class="no-results-text">
                 @if (!string.IsNullOrEmpty(Model.SearchTerm))
                 {
-                    <span>No hay restaurantes que coincidan con "<strong>@Model.SearchTerm</strong>"</span>
+                    <span>Intenta con otra búsqueda o explora todos los restaurantes disponibles</span>
                 }
                 else
                 {
-                    <span>No hay restaurantes disponibles en este momento.</span>
+                    <span>No hay restaurantes disponibles en este momento</span>
                 }
             </p>
             @if (!string.IsNullOrEmpty(Model.SearchTerm))
             {
-                <a asp-page="Browse" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; transition: all 0.3s;">
-                    Ver Todos los Restaurantes
-                </a>
+                <a asp-page="Browse" class="btn-reset">Ver todos los restaurantes</a>
             }
         </div>
     </div>
 }
 
-<!-- BACK BUTTON -->
-<div style="max-width: 1200px; margin: 3rem auto 0; padding: 0 1rem; text-align: center;">
-    <a asp-page="/Index" style="background: white; color: #2c3e50; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s;">
-        &larr; Volver al Inicio
-    </a>
-</div>
-
 <style>
-    @@media (max-width: 768px) {
-        .card {
-            margin-bottom: 2rem;
-        }
+/* AIRBNB BROWSE PAGE STYLES */
+.browse-header {
+    background: white;
+    border-bottom: 1px solid var(--airbnb-light-gray);
+    padding: 24px 0;
+    margin-bottom: 32px;
+}
+
+.browse-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.browse-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--airbnb-black);
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+}
+
+/* AIRBNB SEARCH BAR */
+.airbnb-search-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 850px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: var(--airbnb-gray);
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    color: var(--airbnb-black);
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--airbnb-black);
+    box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+}
+
+.search-button {
+    background: var(--airbnb-red);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.search-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.search-button:hover {
+    background: var(--airbnb-red-dark);
+}
+
+.clear-button {
+    background: white;
+    color: var(--airbnb-black);
+    border: 1px solid var(--airbnb-black);
+    padding: 14px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.clear-button:hover {
+    background: var(--airbnb-lighter-gray);
+    color: var(--airbnb-black);
+}
+
+.results-count {
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin-bottom: 24px;
+}
+
+.search-term {
+    color: var(--airbnb-black);
+    font-weight: 600;
+}
+
+/* AIRBNB RESTAURANT GRID */
+.restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.restaurant-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.restaurant-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* AIRBNB CARD IMAGE */
+.card-image {
+    position: relative;
+    width: 100%;
+    padding-top: 66.67%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FFF1F3 0%, #F7F7F7 100%);
+}
+
+.image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.restaurant-emoji {
+    font-size: 64px;
+    opacity: 0.6;
+}
+
+.favorite-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.favorite-button:hover {
+    transform: scale(1.1);
+}
+
+.favorite-button svg {
+    width: 16px;
+    height: 16px;
+    fill: rgba(0, 0, 0, 0.5);
+}
+
+.favorite-button:hover svg {
+    fill: var(--airbnb-red);
+}
+
+/* CARD CONTENT */
+.card-content {
+    padding: 16px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.card-rating svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--airbnb-red);
+}
+
+.card-rating span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+}
+
+.card-location {
+    font-size: 15px;
+    color: var(--airbnb-gray);
+    margin: 0 0 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-description {
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--airbnb-light-gray);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--airbnb-gray);
+}
+
+.detail-item svg {
+    width: 16px;
+    height: 16px;
+    color: var(--airbnb-gray);
+}
+
+.card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-reserve,
+.btn-details {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-reserve {
+    background: var(--airbnb-red);
+    color: white;
+}
+
+.btn-reserve:hover {
+    background: var(--airbnb-red-dark);
+    color: white;
+}
+
+.btn-reserve.btn-disabled {
+    background: var(--airbnb-light-gray);
+    color: var(--airbnb-gray);
+    cursor: not-allowed;
+}
+
+.btn-details {
+    background: white;
+    color: var(--airbnb-black);
+    border: 1px solid var(--airbnb-light-gray);
+}
+
+.btn-details:hover {
+    background: var(--airbnb-lighter-gray);
+    color: var(--airbnb-black);
+    border-color: var(--airbnb-black);
+}
+
+/* NO RESULTS */
+.no-results {
+    text-align: center;
+    padding: 80px 24px;
+}
+
+.no-results-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    color: var(--airbnb-light-gray);
+}
+
+.no-results-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin-bottom: 12px;
+}
+
+.no-results-text {
+    font-size: 16px;
+    color: var(--airbnb-gray);
+    margin-bottom: 32px;
+}
+
+.btn-reset {
+    background: var(--airbnb-black);
+    color: white;
+    padding: 14px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: var(--transition);
+}
+
+.btn-reset:hover {
+    background: #000;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* RESPONSIVE */
+@@media (max-width: 768px) {
+    .browse-title {
+        font-size: 24px;
     }
+    
+    .airbnb-search-bar {
+        flex-direction: column;
+    }
+    
+    .search-button,
+    .clear-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .restaurant-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-actions {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
