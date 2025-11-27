@@ -1,200 +1,261 @@
 @page
 @model TP_Jueves.Pages.IndexModel
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Inicio - Restaurancito";
 }
-
-<section class="hero">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">TP Jueves</h1>
-        <p style="font-size: 1.5rem; margin-bottom: 2rem;">Sistema Inteligente de Reservas de Restaurantes</p>
-    </div>
-</section>
 
 @if (User?.Identity?.IsAuthenticated ?? false)
 {
     @if (User.IsInRole("Restaurantero"))
     {
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-            <h2 style="text-align: center; margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Restaurantero</h2>
-            
-            <div class="feature-cards">
-                <div class="feature-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#127978;</span>
-                    <h3 style="color: white;">Mis Restaurantes</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Gestiona tus restaurantes, mesas y horarios disponibles.</p>
-                    <a asp-page="/Restaurants/Index" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                        Ver Restaurantes &rarr;
-                    </a>
+        <!-- DASHBOARD RESTAURANTERO -->
+        <div class="dashboard-container">
+            <header class="dashboard-header">
+                <div class="header-content">
+                    <h1 class="dashboard-title">Bienvenido a tu Panel</h1>
+                    <p class="dashboard-subtitle">Administra tus restaurantes desde un solo lugar</p>
                 </div>
+            </header>
 
-                <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#128100;</span>
-                    <h3 style="color: white;">Mi Perfil</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu informaci&oacute;n personal y preferencias de cuenta.</p>
-                    <a asp-page="/Account/Profile" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                        Ver Perfil &rarr;
-                    </a>
-                </div>
+            <div class="quick-actions">
+                <a asp-page="/Restaurants/Index" class="action-card action-primary">
+                    <div class="action-icon">🍽️</div>
+                    <div class="action-content">
+                        <h3>Mis Restaurantes</h3>
+                        <p>Gestiona menús, mesas y horarios</p>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
 
-                <div class="feature-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2c3e50; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#128202;</span>
-                    <h3>Estad&iacute;sticas</h3>
-                    <p style="margin-bottom: 1.5rem;">Pr&oacute;ximamente: Reportes detallados de tus reservas y ocupaci&oacute;n.</p>
-                    <button style="background: rgba(0,0,0,0.1); color: #2c3e50; padding: 1rem 2rem; border-radius: 10px; border: none; font-weight: 700; cursor: not-allowed;" disabled>
-                        Pr&oacute;ximamente
-                    </button>
+                <a asp-page="/Account/Profile" class="action-card action-secondary">
+                    <div class="action-icon">👤</div>
+                    <div class="action-content">
+                        <h3>Mi Perfil</h3>
+                        <p>Configuración de cuenta</p>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <div class="action-card action-disabled">
+                    <div class="action-icon">📊</div>
+                    <div class="action-content">
+                        <h3>Estadísticas</h3>
+                        <p>Próximamente disponible</p>
+                    </div>
+                    <span class="action-badge">Pronto</span>
                 </div>
             </div>
         </div>
     }
     else if (User.IsInRole("Cliente"))
     {
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-            <h2 style="text-align: center; margin: 3rem 0 2rem; font-weight: 800; font-size: 2rem;">Panel del Cliente</h2>
-            
-            <div class="feature-cards">
-                <div class="feature-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#128269;</span>
-                    <h3 style="color: white;">Buscar Restaurante</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Descubre y reserva en nuestros restaurantes asociados.</p>
-                    <a asp-page="/Restaurants/Browse" style="background: white; color: #11998e; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                        Ver Restaurantes &rarr;
-                    </a>
+        <!-- DASHBOARD CLIENTE -->
+        <div class="dashboard-container">
+            <header class="dashboard-header">
+                <div class="header-content">
+                    <h1 class="dashboard-title">Hola de nuevo</h1>
+                    <p class="dashboard-subtitle">Tu próxima experiencia gastronómica te espera</p>
                 </div>
+            </header>
 
-                <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#128197;</span>
-                    <h3 style="color: white;">Mis Reservas</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Ver, gestionar y cancelar tus reservas activas.</p>
-                    <a asp-page="/Reservations/List" style="background: white; color: #764ba2; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                        Ver Reservas &rarr;
-                    </a>
-                </div>
+            <div class="quick-actions">
+                <a asp-page="/Restaurants/Browse" class="action-card action-primary">
+                    <div class="action-icon">🔍</div>
+                    <div class="action-content">
+                        <h3>Explorar Restaurantes</h3>
+                        <p>Descubre nuevos lugares</p>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
 
-                <div class="feature-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
-                    <span class="icon" style="font-size: 3.5rem;">&#128100;</span>
-                    <h3 style="color: white;">Mi Perfil</h3>
-                    <p style="color: rgba(255,255,255,0.95); margin-bottom: 1.5rem;">Edita tu informaci&oacute;n personal y configuraci&oacute;n.</p>
-                    <a asp-page="/Account/Profile" style="background: white; color: #f5576c; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                        Ver Perfil &rarr;
-                    </a>
-                </div>
+                <a asp-page="/Reservations/List" class="action-card action-secondary">
+                    <div class="action-icon">📅</div>
+                    <div class="action-content">
+                        <h3>Mis Reservas</h3>
+                        <p>Gestiona tus reservas activas</p>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <a asp-page="/Account/Profile" class="action-card action-tertiary">
+                    <div class="action-icon">⚙️</div>
+                    <div class="action-content">
+                        <h3>Configuración</h3>
+                        <p>Edita tu perfil</p>
+                    </div>
+                    <span class="action-arrow">→</span>
+                </a>
             </div>
         </div>
     }
     else
     {
-        <div style="max-width: 700px; margin: 3rem auto; padding: 0 1rem;">
-            <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 3rem; border-radius: 16px; text-align: center;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">&#9888;</div>
-                <h3 style="color: #2c3e50; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">Advertencia</h3>
-                <p style="color: #2c3e50; font-size: 1.2rem; margin-bottom: 2rem;">
-                    Tu cuenta no tiene un rol asignado. Por favor, contacta al administrador para obtener acceso.
-                </p>
-                <a asp-page="/Account/Logout" style="background: #e74c3c; color: white; padding: 1rem 2.5rem; border-radius: 10px; text-decoration: none; font-weight: 700;">
-                    Cerrar Sesi&oacute;n
-                </a>
+        <!-- USUARIO SIN ROL -->
+        <div class="alert-container">
+            <div class="alert-box">
+                <div class="alert-icon">⚠️</div>
+                <h2>Cuenta sin Permisos</h2>
+                <p>Tu cuenta necesita ser activada por un administrador. Por favor, contacta al equipo de soporte.</p>
+                <a asp-page="/Account/Logout" class="btn-danger">Cerrar Sesión</a>
             </div>
         </div>
     }
 }
 else
 {
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-        <div style="text-align: center; padding: 3rem 1rem; margin-bottom: 3rem;">
-            <div style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; padding: 2.5rem; border-radius: 16px;">
-                <h3 style="color: white; font-weight: 800; font-size: 1.8rem; margin-bottom: 1rem;">&iexcl;Comienza Ahora!</h3>
-                <p style="color: rgba(255,255,255,0.95); font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    Explora nuestros restaurantes sin necesidad de registro, o <strong>inicia sesi&oacute;n</strong> para hacer reservas al instante.
-                </p>
-
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a asp-page="/Restaurants/Browse" style="background: white; color: #0984e3; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem;">
-                        &#127860; Ver Restaurantes
+    <!-- LANDING PAGE PRINCIPAL -->
+    <div class="landing-page">
+        
+        <!-- HERO SECTION -->
+        <section class="hero-modern">
+            <div class="hero-content">
+                <div class="brand-logo">
+                    <span class="logo-icon">🍴</span>
+                    <h1 class="brand-name">Restaurancito</h1>
+                </div>
+                <p class="hero-tagline">Tu mesa perfecta, a un clic de distancia</p>
+                <p class="hero-description">Descubre, reserva y disfruta los mejores restaurantes de la ciudad sin complicaciones</p>
+                
+                <div class="hero-buttons">
+                    <a asp-page="/Restaurants/Browse" class="btn-hero-primary">
+                        <span class="btn-icon">🍽️</span>
+                        Explorar Restaurantes
                     </a>
-                    <a asp-page="/Account/Login" style="background: rgba(255,255,255,0.2); color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem; border: 2px solid white;">
-                        Iniciar Sesi&oacute;n
-                    </a>
-                    <a asp-page="/Account/Register" style="background: #11998e; color: white; padding: 1.2rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 1.1rem;">
-                        Registrarse
+                    <a asp-page="/Account/Login" class="btn-hero-secondary">
+                        Iniciar Sesión
                     </a>
                 </div>
-            </div>
-        </div>
 
-        <h2 style="text-align: center; margin: 4rem 0 2.5rem; font-weight: 800; font-size: 2.2rem;">
-            &iquest;Por qu&eacute; elegir TP Jueves?
-        </h2>
-
-        <div class="feature-cards">
-            <div class="feature-card">
-                <span class="icon">&#9889;</span>
-                <h3>R&aacute;pido y F&aacute;cil</h3>
-                <p>Reserva tu mesa en segundos. Solo necesitas algunos datos b&aacute;sicos y listo.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="icon">&#128274;</span>
-                <h3>Seguro</h3>
-                <p>Tus datos est&aacute;n protegidos con los m&aacute;s altos est&aacute;ndares de seguridad y encriptaci&oacute;n.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="icon">&#128241;</span>
-                <h3>Accesible</h3>
-                <p>Reserva desde cualquier dispositivo: celular, tablet o computadora, en cualquier momento.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="icon">&#9989;</span>
-                <h3>Confirmaci&oacute;n</h3>
-                <p>Recibe confirmaci&oacute;n inmediata de tu reserva al completar el formulario.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="icon">&#127919;</span>
-                <h3>Gestiona</h3>
-                <p>Modifica o cancela tus reservas cuando lo necesites desde tu panel de control.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="icon">&#128101;</span>
-                <h3>Grupos</h3>
-                <p>Realiza reservas para grupos de hasta 20 personas con preferencias diet&eacute;ticas especiales.</p>
-            </div>
-        </div>
-
-        <div style="margin: 5rem 0; background: white; padding: 3rem; border-radius: 16px;">
-            <h2 style="text-align: center; margin-bottom: 3rem; font-weight: 800; font-size: 2rem;">
-                &iquest;C&oacute;mo Funciona?
-            </h2>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                <div style="text-align: center;">
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
-                        1
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Restaurantes</span>
                     </div>
-                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Explora</h4>
-                    <p style="color: #636e72;">Busca entre nuestros restaurantes asociados</p>
-                </div>
-
-                <div style="text-align: center;">
-                    <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
-                        2
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">10k+</span>
+                        <span class="stat-label">Reservas</span>
                     </div>
-                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Reserva</h4>
-                    <p style="color: #636e72;">Elige fecha, horario y n&uacute;mero de comensales</p>
-                </div>
-
-                <div style="text-align: center;">
-                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2.5rem; font-weight: 800;">
-                        3
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.9★</span>
+                        <span class="stat-label">Valoración</span>
                     </div>
-                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Disfruta</h4>
-                    <p style="color: #636e72;">Llega y disfruta tu experiencia gastron&oacute;mica</p>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section class="features-modern">
+            <div class="section-header">
+                <h2 class="section-title">¿Por qué Restaurancito?</h2>
+                <p class="section-subtitle">La forma más simple de reservar tu próxima comida</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-orange">
+                        <span class="feature-icon">⚡</span>
+                    </div>
+                    <h3 class="feature-title">Reserva Instantánea</h3>
+                    <p class="feature-text">Sin esperas ni llamadas. Reserva en tiempo real y recibe confirmación inmediata.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-blue">
+                        <span class="feature-icon">🔐</span>
+                    </div>
+                    <h3 class="feature-title">100% Seguro</h3>
+                    <p class="feature-text">Tus datos protegidos con encriptación de nivel bancario.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-green">
+                        <span class="feature-icon">📱</span>
+                    </div>
+                    <h3 class="feature-title">Multiplataforma</h3>
+                    <p class="feature-text">Accede desde cualquier dispositivo: móvil, tablet o escritorio.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-purple">
+                        <span class="feature-icon">🎯</span>
+                    </div>
+                    <h3 class="feature-title">Recomendaciones</h3>
+                    <p class="feature-text">Sugerencias personalizadas basadas en tus preferencias.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-pink">
+                        <span class="feature-icon">🎉</span>
+                    </div>
+                    <h3 class="feature-title">Eventos Especiales</h3>
+                    <p class="feature-text">Reservas para grupos, celebraciones y ocasiones especiales.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper feature-teal">
+                        <span class="feature-icon">💳</span>
+                    </div>
+                    <h3 class="feature-title">Sin Cargos Ocultos</h3>
+                    <p class="feature-text">Servicio completamente gratuito para los comensales.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="how-it-works">
+            <div class="section-header">
+                <h2 class="section-title">Reserva en 3 Pasos</h2>
+                <p class="section-subtitle">Es más fácil de lo que imaginas</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Busca tu Restaurante</h3>
+                        <p class="step-description">Explora nuestra selección curada de restaurantes por ubicación, cocina o ambiente.</p>
+                    </div>
+                </div>
+
+                <div class="step-arrow">→</div>
+
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Elige tu Horario</h3>
+                        <p class="step-description">Selecciona fecha, hora y número de comensales según disponibilidad.</p>
+                    </div>
+                </div>
+
+                <div class="step-arrow">→</div>
+
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Confirma y Disfruta</h3>
+                        <p class="step-description">Recibe tu confirmación y prepárate para una experiencia inolvidable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">¿Listo para tu próxima aventura culinaria?</h2>
+                <p class="cta-text">Únete a miles de usuarios que ya disfrutan de la mejor experiencia de reservas</p>
+                <div class="cta-buttons">
+                    <a asp-page="/Account/Register" class="btn-cta-primary">
+                        Crear Cuenta Gratis
+                    </a>
+                    <a asp-page="/Restaurants/Browse" class="btn-cta-secondary">
+                        Ver Restaurantes
+                    </a>
+                </div>
+            </div>
+        </section>
+
     </div>
 }

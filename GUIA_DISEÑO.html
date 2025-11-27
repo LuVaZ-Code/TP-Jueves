@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurancito - Guía de Diseño</title>
+    <link rel="stylesheet" href="TP Jueves/wwwroot/css/site.css">
+    <link rel="stylesheet" href="TP Jueves/wwwroot/css/animations.css">
+    <style>
+        .design-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+        }
+        .design-section h2 {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--neutral-200);
+        }
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .color-swatch {
+            padding: 3rem 1rem 1rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .component-showcase {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+        <div class="hero fade-in">
+            <h1>🎨 Guía de Diseño Restaurancito</h1>
+            <p>Sistema de diseño profesional, limpio e innovador</p>
+        </div>
+
+        <!-- Paleta de Colores -->
+        <div class="design-section scale-in">
+            <h2>🎨 Paleta de Colores</h2>
+            
+            <h3 style="margin-top: 2rem; color: var(--neutral-700);">Primarios (Emerald)</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: var(--primary-50); color: var(--neutral-700);">
+                    Primary 50<br>#ecfdf5
+                </div>
+                <div class="color-swatch" style="background: var(--primary-300); color: white;">
+                    Primary 300<br>#6ee7b7
+                </div>
+                <div class="color-swatch" style="background: var(--primary-500); color: white;">
+                    Primary 500<br>#10b981
+                </div>
+                <div class="color-swatch" style="background: var(--primary-700); color: white;">
+                    Primary 700<br>#047857
+                </div>
+                <div class="color-swatch" style="background: var(--primary-900); color: white;">
+                    Primary 900<br>#064e3b
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--neutral-700);">Acento (Indigo)</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: var(--accent-50); color: var(--neutral-700);">
+                    Accent 50<br>#eef2ff
+                </div>
+                <div class="color-swatch" style="background: var(--accent-300); color: white;">
+                    Accent 300<br>#a5b4fc
+                </div>
+                <div class="color-swatch" style="background: var(--accent-500); color: white;">
+                    Accent 500<br>#6366f1
+                </div>
+                <div class="color-swatch" style="background: var(--accent-700); color: white;">
+                    Accent 700<br>#4338ca
+                </div>
+                <div class="color-swatch" style="background: var(--accent-900); color: white;">
+                    Accent 900<br>#312e81
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="design-section slide-in">
+            <h2>🔘 Botones</h2>
+            <div class="component-showcase">
+                <div>
+                    <h4>Primarios</h4>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn btn-primary">Primary</button>
+                        <button class="btn btn-success">Success</button>
+                        <button class="btn btn-info">Info</button>
+                        <button class="btn btn-danger">Danger</button>
+                        <button class="btn btn-secondary">Secondary</button>
+                    </div>
+                </div>
+                <div>
+                    <h4>Tamaños</h4>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn btn-primary btn-sm">Pequeño</button>
+                        <button class="btn btn-primary">Normal</button>
+                        <button class="btn btn-primary btn-lg">Grande</button>
+                    </div>
+                </div>
+                <div>
+                    <h4>Estados</h4>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn btn-primary">Activo</button>
+                        <button class="btn btn-primary" disabled>Deshabilitado</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards -->
+        <div class="design-section">
+            <h2>🃏 Cards</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Card Estándar</h3>
+                        <p class="card-text">Este es un card básico con título y texto. Ideal para mostrar información de manera organizada.</p>
+                        <button class="btn btn-primary">Acción</button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🍽️</div>
+                    <h3>Feature Card</h3>
+                    <p>Card especial con icono y animaciones hover para destacar características principales.</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--primary-500), var(--primary-600)); color: white;">
+                        📊
+                    </div>
+                    <div class="stat-value" style="color: var(--primary-600);">1,234</div>
+                    <div class="stat-label">Estadística</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formularios -->
+        <div class="design-section">
+            <h2>📝 Formularios</h2>
+            <div style="max-width: 600px;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" placeholder="Ingresa tu nombre">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" placeholder="tu@email.com">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Seleccionar opción</label>
+                    <select class="form-select">
+                        <option>Opción 1</option>
+                        <option>Opción 2</option>
+                        <option>Opción 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="design-section">
+            <h2>⚠️ Alertas</h2>
+            <div style="display: grid; gap: 1rem; margin-top: 1.5rem;">
+                <div class="alert alert-success">
+                    ✓ Operación completada exitosamente
+                </div>
+                <div class="alert alert-info">
+                    ℹ️ Esta es información importante
+                </div>
+                <div class="alert alert-warning">
+                    ⚠️ Advertencia: revisa esta información
+                </div>
+                <div class="alert alert-danger">
+                    ✕ Error: algo salió mal
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="design-section">
+            <h2>🏷️ Badges</h2>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                <span class="badge bg-success">Success</span>
+                <span class="badge bg-info">Info</span>
+                <span class="badge bg-warning">Warning</span>
+                <span class="badge bg-danger">Danger</span>
+                <span class="badge bg-secondary">Secondary</span>
+            </div>
+        </div>
+
+        <!-- Animaciones -->
+        <div class="design-section">
+            <h2>✨ Animaciones</h2>
+            <p style="color: var(--neutral-600); margin-bottom: 2rem;">Recarga la página para ver las animaciones de entrada</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div class="card fade-in">
+                    <div class="card-body">
+                        <h5>.fade-in</h5>
+                        <p style="font-size: 0.875rem; color: var(--neutral-600);">Aparece suavemente</p>
+                    </div>
+                </div>
+                <div class="card scale-in delay-100">
+                    <div class="card-body">
+                        <h5>.scale-in</h5>
+                        <p style="font-size: 0.875rem; color: var(--neutral-600);">Escala desde el centro</p>
+                    </div>
+                </div>
+                <div class="card slide-in delay-200">
+                    <div class="card-body">
+                        <h5>.slide-in</h5>
+                        <p style="font-size: 0.875rem; color: var(--neutral-600);">Desliza desde la izquierda</p>
+                    </div>
+                </div>
+                <div class="card pulse delay-300">
+                    <div class="card-body">
+                        <h5>.pulse</h5>
+                        <p style="font-size: 0.875rem; color: var(--neutral-600);">Pulsa continuamente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipografía -->
+        <div class="design-section">
+            <h2>🔤 Tipografía</h2>
+            <div style="margin-top: 2rem;">
+                <h1>Heading 1 - Principal</h1>
+                <h2>Heading 2 - Secciones</h2>
+                <h3>Heading 3 - Subsecciones</h3>
+                <h4>Heading 4 - Componentes</h4>
+                <h5>Heading 5 - Detalles</h5>
+                <p>Párrafo normal con texto de ejemplo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p style="font-size: 0.875rem; color: var(--neutral-500);">Texto secundario más pequeño para información adicional.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Restaurancito - Sistema de Diseño Profesional</p>
+        </div>
+    </footer>
+</body>
+</html>
