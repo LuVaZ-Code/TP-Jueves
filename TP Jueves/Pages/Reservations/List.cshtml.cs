@@ -45,6 +45,7 @@ namespace TP_Jueves.Pages.Reservations
                 .Where(r => r.ClienteId == CurrentUser.Id && !r.IsCancelled)
                 .Include(r => r.Mesa)
                 .Include(r => r.Restaurante)
+                .AsNoTracking()
                 .OrderByDescending(r => r.Fecha)
                 .ThenBy(r => r.Horario)
                 .ToListAsync();

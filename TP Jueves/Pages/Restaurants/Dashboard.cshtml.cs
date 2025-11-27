@@ -36,39 +36,44 @@ namespace TP_Jueves.Pages.Restaurants
 
             Restaurante = await _db.Restaurantes
                 .Include(r => r.Mesas)
-                .Include(r => r.Reservas.Where(res => !res.IsCancelled))
-                    .ThenInclude(res => res.Cliente)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == Id && r.PropietarioId == user.Id);
 
             if (Restaurante == null)
                 return NotFound();
 
-            // Si no está configurado, redirigir al wizard
+            // Si no estï¿½ configurado, redirigir al wizard
             if (!Restaurante.ConfiguracionCompletada)
             {
                 return RedirectToPage("/Restaurants/Setup/Wizard", new { id = Id, step = 2 });
             }
 
             var hoy = DateTime.Today;
-            var ahora = DateTime.UtcNow;
+
+            // Cargar reservas no canceladas del restaurante
+            var todasLasReservas = await _db.Reservas
+                .Where(r => r.RestauranteId == Id && !r.IsCancelled)
+                .Include(r => r.Cliente)
+                .AsNoTracking()
+                .ToListAsync();
 
             // Reservas de hoy
-            ReservasHoy = Restaurante.Reservas
-                .Where(r => r.Fecha.Date == hoy && !r.IsCancelled)
+            ReservasHoy = todasLasReservas
+                .Where(r => r.Fecha.Date == hoy)
                 .OrderBy(r => r.Horario)
                 .ToList();
 
-            // Próximas reservas (próximos 7 días)
-            ReservasProximas = Restaurante.Reservas
-                .Where(r => r.Fecha.Date > hoy && r.Fecha.Date <= hoy.AddDays(7) && !r.IsCancelled)
+            // Prï¿½ximas reservas (prï¿½ximos 7 dï¿½as)
+            ReservasProximas = todasLasReservas
+                .Where(r => r.Fecha.Date > hoy && r.Fecha.Date <= hoy.AddDays(7))
                 .OrderBy(r => r.Fecha)
                 .ThenBy(r => r.Horario)
                 .Take(10)
                 .ToList();
 
-            // Estadísticas
+            // Estadï¿½sticas
             Stats.TotalMesas = Restaurante.Mesas.Count;
-            Stats.TotalReservasActivas = Restaurante.Reservas.Count(r => !r.IsCancelled && r.Fecha >= hoy);
+            Stats.TotalReservasActivas = todasLasReservas.Count(r => r.Fecha >= hoy);
             Stats.ReservasHoy = ReservasHoy.Count;
             Stats.PersonasHoy = ReservasHoy.Sum(r => r.CantPersonas);
             Stats.TasaOcupacionHoy = CalcularTasaOcupacion(ReservasHoy);
@@ -89,6 +94,30 @@ namespace TP_Jueves.Pages.Restaurants
                 return NotFound();
 
             restaurante.Estado = nuevoEstado;
+            await _db.SaveChangesAsync();
+
+            return RedirectToPage(new { id = Id });
+        }
+
+        public async Task<IActionResult> OnPostEliminarReservaAsync(Guid reservaId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            // Don't use AsNoTracking here - we need to track changes
+            var reserva = await _db.Reservas
+                .Include(r => r.Restaurante)
+                .FirstOrDefaultAsync(r => r.Id == reservaId && r.Restaurante.PropietarioId == user.Id && !r.IsCancelled);
+
+            if (reserva == null)
+                return NotFound();
+
+            // Cancelar la reserva en lugar de eliminarla
+            reserva.IsCancelled = true;
+            
+            // Ensure the change is tracked and saved
+            _db.Reservas.Update(reserva);
             await _db.SaveChangesAsync();
 
             return RedirectToPage(new { id = Id });

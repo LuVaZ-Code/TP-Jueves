@@ -32,7 +32,8 @@ namespace TP_Jueves.Pages.Reservations
                 .Include(r => r.Mesa)
                 .Include(r => r.Restaurante)
                 .Include(r => r.TurnoDisponible)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == id && !r.IsCancelled);
 
             if (Reserva == null)
                 return NotFound();

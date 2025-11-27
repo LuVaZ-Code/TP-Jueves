@@ -31,7 +31,8 @@ namespace TP_Jueves.Pages.Reservations
             Reserva = await _db.Reservas
                 .Include(r => r.Mesa)
                 .Include(r => r.Restaurante)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == id && !r.IsCancelled);
 
             if (Reserva == null)
                 return NotFound();
@@ -55,7 +56,7 @@ namespace TP_Jueves.Pages.Reservations
 
             var reserva = await _db.Reservas
                 .Include(r => r.Restaurante)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id && !r.IsCancelled);
 
             if (reserva == null)
                 return NotFound();
