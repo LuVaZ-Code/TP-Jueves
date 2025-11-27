@@ -22,6 +22,9 @@ namespace TP_Jueves.Pages.Restaurants
 
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
+        
+        [BindProperty]
+        public int RestauranteId { get; set; }
 
         public Restaurante? Restaurante { get; set; }
         public List<Reserva> ReservasHoy { get; set; } = new();
@@ -120,7 +123,7 @@ namespace TP_Jueves.Pages.Restaurants
             _db.Reservas.Update(reserva);
             await _db.SaveChangesAsync();
 
-            return RedirectToPage(new { id = Id });
+            return RedirectToPage(new { id = RestauranteId });
         }
 
         private int CalcularTasaOcupacion(List<Reserva> reservas)

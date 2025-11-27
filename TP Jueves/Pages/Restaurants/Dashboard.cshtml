@@ -209,7 +209,9 @@
                                         </div>
                                         <div class="reserva-actions">
                                             <div class="time-badge">@horaDisplay</div>
-                                            <form method="post" asp-page-handler="EliminarReserva" asp-route-reservaId="@reserva.Id" class="delete-form-inline" onsubmit="return confirm('¿Estás seguro de que quieres cancelar esta reserva?');">
+                                            <form method="post" asp-page-handler="EliminarReserva" class="delete-form-inline" onsubmit="return confirm('¿Estás seguro de que quieres cancelar esta reserva?');">
+                                                <input type="hidden" name="reservaId" value="@reserva.Id" />
+                                                <input type="hidden" name="restauranteId" value="@Model.Id" />
                                                 <button type="submit" class="btn-delete-reservation" title="Cancelar reserva">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -301,7 +303,9 @@
                                                 <div class="customer-detail">@reserva.CantPersonas personas • @horaDisplay</div>
                                             </div>
                                         </div>
-                                        <form method="post" asp-page-handler="EliminarReserva" asp-route-reservaId="@reserva.Id" class="delete-form-inline" onsubmit="return confirm('¿Estás seguro de que quieres cancelar esta reserva?');">
+                                        <form method="post" asp-page-handler="EliminarReserva" class="delete-form-inline" onsubmit="return confirm('¿Estás seguro de que quieres cancelar esta reserva?');">
+                                            <input type="hidden" name="reservaId" value="@reserva.Id" />
+                                            <input type="hidden" name="restauranteId" value="@Model.Id" />
                                             <button type="submit" class="btn-delete-reservation" title="Cancelar reserva">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                     <line x1="18" y1="6" x2="6" y2="18"></line>
