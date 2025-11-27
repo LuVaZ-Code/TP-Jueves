@@ -1,77 +1,457 @@
 @page
 @model TP_Jueves.Pages.Restaurants.EditModel
 @{
-    ViewData["Title"] = "Editar Restaurante";
+    ViewData["Title"] = "Editar Restaurante - Restaurancito";
 }
 
-<!-- HERO SECTION -->
-<section class="hero" style="margin-bottom: 2rem;">
-    <h1>Editar Restaurante</h1>
-    <p>@Model.Restaurante.Nombre</p>
-</section>
+<!-- AIRBNB EDIT RESTAURANT -->
+<div class="form-page-modern">
+    <div class="form-container-modern">
+        
+        <!-- BACK BUTTON -->
+        <a asp-page="Index" class="back-link-modern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Volver a mis restaurantes
+        </a>
 
-<div class="reserve-form" style="max-width: 700px;">
-    <form method="post" novalidate>
-        <input type="hidden" asp-for="Restaurante.Id" />
-
-        <!-- NOMBRE -->
-        <div class="form-group">
-            <label asp-for="Restaurante.Nombre" class="form-label">
-                Nombre del Restaurante
-            </label>
-            <input asp-for="Restaurante.Nombre" class="form-control" />
-            <span asp-validation-for="Restaurante.Nombre" class="text-danger"></span>
+        <!-- HEADER -->
+        <div class="form-header-modern">
+            <div class="header-icon edit-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            </div>
+            <h1 class="form-title-modern">Editar restaurante</h1>
+            <p class="form-subtitle-modern">Actualiza la información básica de <strong>@Model.Restaurante.Nombre</strong></p>
         </div>
 
-        <!-- DESCRIPCION -->
-        <div class="form-group">
-            <label asp-for="Restaurante.Descripcion" class="form-label">
-                Descripcion
-            </label>
-            <textarea asp-for="Restaurante.Descripcion" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="Restaurante.Descripcion" class="text-danger"></span>
-        </div>
+        <!-- FORM -->
+        <form method="post" class="modern-form">
+            <div asp-validation-summary="ModelOnly" class="error-banner"></div>
+            <input type="hidden" asp-for="Restaurante.Id" />
 
-        <!-- FILA 1: DIRECCION Y TELEFONO -->
-        <div class="form-row">
-            <div class="form-group">
-                <label asp-for="Restaurante.Direccion" class="form-label">
-                    Direccion
+            <!-- NOMBRE -->
+            <div class="form-group-modern">
+                <label asp-for="Restaurante.Nombre" class="label-modern">
+                    Nombre del restaurante
+                    <span class="required-star">*</span>
                 </label>
-                <input asp-for="Restaurante.Direccion" class="form-control" />
-                <span asp-validation-for="Restaurante.Direccion" class="text-danger"></span>
+                <input asp-for="Restaurante.Nombre" class="input-modern" placeholder="Ej: La Trattoria" />
+                <span asp-validation-for="Restaurante.Nombre" class="validation-error"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Restaurante.Telefono" class="form-label">
-                    Telefono
+            <!-- DESCRIPCION -->
+            <div class="form-group-modern">
+                <label asp-for="Restaurante.Descripcion" class="label-modern">
+                    Descripción
+                    <span class="optional-text">(opcional)</span>
                 </label>
-                <input asp-for="Restaurante.Telefono" class="form-control" />
-                <span asp-validation-for="Restaurante.Telefono" class="text-danger"></span>
+                <textarea asp-for="Restaurante.Descripcion" class="textarea-modern" rows="4" placeholder="Describe tu restaurante, su cocina, ambiente y lo que lo hace especial..."></textarea>
+                <span asp-validation-for="Restaurante.Descripcion" class="validation-error"></span>
+                <small class="helper-text">Esta descripción será visible para tus clientes</small>
             </div>
-        </div>
 
-        <!-- EMAIL -->
-        <div class="form-group">
-            <label asp-for="Restaurante.Email" class="form-label">
-                Email
-            </label>
-            <input asp-for="Restaurante.Email" type="email" class="form-control" />
-            <span asp-validation-for="Restaurante.Email" class="text-danger"></span>
-        </div>
+            <!-- DIRECCION Y TELEFONO -->
+            <div class="input-row">
+                <div class="form-group-modern">
+                    <label asp-for="Restaurante.Direccion" class="label-modern">
+                        Dirección
+                        <span class="required-star">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <input asp-for="Restaurante.Direccion" class="input-modern has-icon" placeholder="Ej: Av. Corrientes 1234" />
+                    </div>
+                    <span asp-validation-for="Restaurante.Direccion" class="validation-error"></span>
+                </div>
 
-        <!-- BOTONES -->
-        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
-                Guardar Cambios
-            </button>
-            <a asp-page="Index" class="btn btn-secondary btn-lg" style="flex: 1;">
-                Cancelar
-            </a>
-        </div>
-    </form>
+                <div class="form-group-modern">
+                    <label asp-for="Restaurante.Telefono" class="label-modern">
+                        Teléfono
+                        <span class="required-star">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        <input asp-for="Restaurante.Telefono" class="input-modern has-icon" placeholder="Ej: +54 11 1234-5678" />
+                    </div>
+                    <span asp-validation-for="Restaurante.Telefono" class="validation-error"></span>
+                </div>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group-modern">
+                <label asp-for="Restaurante.Email" class="label-modern">
+                    Email de contacto
+                    <span class="optional-text">(opcional)</span>
+                </label>
+                <div class="input-with-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input asp-for="Restaurante.Email" class="input-modern has-icon" type="email" placeholder="contacto@turestaurante.com" />
+                </div>
+                <span asp-validation-for="Restaurante.Email" class="validation-error"></span>
+            </div>
+
+            <!-- DIVIDER -->
+            <div class="form-divider"></div>
+
+            <!-- INFO BOX -->
+            <div class="info-box warning-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <div>
+                    <strong>Atención</strong>
+                    <p>Los cambios que realices aquí afectarán la información visible para tus clientes. Asegúrate de que todos los datos sean correctos antes de guardar.</p>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="form-actions-modern">
+                <a asp-page="Index" class="btn-cancel-modern">Cancelar</a>
+                <button type="submit" class="btn-submit-modern">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+
+    </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+/* AIRBNB FORM PAGE STYLES */
+.form-page-modern {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F7F7F7 0%, #FFFFFF 100%);
+    padding: 40px 24px 80px;
+}
+
+.form-container-modern {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.back-link-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--airbnb-gray);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: var(--transition);
+}
+
+.back-link-modern:hover {
+    color: var(--airbnb-black);
+}
+
+.back-link-modern svg {
+    width: 18px;
+    height: 18px;
+}
+
+.form-header-modern {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--airbnb-red) 0%, var(--airbnb-red-dark) 100%);
+    border-radius: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(255, 56, 92, 0.3);
+}
+
+.header-icon.edit-icon {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+}
+
+.header-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+}
+
+.form-title-modern {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--airbnb-black);
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle-modern {
+    font-size: 16px;
+    color: var(--airbnb-gray);
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-subtitle-modern strong {
+    color: var(--airbnb-black);
+}
+
+.modern-form {
+    background: white;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-group-modern {
+    margin-bottom: 24px;
+}
+
+.label-modern {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin-bottom: 8px;
+}
+
+.required-star {
+    color: var(--airbnb-red);
+    margin-left: 2px;
+}
+
+.optional-text {
+    color: var(--airbnb-gray);
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.input-modern,
+.textarea-modern {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--airbnb-black);
+    transition: var(--transition);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.input-modern:focus,
+.textarea-modern:focus {
+    outline: none;
+    border-color: var(--airbnb-black);
+    box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+}
+
+.textarea-modern {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    stroke: var(--airbnb-gray);
+    pointer-events: none;
+}
+
+.input-modern.has-icon {
+    padding-left: 44px;
+}
+
+.helper-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--airbnb-gray);
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-divider {
+    height: 1px;
+    background: var(--airbnb-light-gray);
+    margin: 32px 0;
+}
+
+.info-box {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    margin-bottom: 32px;
+}
+
+.info-box svg {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    stroke: #3B82F6;
+}
+
+.info-box strong {
+    display: block;
+    color: #1E40AF;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.info-box p {
+    color: #1E3A8A;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.warning-box {
+    background: #FEF3C7;
+    border-color: #FDE047;
+}
+
+.warning-box svg {
+    stroke: #F59E0B;
+}
+
+.warning-box strong {
+    color: #92400E;
+}
+
+.warning-box p {
+    color: #78350F;
+}
+
+.form-actions-modern {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel-modern {
+    padding: 12px 24px;
+    background: white;
+    color: var(--airbnb-black);
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-cancel-modern:hover {
+    background: var(--airbnb-lighter-gray);
+    border-color: var(--airbnb-black);
+    color: var(--airbnb-black);
+}
+
+.btn-submit-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--airbnb-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-submit-modern:hover {
+    background: var(--airbnb-red-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-submit-modern svg {
+    width: 18px;
+    height: 18px;
+}
+
+.error-banner {
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    color: #DC2626;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.validation-error {
+    display: block;
+    color: #DC2626;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* RESPONSIVE */
+@@media (max-width: 768px) {
+    .form-page-modern {
+        padding: 24px 16px 60px;
+    }
+    
+    .modern-form {
+        padding: 24px;
+    }
+    
+    .input-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-modern {
+        flex-direction: column-reverse;
+    }
+    
+    .btn-cancel-modern,
+    .btn-submit-modern {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
