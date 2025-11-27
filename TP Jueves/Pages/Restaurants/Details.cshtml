@@ -4,151 +4,765 @@
     ViewData["Title"] = Model.Restaurante?.Nombre ?? "Restaurante";
 }
 
-<!-- HERO SECTION -->
-<section class="hero" style="margin-bottom: 2rem; background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);">
-    <h1>@Model.Restaurante?.Nombre</h1>
-    <p>@Model.Restaurante?.Direccion</p>
-</section>
+<!-- AIRBNB DETAILS PAGE -->
+<div class="details-page">
+    
+    <!-- BREADCRUMB -->
+    <div class="details-container">
+        <nav class="breadcrumb-nav">
+            <a asp-page="Browse" class="breadcrumb-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Restaurantes
+            </a>
+        </nav>
+    </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-    <!-- INFORMACION PRINCIPAL -->
-    <div class="card" style="box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-        <div class="card-body">
-            <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">Sobre el Restaurante</h3>
-            
-            <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">
-                @Model.Restaurante?.Descripcion
-            </p>
-
-            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #e74c3c;">
-                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 600;">&#128222; Contacto</h4>
-                
-                <div style="margin-bottom: 1rem;">
-                    <p style="margin: 0.5rem 0; color: #7f8c8d; font-size: 0.9rem;">
-                        <strong>Tel&eacute;fono</strong>
-                    </p>
-                    <p style="margin: 0; font-size: 1.1rem;">
-                        <a href="tel:@Model.Restaurante?.Telefono" style="color: #e74c3c; text-decoration: none; font-weight: 600;">
-                            @Model.Restaurante?.Telefono
-                        </a>
-                    </p>
-                </div>
-
-                <div>
-                    <p style="margin: 0.5rem 0; color: #7f8c8d; font-size: 0.9rem;">
-                        <strong>Email</strong>
-                    </p>
-                    <p style="margin: 0; font-size: 1.1rem;">
-                        <a href="mailto:@Model.Restaurante?.Email" style="color: #e74c3c; text-decoration: none; font-weight: 600;">
-                            @Model.Restaurante?.Email
-                        </a>
-                    </p>
+    <!-- HEADER -->
+    <div class="details-container">
+        <div class="details-header">
+            <div class="header-content">
+                <h1 class="restaurant-name">@Model.Restaurante?.Nombre</h1>
+                <div class="header-meta">
+                    <div class="rating-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                        <span>4.9</span>
+                    </div>
+                    <span class="separator">·</span>
+                    <a href="#reviews" class="reviews-link">23 opiniones</a>
+                    <span class="separator">·</span>
+                    <div class="location-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>@Model.Restaurante?.Direccion</span>
+                    </div>
                 </div>
             </div>
+            <button class="share-save-buttons">
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 28c-0.25 0-0.5-0.094-0.688-0.281l-9.75-9.406c-0.125-0.109-3.563-3.375-3.563-7.188 0-4.781 3.656-8.125 8-8.125 2.219 0 4.438 0.969 6 2.469 1.563-1.5 3.781-2.469 6-2.469 4.344 0 8 3.344 8 8.125 0 3.813-3.438 7.078-3.563 7.188l-9.75 9.406c-0.188 0.187-0.438 0.281-0.688 0.281z"></path>
+                </svg>
+                Guardar
+            </button>
+        </div>
 
-            @if (User?.Identity?.IsAuthenticated ?? false)
-            {
-                @if (User.IsInRole("Cliente"))
-                {
-                    <a asp-page="/Reserve" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-primary btn-lg" style="width: 100%; border-radius: 8px;">
-                        &#128197; Hacer Reserva
-                    </a>
-                }
-                else
-                {
-                    <div class="alert alert-info mb-0" style="border-radius: 8px;">
-                        <p style="margin: 0;">Solo los clientes pueden hacer reservas.</p>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="alert alert-warning mb-0" style="border-radius: 8px;">
-                    <p style="margin: 0;">
-                        Debes 
-                        <a asp-page="/Account/Login" style="font-weight: 600; color: #e74c3c;">iniciar sesi&oacute;n</a>
-                        para hacer una reserva.
-                    </p>
+        <!-- IMAGE GALLERY -->
+        <div class="image-gallery">
+            <div class="gallery-main">
+                <div class="gallery-image main-image">
+                    <span class="gallery-emoji">🍽️</span>
                 </div>
-            }
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-image">
+                    <span class="gallery-emoji">🍴</span>
+                </div>
+                <div class="gallery-image">
+                    <span class="gallery-emoji">🥘</span>
+                </div>
+                <div class="gallery-image">
+                    <span class="gallery-emoji">🍷</span>
+                </div>
+                <div class="gallery-image">
+                    <span class="gallery-emoji">✨</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- PANEL LATERAL -->
-    <div>
-        <!-- MESAS DISPONIBLES -->
-        <div class="card" style="margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-            <div class="card-body">
-                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">&#128186; Mesas</h4>
+    <!-- MAIN CONTENT -->
+    <div class="details-container">
+        <div class="details-layout">
+            
+            <!-- LEFT COLUMN -->
+            <div class="details-main">
                 
-                @if (Model.Restaurante?.Mesas?.Any() ?? false)
-                {
-                    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-                        @foreach (var mesa in Model.Restaurante.Mesas.OrderBy(m => m.Capacidad))
+                <!-- DESCRIPTION -->
+                <section class="details-section">
+                    <h2 class="section-title">Descripción</h2>
+                    <p class="description-text">
+                        @if (!string.IsNullOrEmpty(Model.Restaurante?.Descripcion))
                         {
-                            <div style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 0.8rem; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                                <p style="margin: 0; opacity: 0.9;">Mesa @mesa.Id</p>
-                                <p style="margin: 0.25rem 0 0; font-weight: 700;">@mesa.Capacidad personas</p>
+                            @Model.Restaurante.Descripcion
+                        }
+                        else
+                        {
+                            <span>Descubre una experiencia gastronómica única en @Model.Restaurante?.Nombre. Un lugar perfecto para disfrutar de excelente comida en un ambiente acogedor.</span>
+                        }
+                    </p>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- AMENITIES -->
+                <section class="details-section">
+                    <h2 class="section-title">Lo que ofrece este lugar</h2>
+                    <div class="amenities-grid">
+                        <div class="amenity-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>Reservas disponibles</span>
+                        </div>
+                        <div class="amenity-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>Grupos bienvenidos</span>
+                        </div>
+                        <div class="amenity-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            <span>Contacto directo</span>
+                        </div>
+                        <div class="amenity-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>Horarios flexibles</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- TABLES -->
+                <section class="details-section">
+                    <h2 class="section-title">Mesas disponibles</h2>
+                    @if (Model.Restaurante?.Mesas?.Any() ?? false)
+                    {
+                        <div class="tables-grid">
+                            @foreach (var mesa in Model.Restaurante.Mesas.OrderBy(m => m.Capacidad))
+                            {
+                                <div class="table-card">
+                                    <div class="table-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="8" width="18" height="12" rx="2"></rect>
+                                            <path d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="table-info">
+                                        <p class="table-name">Mesa #@mesa.Id</p>
+                                        <p class="table-capacity">Hasta @mesa.Capacidad personas</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <p class="tables-total">Total: @(Model.Restaurante.Mesas.Count) mesa(s) disponibles</p>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <p>No hay mesas disponibles en este momento</p>
+                        </div>
+                    }
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN - STICKY CARD -->
+            <div class="details-sidebar">
+                <div class="reservation-card">
+                    <div class="reservation-header">
+                        <div class="price-info">
+                            <span class="price-label">Reserva gratuita</span>
+                        </div>
+                        <div class="rating-inline">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                            <span>4.9</span>
+                            <span class="reviews-count">· 23 opiniones</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            <div>
+                                <p class="contact-label">Teléfono</p>
+                                <a href="tel:@Model.Restaurante?.Telefono" class="contact-value">@Model.Restaurante?.Telefono</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <div>
+                                <p class="contact-label">Email</p>
+                                <a href="mailto:@Model.Restaurante?.Email" class="contact-value">@Model.Restaurante?.Email</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        @if (User.IsInRole("Cliente"))
+                        {
+                            <a asp-page="/Reserve" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn-reserve-main">
+                                Reservar ahora
+                            </a>
+                            <p class="no-charge-text">No se te hará ningún cargo</p>
+                        }
+                        else
+                        {
+                            <div class="info-message">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <p>Solo los clientes pueden hacer reservas</p>
                             </div>
                         }
-                    </div>
+                    }
+                    else
+                    {
+                        <a asp-page="/Account/Login" class="btn-reserve-main">
+                            Iniciar sesión para reservar
+                        </a>
+                        <p class="no-charge-text">Crea tu cuenta gratis</p>
+                    }
 
-                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #7f8c8d;">
-                        <strong>Total:</strong> @(Model.Restaurante.Mesas.Count) mesa(s) disponibles
-                    </p>
-                }
-                else
-                {
-                    <div class="alert alert-warning mb-0" style="border-radius: 6px; font-size: 0.9rem;">
-                        <p style="margin: 0;">Sin mesas disponibles</p>
+                    <div class="trust-badges">
+                        <div class="trust-item">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Ubicación verificada</span>
+                        </div>
+                        <div class="trust-item">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Respuesta rápida</span>
+                        </div>
                     </div>
-                }
-            </div>
-        </div>
-
-        <!-- INFORMACION ADICIONAL -->
-        <div class="card" style="box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-            <div class="card-body">
-                <h4 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">&#8505; Informaci&oacute;n</h4>
-                
-                <div style="background: #f0f4f8; padding: 1rem; border-radius: 6px;">
-                    <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">
-                        <strong>&#10003; Ubicaci&oacute;n confirmada</strong>
-                    </p>
-                    <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.9rem;">
-                        <strong>&#10003; Contacto verificado</strong>
-                    </p>
-                    <p style="margin: 0.5rem 0 0; color: #7f8c8d; font-size: 0.9rem;">
-                        <strong>&#10003; Reservas disponibles</strong>
-                    </p>
                 </div>
             </div>
+
         </div>
     </div>
+
 </div>
 
-<!-- OPINIONES - PROXIMAMENTE -->
-<div class="card" style="margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-    <div class="card-body">
-        <h3 style="color: #2c3e50; margin-bottom: 1rem; font-weight: 700;">&#11088; Opiniones</h3>
-        <p style="color: #7f8c8d; margin: 0;">
-            <em>Pr&oacute;ximamente: Sistema de valoraciones y opiniones de clientes</em>
-        </p>
-    </div>
-</div>
+<style>
+/* AIRBNB DETAILS PAGE STYLES */
+.details-page {
+    background: white;
+    padding: 24px 0 80px;
+}
 
-<!-- BOTONES FINALES -->
-<div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
-    <a asp-page="Browse" class="btn btn-secondary btn-lg" style="flex: 1; min-width: 150px; border-radius: 8px;">
-        &larr; Volver a Restaurantes
-    </a>
-    @if (User?.Identity?.IsAuthenticated ?? false)
-    {
-        @if (User.IsInRole("Cliente"))
-        {
-            <a asp-page="/Reserve" asp-route-restauranteId="@Model.Restaurante?.Id" class="btn btn-success btn-lg" style="flex: 1; min-width: 150px; border-radius: 8px;">
-                &#128197; Reservar
-            </a>
-        }
+.details-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* BREADCRUMB */
+.breadcrumb-nav {
+    margin-bottom: 16px;
+}
+
+.breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--airbnb-black);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 0;
+    transition: var(--transition);
+}
+
+.breadcrumb-link:hover {
+    color: var(--airbnb-gray);
+}
+
+.breadcrumb-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* HEADER */
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.restaurant-name {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin: 0 0 8px;
+    letter-spacing: -0.3px;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.rating-badge svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--airbnb-red);
+}
+
+.separator {
+    color: var(--airbnb-gray);
+}
+
+.reviews-link {
+    color: var(--airbnb-black);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.reviews-link:hover {
+    color: var(--airbnb-black);
+}
+
+.location-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--airbnb-black);
+}
+
+.location-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+.share-save-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: white;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.share-save-buttons:hover {
+    background: var(--airbnb-lighter-gray);
+}
+
+.share-save-buttons svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* IMAGE GALLERY */
+.image-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    height: 480px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 48px;
+}
+
+.gallery-main {
+    grid-row: 1 / 3;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.gallery-image {
+    background: linear-gradient(135deg, #FFF1F3 0%, #F7F7F7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-image:hover {
+    filter: brightness(0.95);
+}
+
+.main-image {
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.gallery-emoji {
+    font-size: 64px;
+    opacity: 0.6;
+}
+
+.main-image .gallery-emoji {
+    font-size: 120px;
+}
+
+/* LAYOUT */
+.details-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 80px;
+}
+
+.details-main {
+    padding-right: 40px;
+}
+
+/* SECTIONS */
+.details-section {
+    padding: 32px 0;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin: 0 0 24px;
+}
+
+.description-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--airbnb-gray);
+    margin: 0;
+}
+
+.divider {
+    height: 1px;
+    background: var(--airbnb-light-gray);
+}
+
+/* AMENITIES */
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.amenity-item svg {
+    width: 24px;
+    height: 24px;
+    color: var(--airbnb-black);
+}
+
+.amenity-item span {
+    font-size: 16px;
+    color: var(--airbnb-black);
+}
+
+/* TABLES */
+.tables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.table-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--airbnb-lighter-gray);
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.table-card:hover {
+    background: #F0F0F0;
+}
+
+.table-icon {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--airbnb-red);
+}
+
+.table-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin: 0;
+}
+
+.table-capacity {
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin: 4px 0 0;
+}
+
+.tables-total {
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin: 0;
+}
+
+.empty-state {
+    padding: 32px;
+    text-align: center;
+    background: var(--airbnb-lighter-gray);
+    border-radius: 8px;
+    color: var(--airbnb-gray);
+}
+
+/* RESERVATION CARD */
+.details-sidebar {
+    position: relative;
+}
+
+.reservation-card {
+    position: sticky;
+    top: 24px;
+    background: white;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+}
+
+.reservation-header {
+    margin-bottom: 20px;
+}
+
+.price-info {
+    margin-bottom: 8px;
+}
+
+.price-label {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+}
+
+.rating-inline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+}
+
+.rating-inline svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--airbnb-red);
+}
+
+.reviews-count {
+    color: var(--airbnb-gray);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 20px 0;
+    border-top: 1px solid var(--airbnb-light-gray);
+    border-bottom: 1px solid var(--airbnb-light-gray);
+}
+
+.contact-item {
+    display: flex;
+    gap: 12px;
+}
+
+.contact-item svg {
+    width: 20px;
+    height: 20px;
+    color: var(--airbnb-gray);
+    flex-shrink: 0;
+}
+
+.contact-label {
+    font-size: 12px;
+    color: var(--airbnb-gray);
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.contact-value {
+    font-size: 15px;
+    color: var(--airbnb-black);
+    font-weight: 500;
+    text-decoration: none;
+    margin: 0;
+}
+
+.contact-value:hover {
+    color: var(--airbnb-red);
+}
+
+.btn-reserve-main {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--airbnb-red) 0%, var(--airbnb-red-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: block;
+}
+
+.btn-reserve-main:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.no-charge-text {
+    text-align: center;
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin: 12px 0 20px;
+}
+
+.info-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #FFF4E6;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.info-message svg {
+    width: 20px;
+    height: 20px;
+    color: #F59E0B;
+    flex-shrink: 0;
+}
+
+.info-message p {
+    font-size: 14px;
+    color: var(--airbnb-black);
+    margin: 0;
+}
+
+.trust-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--airbnb-gray);
+}
+
+.trust-item svg {
+    width: 16px;
+    height: 16px;
+    color: #10B981;
+}
+
+/* RESPONSIVE */
+@@media (max-width: 1024px) {
+    .details-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
-</div>
+    
+    .details-main {
+        padding-right: 0;
+    }
+    
+    .reservation-card {
+        position: static;
+    }
+}
+
+@@media (max-width: 768px) {
+    .image-gallery {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .gallery-main {
+        grid-row: auto;
+        height: 300px;
+    }
+    
+    .main-image {
+        border-radius: var(--border-radius);
+    }
+    
+    .gallery-grid {
+        display: none;
+    }
+    
+    .restaurant-name {
+        font-size: 22px;
+    }
+    
+    .amenities-grid,
+    .tables-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
