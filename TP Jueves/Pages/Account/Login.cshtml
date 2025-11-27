@@ -1,70 +1,100 @@
 @page
 @model TP_Jueves.Pages.Account.LoginModel
 @{
-    ViewData["Title"] = "Iniciar Sesion";
+    ViewData["Title"] = "Iniciar sesión - Restaurancito";
 }
 
-<div class="auth-container">
-    <div class="auth-card">
+<!-- AIRBNB LOGIN PAGE -->
+<div class="auth-page">
+    <div class="auth-container-modern">
+        
         <!-- HEADER -->
-        <div class="auth-card-header">
-            <h2>Iniciar Sesion</h2>
-            <p style="margin: 0.5rem 0 0; font-size: 0.9rem; opacity: 0.9;">Accede a tu cuenta</p>
+        <div class="auth-header">
+            <a asp-page="/Index" class="auth-logo">
+                <span class="logo-icon">🍴</span>
+                <span class="logo-text">Restaurancito</span>
+            </a>
         </div>
 
-        <!-- BODY -->
-        <div class="auth-card-body">
-            @if (ViewData.ModelState[""]?.Errors.Any() ?? false)
-            {
-                <div class="alert alert-danger" role="alert" style="margin-bottom: 1.5rem;">
-                    <strong>Error de Login:</strong>
-                    @foreach (var error in ViewData.ModelState[""].Errors)
-                    {
-                        <p style="margin: 0.5rem 0 0;">@error.ErrorMessage</p>
-                    }
-                </div>
-            }
+        <!-- CARD -->
+        <div class="auth-card-modern">
+            <div class="auth-card-content">
+                <h1 class="auth-title">Te damos la bienvenida a Restaurancito</h1>
+                
+                @if (ViewData.ModelState[""]?.Errors.Any() ?? false)
+                {
+                    <div class="error-banner">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12" stroke="white" stroke-width="2"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16" stroke="white" stroke-width="2"></line>
+                        </svg>
+                        <div>
+                            @foreach (var error in ViewData.ModelState[""].Errors)
+                            {
+                                <p>@error.ErrorMessage</p>
+                            }
+                        </div>
+                    </div>
+                }
 
-            <form method="post" novalidate>
-                <!-- EMAIL -->
-                <div class="form-group">
-                    <label asp-for="Input.Email" class="form-label">
-                        <i class="fas fa-envelope"></i> Correo Electronico
-                    </label>
-                    <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
+                <form method="post" class="auth-form">
+                    <!-- EMAIL -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.Email" class="input-label-modern">Correo electrónico</label>
+                        <input asp-for="Input.Email" 
+                               class="input-modern" 
+                               type="email"
+                               placeholder="tu@ejemplo.com" 
+                               autocomplete="email" />
+                        <span asp-validation-for="Input.Email" class="validation-error"></span>
+                    </div>
 
-                <!-- CONTRASE�A -->
-                <div class="form-group">
-                    <label asp-for="Input.Password" class="form-label">
-                        <i class="fas fa-lock"></i> Contrasena
-                    </label>
-                    <input asp-for="Input.Password" class="form-control" placeholder="Tu contrasena" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
+                    <!-- PASSWORD -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.Password" class="input-label-modern">Contraseña</label>
+                        <input asp-for="Input.Password" 
+                               class="input-modern" 
+                               type="password"
+                               placeholder="Ingresa tu contraseña" 
+                               autocomplete="current-password" />
+                        <span asp-validation-for="Input.Password" class="validation-error"></span>
+                    </div>
 
-                <!-- RECORDARME -->
-                <div class="form-group mb-4">
-                    <div class="form-check">
-                        <input asp-for="Input.RememberMe" class="form-check-input" id="rememberMe" />
-                        <label class="form-check-label" for="rememberMe">
-                            Recordarme en este dispositivo
+                    <!-- REMEMBER ME -->
+                    <div class="checkbox-modern">
+                        <input asp-for="Input.RememberMe" 
+                               type="checkbox" 
+                               id="rememberMe" 
+                               class="checkbox-input" />
+                        <label for="rememberMe" class="checkbox-label">
+                            Recordarme
                         </label>
                     </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="submit" class="btn-auth-primary">
+                        Continuar
+                    </button>
+                </form>
+
+                <!-- DIVIDER -->
+                <div class="auth-divider">
+                    <span>o</span>
                 </div>
 
-                <!-- BOT�N INGRESAR -->
-                <button type="submit" class="btn btn-primary w-100 btn-lg">
-                    Ingresar
-                </button>
-            </form>
-
-            <!-- LINK A REGISTRO -->
-            <div class="auth-link">
-                No tienes cuenta? <a asp-page="Register">Registrate aqui</a>
+                <!-- LINK TO REGISTER -->
+                <div class="auth-footer-link">
+                    <p>¿No tienes una cuenta? <a asp-page="Register" class="link-primary">Regístrate</a></p>
+                </div>
             </div>
         </div>
+
+        <!-- FOOTER -->
+        <div class="auth-footer">
+            <p>&copy; 2025 Restaurancito. Todos los derechos reservados.</p>
+        </div>
+
     </div>
 </div>
 

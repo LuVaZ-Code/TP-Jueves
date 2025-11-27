@@ -613,3 +613,300 @@ body {
 
 .text-center { text-align: center; }
 .w-100 { width: 100%; }
+
+/* ==========================================================================
+   AIRBNB AUTHENTICATION PAGES
+   ========================================================================== */
+
+.auth-page {
+    min-height: 100vh;
+    background: var(--airbnb-lighter-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.auth-container-modern {
+    width: 100%;
+    max-width: 568px;
+}
+
+/* HEADER */
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.auth-logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-icon {
+    font-size: 32px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--airbnb-red);
+}
+
+/* CARD */
+.auth-card-modern {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.auth-card-content {
+    padding: 32px;
+}
+
+.auth-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin: 0 0 8px;
+}
+
+.auth-subtitle {
+    font-size: 15px;
+    color: var(--airbnb-gray);
+    margin: 0 0 24px;
+}
+
+/* ERROR BANNER */
+.error-banner {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.error-banner svg {
+    width: 20px;
+    height: 20px;
+    color: #DC2626;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.error-banner div {
+    flex: 1;
+}
+
+.error-banner p {
+    font-size: 14px;
+    color: #DC2626;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* FORM */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.input-group-modern {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-label-modern {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--airbnb-black);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+}
+
+.input-modern,
+.select-modern {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--airbnb-black);
+    font-family: inherit;
+    transition: var(--transition);
+    background: white;
+}
+
+.input-modern:focus,
+.select-modern:focus {
+    outline: none;
+    border-color: var(--airbnb-black);
+    box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+}
+
+.input-modern::placeholder {
+    color: var(--airbnb-light-gray);
+}
+
+.select-modern {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23222' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.validation-error {
+    font-size: 12px;
+    color: #DC2626;
+    margin-top: 6px;
+    display: block;
+}
+
+.input-help {
+    font-size: 12px;
+    color: var(--airbnb-gray);
+    margin-top: 6px;
+    display: block;
+}
+
+/* CHECKBOX */
+.checkbox-modern {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checkbox-input {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--airbnb-light-gray);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: var(--airbnb-black);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* BUTTONS */
+.btn-auth-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--airbnb-red) 0%, var(--airbnb-red-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 8px;
+}
+
+.btn-auth-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-auth-primary:active {
+    transform: translateY(0);
+}
+
+/* TERMS */
+.terms-text {
+    font-size: 12px;
+    color: var(--airbnb-gray);
+    line-height: 1.5;
+}
+
+/* DIVIDER */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--airbnb-light-gray);
+}
+
+.auth-divider span {
+    padding: 0 16px;
+    font-size: 12px;
+    color: var(--airbnb-gray);
+    font-weight: 600;
+}
+
+/* FOOTER LINK */
+.auth-footer-link {
+    text-align: center;
+}
+
+.auth-footer-link p {
+    font-size: 14px;
+    color: var(--airbnb-gray);
+    margin: 0;
+}
+
+.link-primary {
+    color: var(--airbnb-red);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.link-primary:hover {
+    color: var(--airbnb-red-dark);
+    text-decoration: underline;
+}
+
+/* FOOTER */
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.auth-footer p {
+    font-size: 12px;
+    color: var(--airbnb-gray);
+    margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+    .auth-card-content {
+        padding: 24px;
+    }
+    
+    .input-row {
+        grid-template-columns: 1fr;
+    }
+}

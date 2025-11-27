@@ -1,127 +1,142 @@
 @page
 @model TP_Jueves.Pages.Account.RegisterModel
 @{
-    ViewData["Title"] = "Crear Cuenta";
+    ViewData["Title"] = "Registro - Restaurancito";
 }
 
-<div class="auth-container">
-    <div class="auth-card">
+<!-- AIRBNB REGISTER PAGE -->
+<div class="auth-page">
+    <div class="auth-container-modern">
+        
         <!-- HEADER -->
-        <div class="auth-card-header">
-            <h2>Crear Cuenta</h2>
-            <p style="margin: 0.5rem 0 0; font-size: 0.9rem; opacity: 0.9;">Unete a TP Jueves hoy</p>
+        <div class="auth-header">
+            <a asp-page="/Index" class="auth-logo">
+                <span class="logo-icon">🍴</span>
+                <span class="logo-text">Restaurancito</span>
+            </a>
         </div>
 
-        <!-- BODY -->
-        <div class="auth-card-body">
-            <!-- MOSTRAR ERRORES GENERALES -->
-            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(string.Empty))
-            {
-                <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; animation: slideIn 0.3s ease;">
-                    <div style="display: flex; align-items: start; gap: 1rem;">
-                        <div style="font-size: 1.5rem;">&#9888;</div>
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0 0 0.5rem 0; font-weight: 700; font-size: 1.1rem;">Error al crear la cuenta</h4>
+        <!-- CARD -->
+        <div class="auth-card-modern">
+            <div class="auth-card-content">
+                <h1 class="auth-title">Únete a Restaurancito</h1>
+                <p class="auth-subtitle">Crea tu cuenta y comienza a disfrutar</p>
+                
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(string.Empty))
+                {
+                    <div class="error-banner">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12" stroke="white" stroke-width="2"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16" stroke="white" stroke-width="2"></line>
+                        </svg>
+                        <div>
                             @foreach (var error in ViewData.ModelState[string.Empty].Errors)
                             {
-                                <p style="margin: 0.25rem 0; font-size: 0.95rem;">&#8226; @Html.Raw(error.ErrorMessage)</p>
+                                <p>@Html.Raw(error.ErrorMessage)</p>
                             }
                         </div>
                     </div>
+                }
+
+                <form method="post" class="auth-form">
+                    <!-- NAME ROW -->
+                    <div class="input-row">
+                        <div class="input-group-modern">
+                            <label asp-for="Input.Nombre" class="input-label-modern">Nombre</label>
+                            <input asp-for="Input.Nombre" 
+                                   class="input-modern" 
+                                   placeholder="Juan" 
+                                   autocomplete="given-name" />
+                            <span asp-validation-for="Input.Nombre" class="validation-error"></span>
+                        </div>
+
+                        <div class="input-group-modern">
+                            <label asp-for="Input.Apellido" class="input-label-modern">Apellido</label>
+                            <input asp-for="Input.Apellido" 
+                                   class="input-modern" 
+                                   placeholder="Pérez" 
+                                   autocomplete="family-name" />
+                            <span asp-validation-for="Input.Apellido" class="validation-error"></span>
+                        </div>
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.Email" class="input-label-modern">Correo electrónico</label>
+                        <input asp-for="Input.Email" 
+                               class="input-modern" 
+                               type="email"
+                               placeholder="tu@ejemplo.com" 
+                               autocomplete="email" />
+                        <span asp-validation-for="Input.Email" class="validation-error"></span>
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.Rol" class="input-label-modern">Tipo de cuenta</label>
+                        <select asp-for="Input.Rol" class="select-modern">
+                            <option value="Cliente">🍽️ Cliente - Hacer reservas</option>
+                            <option value="Restaurantero">👨‍🍳 Restaurantero - Gestionar restaurante</option>
+                        </select>
+                        <span asp-validation-for="Input.Rol" class="validation-error"></span>
+                        <small class="input-help">Puedes cambiar esto más adelante</small>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.Password" class="input-label-modern">Contraseña</label>
+                        <input asp-for="Input.Password" 
+                               class="input-modern" 
+                               type="password"
+                               placeholder="Mínimo 6 caracteres" 
+                               autocomplete="new-password" />
+                        <span asp-validation-for="Input.Password" class="validation-error"></span>
+                        <small class="input-help">Debe contener minúsculas y números</small>
+                    </div>
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="input-group-modern">
+                        <label asp-for="Input.ConfirmPassword" class="input-label-modern">Confirmar contraseña</label>
+                        <input asp-for="Input.ConfirmPassword" 
+                               class="input-modern" 
+                               type="password"
+                               placeholder="Repite tu contraseña" 
+                               autocomplete="new-password" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="validation-error"></span>
+                    </div>
+
+                    <!-- TERMS -->
+                    <div class="terms-text">
+                        Al continuar, acepto los <a href="#" class="link-primary">Términos de servicio</a> y la <a href="#" class="link-primary">Política de privacidad</a> de Restaurancito.
+                    </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="submit" class="btn-auth-primary">
+                        Crear cuenta
+                    </button>
+                </form>
+
+                <!-- DIVIDER -->
+                <div class="auth-divider">
+                    <span>o</span>
                 </div>
-            }
 
-            <form method="post" novalidate>
-                <!-- NOMBRE -->
-                <div class="form-group">
-                    <label asp-for="Input.Nombre" class="form-label">
-                        Nombre
-                    </label>
-                    <input asp-for="Input.Nombre" class="form-control" placeholder="Juan" />
-                    <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                <!-- LINK TO LOGIN -->
+                <div class="auth-footer-link">
+                    <p>¿Ya tienes una cuenta? <a asp-page="Login" class="link-primary">Inicia sesión</a></p>
                 </div>
-
-                <!-- APELLIDO -->
-                <div class="form-group">
-                    <label asp-for="Input.Apellido" class="form-label">
-                        Apellido
-                    </label>
-                    <input asp-for="Input.Apellido" class="form-control" placeholder="Perez" />
-                    <span asp-validation-for="Input.Apellido" class="text-danger"></span>
-                </div>
-
-                <!-- EMAIL -->
-                <div class="form-group">
-                    <label asp-for="Input.Email" class="form-label">
-                        Correo Electr&oacute;nico
-                    </label>
-                    <input asp-for="Input.Email" class="form-control" placeholder="tu@ejemplo.com" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-
-                <!-- ROL -->
-                <div class="form-group">
-                    <label asp-for="Input.Rol" class="form-label">
-                        Tipo de Cuenta
-                    </label>
-                    <select asp-for="Input.Rol" class="form-control">
-                        <option value="Cliente">Cliente - Hacer reservas</option>
-                        <option value="Restaurantero">Restaurantero - Gestionar restaurante</option>
-                    </select>
-                    <span asp-validation-for="Input.Rol" class="text-danger"></span>
-                    <small class="form-text" style="color: #7f8c8d;">
-                        Puedes cambiar esto m&aacute;s adelante si lo deseas.
-                    </small>
-                </div>
-
-                <!-- CONTRASENA -->
-                <div class="form-group">
-                    <label asp-for="Input.Password" class="form-label">
-                        Contrase&ntilde;a
-                    </label>
-                    <input asp-for="Input.Password" class="form-control" placeholder="M&iacute;nimo 6 caracteres" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    <small class="form-text">
-                        Debe contener: min&uacute;sculas y n&uacute;meros
-                    </small>
-                </div>
-
-                <!-- CONFIRMAR CONTRASENA -->
-                <div class="form-group">
-                    <label asp-for="Input.ConfirmPassword" class="form-label">
-                        Confirmar Contrase&ntilde;a
-                    </label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Repetir contrase&ntilde;a" />
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                </div>
-
-                <!-- BOTON REGISTRAR -->
-                <button type="submit" class="btn btn-primary w-100 btn-lg" style="margin-top: 1.5rem;">
-                    Crear Cuenta
-                </button>
-            </form>
-
-            <!-- LINK A LOGIN -->
-            <div class="auth-link">
-                &iquest;Tienes cuenta? <a asp-page="Login">Ingresa aqu&iacute;</a>
             </div>
         </div>
+
+        <!-- FOOTER -->
+        <div class="auth-footer">
+            <p>&copy; 2025 Restaurancito. Todos los derechos reservados.</p>
+        </div>
+
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    
-    <style>
-        @@keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
 }
